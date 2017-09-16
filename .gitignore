@@ -259,3 +259,7 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+
+# Visual Studio Project files since these may differ on different people's computers? we'll see
+Memedemic/Memedemic.vcxproj
+Memedemic/Memedemic.vcxproj.filters

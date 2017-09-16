@@ -1,8 +1,8 @@
 #include "GameStateManager.h"
 
 
-GameStateManager::GameStateManager() {
-	board = new Board();
+GameStateManager::GameStateManager(int numPlayers) {
+	board = new Board(numPlayers);
 }
 
 GameStateManager::~GameStateManager() {

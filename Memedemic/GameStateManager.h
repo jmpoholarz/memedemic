@@ -8,7 +8,7 @@ class GameStateManager {
 	
 public:
 	// Sets up initial game starting conditions
-	GameStateManager();
+	GameStateManager(int numPlayers);
 	
 	// Frees all objects and readies the game for closing
 	~GameStateManager();

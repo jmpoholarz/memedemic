@@ -1,10 +1,18 @@
 #pragma once
+#include <vector>
 
 class Location {
 public:
-	Location();
+	Location(int name);
 	~Location();
 
-private:
+	std::vector<int> getMemeStatus();
+	bool hasCMCServer();
+	std::vector<int> getAdjacentLocations();
+	bool isAdjacent(int location);
 
+private:
+	int name;
+	int memeStatus[4];
+	bool hasCMCServer;
 };

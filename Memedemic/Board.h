@@ -3,9 +3,11 @@
 class Board {
 
 public:
-	Board();
-
+	Board(int numPlayers);
 	~Board();
+
+	bool initialInfection();
+	bool infect(int infectionRate);
 
 private:
 

@@ -1,31 +1,4 @@
 #pragma once
-enum LocationNames {
-	NINEGAG = 0,
-	IFUNNY = 1,
-	IMGUR = 2,
-	FOURCHAN = 3,
-	REDDIT = 4,
-	DISCORD = 5,
-	STEAM = 6,
-	TWITCH = 7,
-	YOUTUBE = 8,
-	VINE = 9,
-	SNAPCHAT = 10,
-	INSTAGRAM = 11,
-	PINTEREST = 12,
-	TWITTER = 13,
-	FACEBOOK = 14,
-	BUZZFEED = 15,
-	TUMBLR = 16,
-	MYSPACE = 17,
-	EMAIL = 18,
-	WHATSAPP = 19,
-	WECHAT = 20,
-	WEIBO = 21,
-	QQ = 22,
-	VK = 23,
-	TOTALLOCATIONS = 24
-};
 
 enum CardNames {
 	NINEGAG = 0,

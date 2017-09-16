@@ -15,6 +15,4 @@ class EventCard: public Card {
 };
 
 class LocationCard: public Card {
-public:
-    //LocationNames getCardLocation();
 };

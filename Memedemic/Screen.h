@@ -1,12 +1,15 @@
 #pragma once
 #include <string>
+#include "GameStateManager.h"
+
 class Screen {
 
 public:
-	Screen();
+	Screen(GameStateManager& gsm);
 	~Screen();
 	void showBoard();
-	void sendCommand(std::string command);
+	std::string sendCommand(std::string command);
+	void run();
 private:
-
+	GameStateManager gsm;
 };

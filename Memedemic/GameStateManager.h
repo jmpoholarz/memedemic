@@ -9,6 +9,8 @@
 class GameStateManager {
 	
 public:
+	GameStateManager();
+
 	// Sets up initial game starting conditions
 	GameStateManager(int numPlayers);
 	

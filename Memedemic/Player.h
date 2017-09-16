@@ -5,8 +5,9 @@
 class Player {
 	
 public:
-	Player(std::string name);
+	Player();
 	~Player();
+	bool setName(std::string name);
 	std::string getPlayerName();
 	int getPlayerRole();
 	std::vector<int> getPlayerCards();

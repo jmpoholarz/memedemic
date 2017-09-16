@@ -14,5 +14,5 @@ public:
 private:
 	int name;
 	int memeStatus[4];
-	bool hasCMCServer;
+	bool CMCServer;
 };

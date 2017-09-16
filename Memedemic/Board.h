@@ -1,14 +1,14 @@
 #pragma once
+#include <vector>
+#include "Location.h"
 
 class Board {
 
 public:
-	Board(int numPlayers);
+	Board();
 	~Board();
 
-	bool initialInfection();
-	bool infect(int infectionRate);
-
 private:
+	std::vector<Location> locations;
 
 };

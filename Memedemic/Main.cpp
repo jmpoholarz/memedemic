@@ -7,6 +7,7 @@ int main() {
 	std::cin >> players;
 	// Create GameStateManager to setup game
 	GameStateManager* gsm = new GameStateManager(players);
-	Screen* screen = new Screen(*gsm);
+	Parser* parser = new Parser(*gsm);
+	Screen* screen = new Screen(*gsm, *parser);
 	screen->run();
 }

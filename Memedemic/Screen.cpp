@@ -1,8 +1,8 @@
 #include <iostream>
 #include "Screen.h"
 
-Screen::Screen(GameStateManager& g) {
-	gsm = g;
+Screen::Screen(GameStateManager& g, Parser& p) : gsm(g), parser(p) {
+
 }
 
 Screen::~Screen() {

@@ -1,14 +1,13 @@
 #include "Parser.h"
 
-Parser::Parser() {
-
+Parser::Parser(GameStateManager& g) : gsm(g) {
 }
 
 Parser::~Parser() {
 
 }
 
-bool Parser::parse(std::string command) {
+std::string Parser::parse(std::string command) {
 	// Create a stringstream to read through the command
 	std::stringstream ss(command); 
 	// Temp string to store each "word" of the command
@@ -27,5 +26,226 @@ bool Parser::parse(std::string command) {
 	}
 
 	// At this point, we have our vector of words to deal with
+	if (tokens[0] == "usage") {
+		return getUsage(tokens[1]);
+	}
+	else if (tokens[0] == "access") {
+		// Wrong number of arguments
+		if (tokens.size() != 2)
+			return "Incorrect usage of access: " + getUsage("access");
+		// Get location number from enum
+		int location = convertCard(tokens[1]);
+		// Check if valid location
+		if (!(location >= 0 && location <= 23)) {
+			return "Invalid location: " + getUsage("access");
+		}
+		
+		// Attempt to move player
+		bool successful = gsm.movePlayer(location);
+		if (successful) 
+			return "Moved to " + tokens[1];
+		else return "Unable to move to " + tokens[1];
 
+	}
+	else if (tokens[0] == "build") {
+
+	}
+	else if (tokens[0] == "ban") {
+
+	}
+	else if (tokens[0] == "give") {
+
+	}
+	else if (tokens[0] == "take") {
+
+	}
+	else if (tokens[0] == "filter") {
+
+	}
+	else if (tokens[0] == "event") {
+
+	}
+	else if (tokens[0] == "outbreak") {
+
+	}
+	else if (tokens[0] == "viral") {
+
+	}
+	else if (tokens[0] == "meme") {
+
+	}
+	else if (tokens[0] == "players") {
+
+	}
+	else if (tokens[0] == "cmc") {
+
+	}
+	else if (tokens[0] == "draw") {
+
+	}
+	else if (tokens[0] == "discard") {
+
+	}
+	else if (tokens[0] == "cards") {
+
+	}
+	else if (tokens[0] == "end") {
+
+	}
+	else if (tokens[0] == "new") {
+
+	}
+}
+
+int Parser::convertCard(std::string name) {
+	if (name == "ninegag" || name == "9gag" || name == "9g" || name == "ng") {
+		return NINEGAG;
+	}
+	else if (name == "ifunny" || name == "if") {
+		return IFUNNY;
+	}
+	else if (name == "imgur" || name == "ig") {
+		return IMGUR;
+	}
+	else if (name == "fourchan" || name == "4chan" || name == "4c"
+		|| name == "fc") {
+		return FOURCHAN;
+	}
+	else if (name == "reddit" || name == "red" || name == "re") {
+		return REDDIT;
+	}
+	else if (name == "discord" || name == "dc") {
+		return DISCORD;
+	}
+	else if (name == "steam" || name == "st") {
+		return STEAM;
+	}
+	else if (name == "twitch" || name == "tw") {
+		return TWITCH;
+	}
+	else if (name == "youtube" || name == "yt") {
+		return YOUTUBE;
+	}
+	else if (name == "vine" || name == "vi") {
+		return VINE;
+	}
+	else if (name == "snapchat" || name == "snap" || name == "sc") {
+		return SNAPCHAT;
+	}
+	else if (name == "instagram" || name == "insta" || name == "ig") {
+		return INSTAGRAM;
+	}
+	else if (name == "pinterest" || name == "pin" || name == "pt") {
+		return PINTEREST;
+	}
+	else if (name == "twitter" || name == "t") {
+		return TWITTER;
+	}
+	else if (name == "facebook" || name == "face" || name == "fb") {
+		return FACEBOOK;
+	}
+	else if (name == "buzzfeed" || name == "buzz" || name == "bf") {
+		return BUZZFEED;
+	}
+	else if (name == "tumblr" || name == "tb") {
+		return TUMBLR;
+	}
+	else if (name == "myspace" || name == "ms") {
+		return MYSPACE;
+	}
+	else if (name == "email" || name == "em") {
+		return EMAIL;
+	}
+	else if (name == "whatsapp" || name == "whats" || name == "wa") {
+		return WHATSAPP;
+	}
+	else if (name == "wechat" || name == "wc") {
+		return WECHAT;
+	}
+	else if (name == "weibo" || name == "we") {
+		return WEIBO;
+	}
+	else if (name == "qq") {
+		return QQ;
+	}
+	else if (name == "vk") {
+		return VK;
+	}
+	else if (name == "seriousdiscussion" || name == "serious" || name == "sd") {
+		return SERIOUSDISCUSSION;
+	}
+	else if (name == "poweroutage" || name == "power" || name == "po") {
+		return POWEROUTAGE;
+	}
+	else if (name == "memeforecast" || name == "meme" || name == "mf") {
+		return MEMEFORECAST;
+	}
+	else if (name == "vpn") {
+		return VPN;
+	}
+	else if (name == "governmentgrant" || name == "government"
+		|| name == "govt" || name == "gov" || name == "gg" || name == "grant") {
+		return GOVERNMENTGRANT;
+	}
+	else if (name == "epidemic") {
+		return EPIDEMIC;
+	}
+	else return -1;
+}
+
+std::string Parser::getUsage(std::string command) {
+		if (command == "access") {
+			return "access <location>";
+		}
+		else if (command == "build") {
+			return "build";
+		}
+		else if (command == "ban") {
+			return "ban <number of meme>";
+		}
+		else if (command == "give") {
+			return "give <card name> <player name>";
+		}
+		else if (command == "take") {
+			return "take <card name> <player name>";
+		}
+		else if (command == "filter") {
+			return "filter <card1> <card2> <card3> <card4> <card5>";
+		}
+		else if (command == "event") {
+			return "event <card name>";
+		}
+		else if (command == "outbreak") {
+			return "outbreak track";
+		}
+		else if (command == "viral") {
+			return "viral quotient";
+		}
+		else if (command == "meme") {
+			return "meme status";
+		}
+		else if (command == "roles") {
+			return "players roles";
+		}
+		else if (command == "players") {
+			return "players";
+		}
+		else if (command == "cmc") {
+			return "cmc servers";
+		}
+		else if (command == "draw") {
+			return "draw cards";
+		}
+		else if (command == "discard") {
+			return "discard <card position in hand>";
+		}
+		else if (command == "cards") {
+			return "cards <player name>";
+		}
+		else if (command == "end") {
+			return "end turn";
+		}
+		else if (command == "new") {
+			return "new game";
+		}
 }

@@ -1,0 +1,9 @@
+Memedemic Current Bug List
+1. Should change function signatures of GSM to ints instead of bool to better handle error checking
+2. gsm.buildCMCServer() asks for a location, but the parser doesn't have that information
+	- based on the current user's turn which the GSM should have already
+3. gsm.banMeme() takes a location but only needs the number of the meme; location would be the
+	the current player's location
+4. shareCard does not take reasonable arguments
+	- parser has which card and to which player name to be transferred
+5. developMemeFilter() does not take data available to the filter it its arguments

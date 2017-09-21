@@ -17,22 +17,22 @@ public:
 	// Frees all objects and readies the game for closing
 	~GameStateManager();
 
-	bool movePlayer(int location);
-	bool banMeme(int location);
-	bool developMemeFilter(int location, int meme);
-	bool buildCMCServer(int location);
-	bool playCard(int card);
-	bool shareCard(int player);
-	bool drawCards(int player);
-	void printPlayerRoles();
-	void printPlayerLocations();
-	void printPlayerCards(int player);
-	void printCMCLocations();
-	bool updateBoard();
-	bool autoSave();
-	bool nextTurn();
-	bool initialInfection();
-	bool infect(int location, int meme, int count);
+	int movePlayer(int location);
+	int banMeme(int memeNumber);
+	int developMemeFilter(int memeNumber);
+	int buildCMCServer();
+	int playCard(int card);
+	int shareCard(int card, std::string playerName);
+	int drawCards();
+	int printPlayerRoles();
+	int printPlayerLocations();
+	int printPlayerCards(int player);
+	int printCMCLocations();
+	int updateBoard();
+	int autoSave();
+	int nextTurn();
+	int initialInfection();
+	int infect(int location, int meme, int count);
 
 
 private:

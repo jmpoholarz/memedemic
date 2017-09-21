@@ -37,12 +37,12 @@ std::string Parser::parse(std::string command) {
 		int location = convertCard(tokens[1]);
 		// Check if valid location
 		if (!(location >= 0 && location <= 23)) {
-return "Invalid location: " + getUsage("access");
+			return "Invalid location: " + getUsage("access");
 		}
 
 		// Attempt to move player
-		bool successful = gsm.movePlayer(location);
-		if (successful)
+		int successful = gsm.movePlayer(location);
+		if (successful == 1)
 			return "Moved to " + tokens[1];
 		else return "Unable to move to " + tokens[1];
 	}
@@ -52,8 +52,8 @@ return "Invalid location: " + getUsage("access");
 			return "Incorrect usage of build: " + getUsage("build");
 		}
 		// Attempt to build
-		bool successful = gsm.buildCMCServer();
-		if (successful)
+		int successful = gsm.buildCMCServer();
+		if (successful == 1)
 			return "Built CMC Server.";
 		else return "Unable to build CMC Server.";
 	}
@@ -64,8 +64,8 @@ return "Invalid location: " + getUsage("access");
 		}
 		// Attempt to ban disease
 		int whichMeme = atoi(tokens[1].c_str());
-		bool successful = gsm.banMeme(whichMeme);
-		if (successful)
+		int successful = gsm.banMeme(whichMeme);
+		if (successful == 1)
 			return "Banned meme " + tokens[1] + " from current location.";
 		else return "Unable to ban meme " + tokens[1] + " from current location.";
 	}

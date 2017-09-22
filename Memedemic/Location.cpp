@@ -3,3 +3,7 @@
 Location::Location(int name) {
 	this->name = name;
 }
+
+Location::~Location() {
+
+}

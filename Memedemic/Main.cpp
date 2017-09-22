@@ -1,5 +1,6 @@
 #include "Main.h"
 
+/*
 int main() {
 	// Prompt player count
 	std::cout << "Enter players 1-4" << std::endl;
@@ -11,3 +12,4 @@ int main() {
 	Screen* screen = new Screen(*gsm, *parser);
 	screen->run();
 }
+*/

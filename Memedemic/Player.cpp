@@ -9,9 +9,6 @@ Player::Player(std::string name, PlayerRoles role, CardNames location) {
     this -> playerLocation = location;
 }
 
-Player::~Player() {
-}
-
 // Sets player's name
 bool Player::setPlayerName(std::string name) {
     this -> playerName = name;
@@ -36,6 +33,12 @@ std::vector<CardNames> Player::getPlayerCards() {
 // Returns player's location
 CardNames Player::getPlayerLocation() {
     return this -> playerLocation;
+}
+
+// Sets player's location
+bool Player::setPlayerLocation(CardNames location) {
+    this -> playerLocation = location;
+    return true;
 }
 
 // Checks if player holds n instances of the specified card
@@ -79,6 +82,7 @@ bool Player::removeNCards(CardNames card, int n) {
             // Remove card using erase so items are relocated
             playerCards.erase(playerCards.begin() + i);
             n--;
+            i--;
         }
         i++;
     }

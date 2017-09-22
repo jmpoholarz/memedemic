@@ -3,6 +3,10 @@
 #include <string>
 #include <vector>
 
+Player::Player() {
+	// Placeholder default constructor for testing
+}
+
 Player::Player(std::string name, PlayerRoles role, CardNames location) {
     this -> playerName = name;
     this -> playerRole = role;
@@ -40,7 +44,7 @@ CardNames Player::getPlayerLocation() {
 
 // Checks if player holds n instances of the specified card
 bool Player::holdsNCards(CardNames card, int n) {
-    int i;
+    unsigned int i;
     int count = 0;
 
     // Count instances of card in player's hand
@@ -71,7 +75,7 @@ bool Player::addCard(CardNames card) {
 
 // Removes n instances of the specified card
 bool Player::removeNCards(CardNames card, int n) {
-    int i = 0;
+    unsigned int i = 0;
     bool success = false;
     while (i < this -> playerCards.size() && n > 0) {
         if (this -> playerCards[i] == card) {

@@ -4,7 +4,6 @@
 #include <sstream>
 #include <cctype>
 #include "GameStateManager.h"
-#include "GameStateManager.h"
 #include "Enums.h"
 
 class Parser {

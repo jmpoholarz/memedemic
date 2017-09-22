@@ -159,3 +159,7 @@ bool Location::isAdjacent(int current, int location) {
 		}
 	}
 }
+
+Location::~Location() {
+
+}

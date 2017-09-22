@@ -16,10 +16,10 @@ std::string Parser::parse(std::string command) {
 	std::vector<std::string> tokens;
 	// Split based on spaces
 	while (std::getline(ss, str, ' ')) {
-		if (str.length() != 1) {
+		if (1){ //str != " ") {
 			// Make all characters lowercase
-			for each (char c in str) {
-				std::tolower(c);
+			for (int i = 0; i < str.length(); i++) {
+				str[i] = std::tolower(str[i]);
 			}
 			tokens.push_back(str);
 		}
@@ -92,7 +92,7 @@ std::string Parser::parse(std::string command) {
 	else if (tokens[0] == "filter") {
 		// Check for wrong number of arguments
 		if (tokens.size() != 6 && tokens.size() != 5) {
-			return "Incorrect usage of give: " + getUsage("filter");
+			return "Incorrect usage of filter: " + getUsage("filter");
 		}
 
 		/// TODO
@@ -377,5 +377,5 @@ std::string Parser::getUsage(std::string command) {
 		else if (command == "new") {
 			return "new game";
 		}
-		else return "no information found on " + command;
+		else return "No information found on " + command;
 }

@@ -21,3 +21,11 @@ void Screen::run() {
 		showBoard();
 	}
 }
+
+void Screen::showBoard() {
+
+}
+
+std::string Screen::sendCommand(std::string command) {
+	return "";
+}

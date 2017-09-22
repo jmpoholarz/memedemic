@@ -6,6 +6,7 @@
 class Player {
 	
 public:
+	Player();
 	Player(std::string name, PlayerRoles playerRole, CardNames location);
 	~Player();
 

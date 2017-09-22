@@ -16,10 +16,10 @@ std::string Parser::parse(std::string command) {
 	std::vector<std::string> tokens;
 	// Split based on spaces
 	while (std::getline(ss, str, ' ')) {
-		if (str.length() != 1) {
+		if (1){ //str != " ") {
 			// Make all characters lowercase
-			for each (char c in str) {
-				std::tolower(c);
+			for (int i = 0; i < str.length(); i++) {
+				str[i] = std::tolower(str[i]);
 			}
 			tokens.push_back(str);
 		}
@@ -77,6 +77,7 @@ std::string Parser::parse(std::string command) {
 		// Attempt to give card
 		int card = convertCard(tokens[1]);
 		/// TODO
+		return "";
 	}
 	else if (tokens[0] == "take") {
 		// Check for wrong number of arguments
@@ -86,14 +87,16 @@ std::string Parser::parse(std::string command) {
 		// Attempt to take card
 		int card = convertCard(tokens[1]);
 		/// TODO
+		return "";
 	}
 	else if (tokens[0] == "filter") {
 		// Check for wrong number of arguments
 		if (tokens.size() != 6 && tokens.size() != 5) {
-			return "Incorrect usage of give: " + getUsage("filter");
+			return "Incorrect usage of filter: " + getUsage("filter");
 		}
 
 		/// TODO
+		return "";
 	}
 	else if (tokens[0] == "event") {
 		// Check for wrong number of arguments
@@ -104,6 +107,7 @@ std::string Parser::parse(std::string command) {
 		int card = convertCard(tokens[1]);
 
 		/// TODO
+		return "";
 	}
 	else if (tokens[0] == "outbreak") {
 		// Check for wrong number of arguments
@@ -112,6 +116,7 @@ std::string Parser::parse(std::string command) {
 		}
 		// Try to print outbreak track
 		/// TODO
+		return "";
 	}
 	else if (tokens[0] == "viral") {
 		// Check for wrong number of arguments
@@ -120,6 +125,7 @@ std::string Parser::parse(std::string command) {
 		}
 		// Try to print viral quotient
 		/// TODO
+		return "";
 	}
 	else if (tokens[0] == "meme") {
 		// Check for wrong number of arguments
@@ -128,6 +134,7 @@ std::string Parser::parse(std::string command) {
 		}
 		// Attempt to print meme status
 		/// TODO
+		return "";
 	}
 	else if (tokens[0] == "players") {
 		// Check for wrong number of arguments
@@ -136,6 +143,7 @@ std::string Parser::parse(std::string command) {
 		}
 
 		/// TODO
+		return "";
 	}
 	else if (tokens[0] == "roles") {
 		// Check for wrong number of arguments
@@ -144,6 +152,7 @@ std::string Parser::parse(std::string command) {
 		}
 
 		/// TODO
+		return "";
 	}
 	else if (tokens[0] == "cmc") {
 		// Check for wrong number of arguments
@@ -152,6 +161,7 @@ std::string Parser::parse(std::string command) {
 		}
 
 		/// TODO
+		return "";
 	}
 	else if (tokens[0] == "servers") {
 		// Check for wrong number of arguments
@@ -160,6 +170,7 @@ std::string Parser::parse(std::string command) {
 		}
 
 		/// TODO
+		return "";
 	}
 	else if (tokens[0] == "draw") {
 		// Check for wrong number of arguments
@@ -168,6 +179,7 @@ std::string Parser::parse(std::string command) {
 		}
 
 		/// TODO
+		return "";
 	}
 	else if (tokens[0] == "discard") {
 		// Check for wrong number of arguments
@@ -176,6 +188,7 @@ std::string Parser::parse(std::string command) {
 		}
 
 		/// TODO
+		return "";
 	}
 	else if (tokens[0] == "cards") {
 		// Check for wrong number of arguments
@@ -184,6 +197,7 @@ std::string Parser::parse(std::string command) {
 		}
 
 		/// TODO
+		return "";
 	}
 	else if (tokens[0] == "end") {
 		// Check for wrong number of arguments
@@ -202,6 +216,10 @@ std::string Parser::parse(std::string command) {
 		}
 		// Attempt to start new game
 		/// TODO
+		return "";
+	}
+	else {
+		return "Unable to parse command!";
 	}
 }
 
@@ -359,4 +377,5 @@ std::string Parser::getUsage(std::string command) {
 		else if (command == "new") {
 			return "new game";
 		}
+		else return "No information found on " + command;
 }

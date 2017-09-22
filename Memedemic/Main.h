@@ -2,3 +2,4 @@
 #include <iostream>
 #include "GameStateManager.h"
 #include "Screen.h"
+#include "Location.h"

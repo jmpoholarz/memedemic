@@ -19,7 +19,6 @@ private:
 	std::vector<int> memeStatus;
 	bool CMCServer;
 	struct site {
-		std::string name;
 		int id;
 		std::vector<int> adjacencies;
 		std::vector<site> a;

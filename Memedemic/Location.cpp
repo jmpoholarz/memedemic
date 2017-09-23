@@ -140,11 +140,13 @@ bool Location::hasCMCServer() {
 
 std::vector<int> Location::getAdjacentLocations(int name) {
 	std::list<site>::iterator it;
-	for (it = this->sites.begin(); it != this->sites.end(); ++it){
+	for (it = this->sites.begin(); it != this->sites.end(); ++it) {
     	if (it->id == name) {
 			return it->adjacencies;
 		}
 	}
+	std::vector<int> error = {-1};
+	return error;
 }
 
 bool Location::isAdjacent(int current, int location) {

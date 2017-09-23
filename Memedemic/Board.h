@@ -4,9 +4,15 @@
 class Board {
 
 public:
-	Board(char p1Role[3], char p2Role[3]);
-	Board(char p1Role[3], char p2Role[3], char p3Role[3]);
-	Board(char p1Role[3], char p2Role[3], char p3Role[3], char p4Role[3]);
+	struct BoardLocation {
+		bool players[4] = { false, false, false, false };
+		int memes[4] = { 0, 0, 0, 0 };
+		bool cmcServer = false;
+	};
+
+	Board(std::string p1Role, std::string p2Role);
+	Board(std::string p1Role, std::string p2Role, std::string p3Role);
+	Board(std::string p1Role, std::string p2Role, std::string p3Role, std::string p4Role);
 	~Board();
 
 	void printBoard();
@@ -19,16 +25,16 @@ public:
 	void addCure(int meme);
 	void removePlayerCard();
 
-private:
-	struct BoardLocation {
-		bool players[4] = { false, false, false, false };
-		int memes[4] = { 0, 0, 0, 0 };
-		bool cmcServer = false;
-	};
+	BoardLocation getLocation(int loc); // For testing purposes
+	int getOutbreakCounter(); // For testing purposes
+	bool getCure(int meme); // For testing purposes
+	int getPlayerCards(); // For testing purposes
+	std::vector<std::string> getPlayerRoles(); // For testing purposes
 
+private:
 	std::vector<BoardLocation> locations;
 
-	std::string playerRoles[4] = { NULL };
+	std::vector<std::string> playerRoles;
 
 	int outbreakCounter;
 	bool cures[4];

@@ -6,13 +6,13 @@
 /**
 	Two Player Constructor
 */
-Board::Board(char p1Role[3], char p2Role[3]) {
+Board::Board(std::string p1Role, std::string p2Role) {
 	outbreakCounter = 2;
 	cures[4] = { false };
 	playerCards = 59;
 
-	playerRoles[0] = p1Role;
-	playerRoles[1] = p2Role;
+	playerRoles.push_back(p1Role);
+	playerRoles.push_back(p2Role);
 
 	initializeLocations();
 
@@ -25,14 +25,14 @@ Board::Board(char p1Role[3], char p2Role[3]) {
 /**
 	Three Player Constructor
 */
-Board::Board(char p1Role[3], char p2Role[3], char p3Role[3]) {
+Board::Board(std::string p1Role, std::string p2Role, std::string p3Role) {
 	outbreakCounter = 2;
 	cures[4] = { false };
 	playerCards = 59;
 
-	playerRoles[0] = p1Role;
-	playerRoles[1] = p2Role;
-	playerRoles[2] = p3Role;
+	playerRoles.push_back(p1Role);
+	playerRoles.push_back(p2Role);
+	playerRoles.push_back(p3Role);
 
 	initializeLocations();
 
@@ -46,15 +46,15 @@ Board::Board(char p1Role[3], char p2Role[3], char p3Role[3]) {
 /**
 	Four Player Constructor
 */
-Board::Board(char p1Role[3], char p2Role[3], char p3Role[3], char p4Role[3]) {
+Board::Board(std::string p1Role, std::string p2Role, std::string p3Role, std::string p4Role) {
 	outbreakCounter = 2;
 	cures[4] = { false };
 	playerCards = 59;
 
-	playerRoles[0] = p1Role;
-	playerRoles[1] = p2Role;
-	playerRoles[2] = p3Role;
-	playerRoles[3] = p4Role;
+	playerRoles.push_back(p1Role);
+	playerRoles.push_back(p2Role);
+	playerRoles.push_back(p3Role);
+	playerRoles.push_back(p4Role);
 
 	initializeLocations();
 
@@ -145,16 +145,51 @@ void Board::removePlayerCard() {
 }
 
 /**
+	Returns the given location.  Used for testing purposes
+*/
+Board::BoardLocation Board::getLocation(int loc) {
+	return locations[loc];
+}
+
+/**
+	Returns the outbreak counter.  Used for testing purposes
+*/
+int Board::getOutbreakCounter() {
+	return outbreakCounter;
+}
+
+/**
+	Returns whether the given meme has been cured or not.  Used for testing purposes
+*/
+bool Board::getCure(int meme) {
+	return cures[meme];
+}
+
+/**
+	Returns the player card count.  Used for testing purposes
+*/
+int Board::getPlayerCards() {
+	return playerCards;
+}
+
+/**
+	Returns the player roles.  Used for testing purposes
+*/
+std::vector<std::string> Board::getPlayerRoles() {
+	return playerRoles;
+}
+
+/**
 	Main function for printing the contents of the board to the command line
 */
 void Board::printBoard() {
 	/*
-	Example print out of the game board:
+	Example print out of the game board (using old extending Ascii characters):
 
 	std::cout << "┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐\n";
 	std::cout << "│  Tumbler  │  │  iFunny   │  │   9GAG    │  │   Imgur   │  │   4chan   │\n";
-	std::cout << "│1 2 3 4 CMC│  │           ├--┤           ├--┤           ├--┤           │\n";
-	std::cout << "│HA RO FI ME│  │           │  │           │  │           │  │           │\n";
+	std::cout << "│           │  │           ├--┤           ├--┤           ├--┤           │\n";
+	std::cout << "│           │  │           │  │           │  │           │  │           │\n";
 	std::cout << "└─────┬─────┘\ └─────┬─────┘ /└───────────┘  └───────────┘\ └─────┬─────┘\n";
 	std::cout << "      |      \\      |      //                            \\      |      \n";
 	std::cout << "┌─────┴─────┐ \┌─────┴─────┐/ ┌───────────┐  ┌───────────┐ \┌─────┴─────┐\n";
@@ -165,8 +200,8 @@ void Board::printBoard() {
 	std::cout << "             \\      |              |              |      \\             \n";
 	std::cout << "┌───────────┐ \┌─────┴─────┐  ┌─────┴─────┐  ┌─────┴─────┐ \┌───────────┐\n";
 	std::cout << "│   Email   │  │ Facebook  │  │   Vine    │  │   Steam   │  │  Discord  │\n";
-	std::cout << "│           ├--┤           │  │           │  │           ├--┤           │\n";
-	std::cout << "│           │  │           │  │           │  │           │  │           │\n";
+	std::cout << "│1 2 1 3 CMC├--┤           │  │           │  │           ├--┤           │\n";
+	std::cout << "│p1 p2 p3 p4│  │           │  │           │  │           │  │           │\n";
 	std::cout << "└───────────┘\ └─────┬─────┘\ └─────┬─────┘\ └───────────┘  └───────────┘\n";
 	std::cout << "             \\      |      \\      |      \\                            \n";
 	std::cout << "┌───────────┐ \┌─────┴─────┐ \┌─────┴─────┐ \┌───────────┐  ┌───────────┐\n";
@@ -176,192 +211,206 @@ void Board::printBoard() {
 	std::cout << "└─────┬─────┘\ └─────┬─────┘\ └───────────┘  └─────┬─────┘ /└───────────┘\n";
 	std::cout << "      |      \\      |      \\                     |      //             \n";
 	std::cout << "┌─────┴─────┐ \┌─────┴─────┐ \┌───────────┐  ┌─────┴─────┐/              \n";
-	std::cout << "│   Weibo   │  │    QQ     │  │    VK     │  │ Instagram │ Outbreaks: 2/8\n";
-	std::cout << "│           ├--┤           ├--┤           │  │           │ Cures: C C C C\n";
+	std::cout << "│   Weibo   │  │    QQ     │  │    VK     │  │ Instagram │ Cures: C C C C\n";
+	std::cout << "│           ├--┤           ├--┤           │  │           │ Outbreaks: 3/8\n";
 	std::cout << "│           │  │           │  │           │  │           │ P-Cards: 14/59\n";
 	std::cout << "└───────────┘  └───────────┘  └───────────┘  └───────────┘               \n";
 	*/
 
 	// First row of locations
-	std::cout << "┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐\n";
-	std::cout << "│  Tumbler  │  │  iFunny   │  │   9GAG    │  │   Imgur   │  │   4chan   │\n";
-	
-	std::cout << "│";
+	std::cout << "+-----------+  +-----------+  +-----------+  +-----------+  +-----------+\n";
+	std::cout << "|  Tumbler  |  |  iFunny   |  |   9GAG    |  |   Imgur   |  |   4chan   |\n";
+	std::cout << "|           |  |           |  |           |  |           |  |           |\n";
+	std::cout << "|";
 	printCounters(16);
 	printCMC(16);
-	std::cout << "│  │";
+	std::cout << "|  |";
 	printCounters(1);
 	printCMC(1);
-	std::cout << "├--┤";
+	std::cout << "+--+";
 	printCounters(0);
 	printCMC(0);
-	std::cout << "├--┤";
+	std::cout << "+--+";
 	printCounters(2);
 	printCMC(2);
-	std::cout << "├--┤";
+	std::cout << "+--+";
 	printCounters(3);
 	printCMC(3);
-	std::cout << "│\n";
+	std::cout << "|\n";
 
-	std::cout << "│";
+	std::cout << "|           |  |           |  |           |  |           |  |           |\n";
+
+	std::cout << "|";
 	printPlayers(16);
-	std::cout << "│  │";
+	std::cout << "|  |";
 	printPlayers(1);
-	std::cout << "│  │";
+	std::cout << "|  |";
 	printPlayers(0);
-	std::cout << "│  │";
+	std::cout << "|  |";
 	printPlayers(2);
-	std::cout << "│  │";
+	std::cout << "|  |";
 	printPlayers(3);
-	std::cout << "│\n";
+	std::cout << "|\n";
 
-	std::cout << "└─────┬─────┘\ └─────┬─────┘ /└───────────┘  └───────────┘\ └─────┬─────┘\n";
-	std::cout << "      |      \\      |      //                            \\      |      \n";
+	std::cout << "+-----+-----+\\ +-----+-----+ /+-----------+  +-----------+\\ +-----+-----+\n";
+	std::cout << "      |      \\\\      |      //                            \\\\      |      \n";
 	
 	// Second row of locations
-	std::cout << "┌─────┴─────┐ \\┌─────┴─────┐/ ┌───────────┐  ┌───────────┐ \\┌─────┴─────┐\n";
-	std::cout << "│  Myspace  │  │ BuzzFeed  │  │  Youtube  │  │  Twitch   │  │  Reddit   │\n";
+	std::cout << "+-----+-----+ \\+-----+-----+/ +-----------+  +-----------+ \\+-----+-----+\n";
+	std::cout << "|  Myspace  |  | BuzzFeed  |  |  Youtube  |  |  Twitch   |  |  Reddit   |\n";
+	std::cout << "|           |  |           |  |           |  |           |  |           |\n";
 
-	std::cout << "│";
+	std::cout << "|";
 	printCounters(17);
 	printCMC(17);
-	std::cout << "│  │";
+	std::cout << "|  |";
 	printCounters(15);
 	printCMC(15);
-	std::cout << "├--┤";
+	std::cout << "+--+";
 	printCounters(8);
 	printCMC(8);
-	std::cout << "├--┤";
+	std::cout << "+--+";
 	printCounters(7);
 	printCMC(7);
-	std::cout << "├--┤";
+	std::cout << "+--+";
 	printCounters(4);
 	printCMC(4);
-	std::cout << "│\n";
+	std::cout << "|\n";
 
-	std::cout << "│";
+	std::cout << "|           |  |           |  |           |  |           |  |           |\n";
+
+	std::cout << "|";
 	printPlayers(17);
-	std::cout << "│  │";
+	std::cout << "|  |";
 	printPlayers(15);
-	std::cout << "│  │";
+	std::cout << "|  |";
 	printPlayers(8);
-	std::cout << "│  │";
+	std::cout << "|  |";
 	printPlayers(7);
-	std::cout << "│  │";
+	std::cout << "|  |";
 	printPlayers(4);
-	std::cout << "│\n";
+	std::cout << "|\n";
 
-	std::cout << "└───────────┘\ └─────┬─────┘  └─────┬─────┘  └─────┬─────┘\ └───────────┘\n";
-	std::cout << "             \\      |              |              |      \\             \n";
+	std::cout << "+-----------+\\ +-----+-----+  +-----+-----+  +-----+-----+\\ +-----------+\n";
+	std::cout << "             \\\\      |              |              |      \\\\             \n";
 	
 	// Third row of locations
-	std::cout << "┌───────────┐ \\┌─────┴─────┐  ┌─────┴─────┐  ┌─────┴─────┐ \\┌───────────┐\n";
-	std::cout << "│   Email   │  │ Facebook  │  │   Vine    │  │   Steam   │  │  Discord  │\n";
+	std::cout << "+-----------+ \\+-----+-----+  +-----+-----+  +-----+-----+ \\+-----------+\n";
+	std::cout << "|   Email   |  | Facebook  |  |   Vine    |  |   Steam   |  |  Discord  |\n";
+	std::cout << "|           |  |           |  |           |  |           |  |           |\n";
 
-	std::cout << "│";
+	std::cout << "|";
 	printCounters(18);
 	printCMC(18);
-	std::cout << "├--┤";
+	std::cout << "+--+";
 	printCounters(14);
 	printCMC(14);
-	std::cout << "│  │";
+	std::cout << "|  |";
 	printCounters(9);
 	printCMC(9);
-	std::cout << "│  │";
+	std::cout << "|  |";
 	printCounters(6);
 	printCMC(6);
-	std::cout << "├--┤";
+	std::cout << "+--+";
 	printCounters(5);
 	printCMC(5);
-	std::cout << "│\n";
+	std::cout << "|\n";
 
-	std::cout << "│";
+	std::cout << "|           |  |           |  |           |  |           |  |           |\n";
+
+	std::cout << "|";
 	printPlayers(18);
-	std::cout << "│  │";
+	std::cout << "|  |";
 	printPlayers(14);
-	std::cout << "│  │";
+	std::cout << "|  |";
 	printPlayers(9);
-	std::cout << "│  │";
+	std::cout << "|  |";
 	printPlayers(6);
-	std::cout << "│  │";
+	std::cout << "|  |";
 	printPlayers(5);
-	std::cout << "│\n";
+	std::cout << "|\n";
 
-	std::cout << "└───────────┘\ └─────┬─────┘\ └─────┬─────┘\ └───────────┘  └───────────┘\n";
-	std::cout << "             \\      |      \\      |      \\                            \n";
+	std::cout << "+-----------+\\ +-----+-----+\\ +-----+-----+\\ +-----------+  +-----------+\n";
+	std::cout << "             \\\\      |      \\\\      |      \\\\                            \n";
 	
 	// Fourth row of locations
-	std::cout << "┌───────────┐ \\┌─────┴─────┐ \\┌─────┴─────┐ \\┌───────────┐  ┌───────────┐\n";
-	std::cout << "│  WeChat   │  │ WhatsApp  │  │  Twitter  │  │ Pinterest │  │ Snapchat  │\n";
+	std::cout << "+-----------+ \\+-----+-----+ \\+-----+-----+ \\+-----------+  +-----------+\n";
+	std::cout << "|  WeChat   |  | WhatsApp  |  |  Twitter  |  | Pinterest |  | Snapchat  |\n";
+	std::cout << "|           |  |           |  |           |  |           |  |           |\n";
 
-	std::cout << "│";
+	std::cout << "|";
 	printCounters(20);
 	printCMC(20);
-	std::cout << "├--┤";
+	std::cout << "+--+";
 	printCounters(19);
 	printCMC(19);
-	std::cout << "│  │";
+	std::cout << "|  |";
 	printCounters(13);
 	printCMC(13);
-	std::cout << "├--┤";
+	std::cout << "+--+";
 	printCounters(12);
 	printCMC(12);
-	std::cout << "├--┤";
+	std::cout << "+--+";
 	printCounters(10);
 	printCMC(10);
-	std::cout << "│\n";
+	std::cout << "|\n";
 
-	std::cout << "│";
+	std::cout << "|           |  |           |  |           |  |           |  |           |\n";
+
+	std::cout << "|";
 	printPlayers(20);
-	std::cout << "│  │";
+	std::cout << "|  |";
 	printPlayers(19);
-	std::cout << "│  │";
+	std::cout << "|  |";
 	printPlayers(13);
-	std::cout << "│  │";
+	std::cout << "|  |";
 	printPlayers(12);
-	std::cout << "│  │";
+	std::cout << "|  |";
 	printPlayers(10);
-	std::cout << "│\n";
+	std::cout << "|\n";
 
-	std::cout << "└─────┬─────┘\ └─────┬─────┘\ └───────────┘  └─────┬─────┘ /└───────────┘\n";
-	std::cout << "      |      \\      |      \\                     |      //             \n";
+	std::cout << "+-----+-----+\\ +-----+-----+\\ +-----------+  +-----+-----+ /+-----------+\n";
+	std::cout << "      |      \\\\      |      \\\\                     |      //             \n";
 	
 	// Fifth row of locations
-	std::cout << "┌─────┴─────┐ \\┌─────┴─────┐ \\┌───────────┐  ┌─────┴─────┐/              \n";
-	std::cout << "│   Weibo   │  │    QQ     │  │    VK     │  │ Instagram │ ";
-
-	printOutbreaks();
-	std::cout << "\n";
-
-	std::cout << "│";
-	printCounters(21);
-	printCMC(21);
-	std::cout << "├--┤";
-	printCounters(22);
-	printCMC(22);
-	std::cout << "├--┤";
-	printCounters(23);
-	printCMC(23);
-	std::cout << "│  │";
-	printCounters(11);
-	printCMC(11);
-	std::cout << "│ ";
+	std::cout << "+-----+-----+ \\+-----+-----+ \\+-----------+  +-----------+/              \n";
+	std::cout << "|   Weibo   |  |    QQ     |  |    VK     |  | Instagram | ";
 	printCures();
 	std::cout << "\n";
 
-	std::cout << "│";
+	std::cout << "|           |  |           |  |           |  |           |               \n";
+
+	std::cout << "|";
+	printCounters(21);
+	printCMC(21);
+	std::cout << "+--+";
+	printCounters(22);
+	printCMC(22);
+	std::cout << "+--+";
+	printCounters(23);
+	printCMC(23);
+	std::cout << "|  |";
+	printCounters(11);
+	printCMC(11);
+	std::cout << "| ";
+	printOutbreaks();
+	std::cout << "\n";
+
+	std::cout << "|           |  |           |  |           |  |           |               \n";
+
+	std::cout << "|";
 	printPlayers(21);
-	std::cout << "│  │";
+	std::cout << "|  |";
 	printPlayers(22);
-	std::cout << "│  │";
+	std::cout << "|  |";
 	printPlayers(23);
-	std::cout << "│  │";
+	std::cout << "|  |";
 	printPlayers(11);
-	std::cout << "│ ";
+	std::cout << "| ";
 	printPlayerCards();
 	std::cout << "\n";
 	
-	std::cout << "└───────────┘  └───────────┘  └───────────┘  └───────────┘               \n";
+	std::cout << "+-----------+  +-----------+  +-----------+  +-----------+               \n\n";
 }
 
 /**

@@ -54,12 +54,12 @@ bool testChangeLocation(Player *&player) {
 
 // Test 4: Add cards to player's hand
 bool testAddCards(Player *&player) {
-    player -> addCard(WEIBO);
-    player -> addCard(FACEBOOK);
-    player -> addCard(WECHAT);
+    player -> addCard(Card(WEIBO));
+    player -> addCard(Card(FACEBOOK));
+    player -> addCard(Card(WECHAT));
 
-    std::vector<CardNames> playerCards = player -> getPlayerCards();
-    if (playerCards[0] != WEIBO || playerCards[1] != FACEBOOK || playerCards[2] != WECHAT) {
+    std::vector<Card> playerCards = player -> getPlayerCards();
+    if (!playerCards[0].equals(WEIBO) || !playerCards[1].equals(FACEBOOK) || !playerCards[2].equals(WECHAT)) {
         return false;
     }
 
@@ -104,8 +104,8 @@ bool testRemoveNCards(Player *&player) {
     player -> removeNCards(WHATSAPP, 3);
     player -> removeNCards(EMAIL, 1);
 
-    std::vector<CardNames> playerCards = player -> getPlayerCards();
-    if (playerCards[0] != WHATSAPP || playerCards[1] != EMAIL || playerCards[2] != MYSPACE) {
+    std::vector<Card> playerCards = player -> getPlayerCards();
+    if (!playerCards[0].equals(WHATSAPP) || !playerCards[1].equals(EMAIL) || !playerCards[2].equals(MYSPACE)) {
         return false;
     }
 

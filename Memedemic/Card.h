@@ -7,6 +7,8 @@ public:
 	~Card();
 
     CardNames getCardName();
+    bool equals(Card);
+    bool equals(CardNames);
 private:
     CardNames cardName;
 };

@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "Card.h"
 #include "Enums.h"
 #include <string>
 #include <vector>
@@ -26,7 +27,7 @@ PlayerRoles Player::getPlayerRole() {
 }
 
 // Returns player's hand
-std::vector<CardNames> Player::getPlayerCards() {
+std::vector<Card> Player::getPlayerCards() {
     return this -> playerCards;
 }
 
@@ -42,13 +43,13 @@ bool Player::setPlayerLocation(CardNames location) {
 }
 
 // Checks if player holds n instances of the specified card
-bool Player::holdsNCards(CardNames card, int n) {
+bool Player::holdsNCards(Card card, int n) {
     int i;
     int count = 0;
 
     // Count instances of card in player's hand
     for (i = 0; i < this -> playerCards.size(); i++) {
-        if (playerCards[i] == card) {
+        if (playerCards[i].equals(card)) {
             count++;
         }
     }
@@ -63,7 +64,7 @@ bool Player::holdsNCards(CardNames card, int n) {
 }
 
 // Adds a card to the player's hand
-bool Player::addCard(CardNames card) {
+bool Player::addCard(Card card) {
     try {
         this -> playerCards.push_back(card);
     } catch (std::bad_alloc) { // If push_back fails to allocate memory to expand the vector
@@ -73,11 +74,11 @@ bool Player::addCard(CardNames card) {
 }
 
 // Removes n instances of the specified card
-bool Player::removeNCards(CardNames card, int n) {
+bool Player::removeNCards(Card card, int n) {
     int i = 0;
     bool success = false;
     while (i < this -> playerCards.size() && n > 0) {
-        if (this -> playerCards[i] == card) {
+        if (this -> playerCards[i].equals(card)) {
             success = true;
             // Remove card using erase so items are relocated
             playerCards.erase(playerCards.begin() + i);

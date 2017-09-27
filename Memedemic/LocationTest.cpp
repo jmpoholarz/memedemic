@@ -71,7 +71,4 @@ int main() {
     adjacentTest(*location, 5, 9, "fail", 8);
     adjacentTest(*location, 55, 95, "fail", 9);
 
-
-    
-    
 }

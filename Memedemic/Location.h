@@ -20,6 +20,7 @@ private:
 	bool CMCServer;
 	struct site {
 		int id;
+		std::string siteName;
 		std::vector<int> adjacencies;
 		std::vector<site> a;
 	};

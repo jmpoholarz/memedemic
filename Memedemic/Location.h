@@ -6,13 +6,13 @@
 class Location {
 public:
 	Location();
-	Location(int name);
 	~Location();
 
 	std::vector<int> getMemeStatus();
 	bool hasCMCServer();
 	std::vector<int> getAdjacentLocations(int name);
 	bool isAdjacent(int current, int location);
+	site getLocation(int name);
 
 private:
 	int name;
@@ -20,6 +20,7 @@ private:
 	bool CMCServer;
 	struct site {
 		int id;
+		std::string name;
 		std::vector<int> adjacencies;
 		std::vector<site> a;
 	};

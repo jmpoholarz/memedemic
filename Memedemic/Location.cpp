@@ -6,98 +6,122 @@
 Location::Location() {
 	site NINEGAG = {0};
 	NINEGAG.id = 0;
+	NINEGAG.siteName = "NINEGAG";
 	NINEGAG.adjacencies = {1, 2, 15};
 
 	site IFUNNY = {0};
 	IFUNNY.id = 1;
+	IFUNNY.siteName = "IFUNNY";
 	IFUNNY.adjacencies = {0, 15};
 
 	site IMGUR = {0};
 	IMGUR.id = 2;
+	IMGUR.siteName = "IMGUR";
 	IMGUR.adjacencies = {0, 3, 4};
 
 	site FOURCHAN = {0};
 	FOURCHAN.id = 3;
+	FOURCHAN.siteName = "FOURCHAN";
 	FOURCHAN.adjacencies = {2, 4};
 
 	site REDDIT = {0};
 	REDDIT.id = 4;
+	REDDIT.siteName = "REDDIT";
 	REDDIT.adjacencies = {3, 2, 7};
 
 	site DISCORD = {0};
 	DISCORD.id = 5;
+	DISCORD.siteName = "DISCORD";
 	DISCORD.adjacencies = {7,6};
 
 	site STEAM = {0};
 	STEAM.id = 6;
+	STEAM.siteName = "STEAM";
 	STEAM.adjacencies = {7,5};
 	
 	site TWITCH = {0};
 	TWITCH.id = 7;
+	TWITCH.siteName = "TWITCH";
 	TWITCH.adjacencies = {8,6,5,4};
 	
 	site YOUTUBE = {0};
 	YOUTUBE.id = 8;
+	YOUTUBE.siteName = "YOUTUBE";
 	YOUTUBE.adjacencies = {15,9,7};
 	
 	site VINE = {0};
 	VINE.id = 9;
+	VINE.siteName = "VINE";
 	VINE.adjacencies = {8,13};
 	
 	site SNAPCHAT = {0};
 	SNAPCHAT.id = 10;
+	SNAPCHAT.siteName = "SNAPCHAT";
 	SNAPCHAT.adjacencies = {11,12};
 	
 	site INSTAGRAM = {0};
 	INSTAGRAM.id = 11;
+	INSTAGRAM.siteName = "INSTAGRAM";
 	INSTAGRAM.adjacencies = {12,10};
 	
 	site PINTEREST = {0};
 	PINTEREST.id = 12;
+	PINTEREST.siteName = "PINTEREST";
 	PINTEREST.adjacencies = {11,13,10};
 	
 	site TWITTER = {0};
 	TWITTER.id = 13;
+	TWITTER.siteName = "TWITTER";
 	TWITCH.adjacencies = {14,9,12};
 	
 	site FACEBOOK = {0};
 	FACEBOOK.id = 14;
+	FACEBOOK.siteName = "FACEBOOK";
 	FACEBOOK.adjacencies = {15,17,18,19,13};
 	
 	site BUZZFEED = {0};
 	BUZZFEED.id = 15;
+	BUZZFEED.siteName = "BUZZFEED";
 	BUZZFEED.adjacencies = {16,1,0,8,14};
 	
 	site TUMBLR = {0};
 	TUMBLR.id = 16;
+	TUMBLR.siteName = "TUMBLR";
 	TUMBLR.adjacencies = {17,15};
 	
 	site MYSPACE = {0};
 	MYSPACE.id = 17;
+	MYSPACE.siteName = "MYSPACE";
 	MYSPACE.adjacencies = {16,14};
 	
 	site EMAIL = {0};
 	EMAIL.id = 18;
+	EMAIL.siteName = "EMAIL";
 	EMAIL.adjacencies = {14,19};
 	
 	site WHATSAPP = {0};
 	WHATSAPP.id = 19;
+	WHATSAPP.siteName = "WHATSAPP";
 	WHATSAPP.adjacencies = {14,18,20,22,23};
 	
 	site WECHAT = {0};
 	WECHAT.id = 20;
+	WECHAT.siteName = "WECHAT";
 	WECHAT.adjacencies = {19,21};
 	
 	site WEIBO = {0};
 	WEIBO.id = 21;
-	
+	WEIBO.siteName = "WEIBO";
 	WEIBO.adjacencies = {20,22};
+
 	site QQ = {0};
 	QQ.id = 22;
+	QQ.siteName = "QQ";
 	QQ.adjacencies = {21,20,19,23};
 	
 	site VK = {0};
 	VK.id = 23;
+	VK.siteName = "VK";
 	VK.adjacencies = {22,19};
 	
 	this->sites.push_back(NINEGAG);
@@ -126,16 +150,21 @@ Location::Location() {
 	this->sites.push_back(VK);
 }
 
-Location::Location(int name) {
-	this->name = name;
-}
-
 std::vector<int> Location::getMemeStatus() {
 	return this->memeStatus;
 }
 
 bool Location::hasCMCServer() {
 	return this->CMCServer;
+}
+
+site Location::getLocation(int name) {
+	std::list<site>::iterator it;
+	for (it = this->sites.begin(); it != this->sites.end(); ++it) {
+    	if (it->id == name) {
+			return it;
+		}
+	}
 }
 
 std::vector<int> Location::getAdjacentLocations(int name) {

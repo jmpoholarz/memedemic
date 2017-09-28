@@ -46,7 +46,9 @@ int GameStateManager::movePlayer(int location) {
 int GameStateManager::banMeme(int memeNumber) {
 	return 0;
 }
-int GameStateManager::developMemeFilter(int memeNumber) {
+int GameStateManager::developMemeFilter(int card1, int card2, int card3, 
+	int card4, int card5) {
+	// Note: card5 might be empty
 	return 0;
 }
 int GameStateManager::buildCMCServer() {
@@ -61,17 +63,20 @@ int GameStateManager::shareCard(int card, std::string playerName) {
 int GameStateManager::drawCards() {
 	return 0;
 }
-int GameStateManager::printPlayerRoles() {
-	return 0;
+int GameStateManager::discardCard(int card1, int card2) {
+
 }
-int GameStateManager::printPlayerLocations() {
-	return 0;
+std::string GameStateManager::printPlayerRoles() {
+	return "";
 }
-int GameStateManager::printPlayerCards(int player) {
-	return 0;
+std::string GameStateManager::printPlayerLocations() {
+	return "";
 }
-int GameStateManager::printCMCLocations() {
-	return 0;
+std::string GameStateManager::printPlayerCards(std::string playerName) {
+	return "";
+}
+std::string GameStateManager::printCMCLocations() {
+	return "";
 }
 int GameStateManager::updateBoard() {
 	return 0;
@@ -87,4 +92,13 @@ int GameStateManager::initialInfection() {
 }
 int GameStateManager::infect(int location, int meme, int count) {
 	return 0;
+}
+std::string GameStateManager::getMemeStatus() {
+	return "";
+}
+std::string GameStateManager::getOutbreakTrack() {
+	return "";
+}
+std::string GameStateManager::getViralQuotient() {
+	return "";
 }

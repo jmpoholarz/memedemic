@@ -19,20 +19,24 @@ public:
 
 	int movePlayer(int location);
 	int banMeme(int memeNumber);
-	int developMemeFilter(int memeNumber);
+	int developMemeFilter(int card1, int card2, int card3, int card4, int card5);
 	int buildCMCServer();
 	int playCard(int card);
+	int discardCard(int card1, int card2);
 	int shareCard(int card, std::string playerName);
 	int drawCards();
-	int printPlayerRoles();
-	int printPlayerLocations();
-	int printPlayerCards(int player);
-	int printCMCLocations();
+	std::string printPlayerRoles();
+	std::string printPlayerLocations();
+	std::string printPlayerCards(std::string playerName);
+	std::string printCMCLocations();
 	int updateBoard();
 	int autoSave();
 	int nextTurn();
 	int initialInfection();
 	int infect(int location, int meme, int count);
+	std::string getOutbreakTrack();
+	std::string getViralQuotient();
+	std::string getMemeStatus();
 
 
 private:

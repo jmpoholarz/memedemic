@@ -44,6 +44,13 @@ std::string Parser::parse(std::string command) {
 		int successful = gsm.movePlayer(location);
 		if (successful == 1)
 			return "Moved to " + tokens[1];
+		else if (successful == -1) {
+			// Location non-adjacent and no held card
+			return "You cannot move to " + tokens[1] + 
+				" unless you:\n1. Hold its card\n2. Are adjacent\n" +
+				"3.It is the location of a CMC server, and" +
+				" you are at a CMC server";
+		}
 		else return "Unable to move to " + tokens[1];
 	}
 	else if (tokens[0] == "build") {
@@ -55,6 +62,18 @@ std::string Parser::parse(std::string command) {
 		int successful = gsm.buildCMCServer();
 		if (successful == 1)
 			return "Built CMC Server.";
+		else if (successful == -1) {
+			// CMC Server Present
+			return "There is already a CMC Server at this location.";
+		}
+		else if (successful == -2) {
+			// Hit max CMC Servers allowed
+			return "You have built the maximum CMC Servers possible already.";
+		}
+		else if (successful == -3) {
+			// Not holding location card
+			return "You must hold this location's card to build a CMC Server.";
+		}
 		else return "Unable to build CMC Server.";
 	}
 	else if (tokens[0] == "ban") {
@@ -67,6 +86,14 @@ std::string Parser::parse(std::string command) {
 		int successful = gsm.banMeme(whichMeme);
 		if (successful == 1)
 			return "Banned meme " + tokens[1] + " from current location.";
+		else if (successful == -1) {
+			// Meme already filtered - doesn't exist on map anymore
+			return "Meme " + tokens[1] + " has already been filtered.";
+		}
+		else if (successful == -2) {
+			// Meme not at current location
+			return "Meme " + tokens[1] + " was not present in this location.";
+		}
 		else return "Unable to ban meme " + tokens[1] + " from current location.";
 	}
 	else if (tokens[0] == "give") {
@@ -94,9 +121,40 @@ std::string Parser::parse(std::string command) {
 		if (tokens.size() != 6 && tokens.size() != 5) {
 			return "Incorrect usage of filter: " + getUsage("filter");
 		}
-
-		/// TODO
-		return "";
+		// Convert card strings to usable integer values
+		int card1, card2, card3, card4, card5 = -1;
+		card1 = atoi(tokens[1].c_str());
+		card2 = atoi(tokens[2].c_str());
+		card3 = atoi(tokens[3].c_str());
+		card4 = atoi(tokens[4].c_str());
+		if (tokens.size() == 6)
+			card5 = atoi(tokens[5].c_str());
+		int successful = gsm.developMemeFilter(card1, card2, card3, card4, card5);
+			
+		if (successful == 1) {
+			return "Successfully developed a meme filter!";
+		}
+		else if (successful == -1) {
+			// Cards don't all match
+			return "Cards must all be from the same region to develop a filter.";
+		}
+		else if (successful == -2) {
+			// Only provided 5 cards when not the role that allows that
+			return "Not enough cards provided.";
+		}
+		else if (successful == -3) {
+			// Trying to filter a meme that has already been filtered
+			return "There is already a filter for that meme.";
+		}
+		else if (successful == -4) {
+			// Numbers don't match cards in hand
+			return "You must select cards in your hand.";
+		}
+		else if (successful == -5) {
+			// Not at a CMC Server
+			return "You must be at a CMC Server to develop a filter.";
+		}
+		else return "Unable to develop meme filter.";
 	}
 	else if (tokens[0] == "event") {
 		// Check for wrong number of arguments
@@ -115,8 +173,7 @@ std::string Parser::parse(std::string command) {
 			return "Incorrect usage of outbreak: " + getUsage("outbreak");
 		}
 		// Try to print outbreak track
-		/// TODO
-		return "";
+		return gsm.getOutbreakTrack();
 	}
 	else if (tokens[0] == "viral") {
 		// Check for wrong number of arguments
@@ -124,8 +181,7 @@ std::string Parser::parse(std::string command) {
 			return "Incorrect usage of viral: " + getUsage("viral");
 		}
 		// Try to print viral quotient
-		/// TODO
-		return "";
+		return gsm.getViralQuotient();
 	}
 	else if (tokens[0] == "meme") {
 		// Check for wrong number of arguments
@@ -133,26 +189,23 @@ std::string Parser::parse(std::string command) {
 			return "Incorrect usage of meme: " + getUsage("meme");
 		}
 		// Attempt to print meme status
-		/// TODO
-		return "";
+		return gsm.getMemeStatus();
 	}
 	else if (tokens[0] == "players") {
 		// Check for wrong number of arguments
 		if (tokens.size() != 2 && tokens.size() != 3) {
 			return "Incorrect usage of players: " + getUsage("players");
 		}
-
-		/// TODO
-		return "";
+		// Try to print players
+		return gsm.printPlayerLocations();
 	}
 	else if (tokens[0] == "roles") {
 		// Check for wrong number of arguments
 		if (tokens.size() != 2 && tokens.size() != 3) {
 			return "Incorrect usage of roles: " + getUsage("roles");
 		}
-
-		/// TODO
-		return "";
+		// Try to print player roles
+		return gsm.printPlayerRoles();
 	}
 	else if (tokens[0] == "cmc") {
 		// Check for wrong number of arguments
@@ -177,27 +230,55 @@ std::string Parser::parse(std::string command) {
 		if (tokens.size() != 2 && tokens.size() != 3) {
 			return "Incorrect usage of draw: " + getUsage("draw");
 		}
-
-		/// TODO
-		return "";
+		// Try to draw cards
+		int successful = gsm.drawCards();
+		if (successful == 1)
+			return "Drew two cards.";
+		else if (successful == 2)
+			return "Drew one card.";
+		else if (successful == -1) {
+			// 1 too many cards in hand
+			return "Holding too many cards.  Please discard one.";
+		}
+		else if (successful == -2) {
+			// 2 too many cards in hand
+			return "Holding too many cards.  Please discard two.";
+		}
 	}
 	else if (tokens[0] == "discard") {
 		// Check for wrong number of arguments
 		if (tokens.size() != 2 && tokens.size() != 3) {
 			return "Incorrect usage of discard: " + getUsage("discard");
 		}
-
-		/// TODO
-		return "";
+		// Attempt to discard
+		int card1, card2 = -1;
+		if (tokens.size() == 3)
+			card2 = atoi(tokens[2].c_str());
+		card1 = atoi(tokens[1].c_str());
+		int successful = gsm.discardCard(card1, card2);
+		if (successful == 1) {
+			return "Successfully discarded.";
+		}
+		else if (successful == -1) {
+			return "Invalid cards for discard.";
+		}
+		else if (successful == -2) {
+			return "Cannot discard an event card.";
+		}
+		else if (successful == -3) {
+			return "Cannot discard the same card multiple times.";
+		}
+		else return "Could not discard card(s).";
 	}
 	else if (tokens[0] == "cards") {
 		// Check for wrong number of arguments
-		if (tokens.size() != 2) {
+		if (tokens.size() != 2 && tokens.size() != 1) {
 			return "Incorrect usage of cards: " + getUsage("cards");
 		}
-
-		/// TODO
-		return "";
+		// Try to print cards
+		if (tokens.size() == 1)
+			return gsm.printPlayerCards("");
+		else return gsm.printPlayerCards(tokens[1]);
 	}
 	else if (tokens[0] == "end") {
 		// Check for wrong number of arguments
@@ -205,8 +286,9 @@ std::string Parser::parse(std::string command) {
 			return "Incorrect usage of end: " + getUsage("end");
 		}
 		// Attempt to end turn
-		bool successful = gsm.nextTurn();
-		if (successful) return "Proceeding to next turn.";
+		int successful = gsm.nextTurn();
+		if (successful == 1)
+			return "Proceeding to next turn.";
 		else return "Unable to end turn.";
 	}
 	else if (tokens[0] == "new") {
@@ -215,8 +297,7 @@ std::string Parser::parse(std::string command) {
 			return "Incorrect usage of new: " + getUsage("new");
 		}
 		// Attempt to start new game
-		/// TODO
-		return "";
+		return "Starting a new game!";
 	}
 	else {
 		return "Unable to parse command!";

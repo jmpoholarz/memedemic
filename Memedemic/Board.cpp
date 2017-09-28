@@ -1,18 +1,37 @@
 ﻿#include "Board.h"
 #include <string>
 #include <iostream>
-#include <vector>
 
 /**
-	Two Player Constructor
+	One Player Constructor
 */
-Board::Board(std::string p1Role, std::string p2Role) {
+Board::Board(PlayerRoles p1Role) {
 	outbreakCounter = 2;
 	cures[4] = { false };
 	playerCards = 59;
 
-	playerRoles.push_back(p1Role);
-	playerRoles.push_back(p2Role);
+	std::string p1 = getRoleAbbreviation(p1Role);
+	playerRoles.push_back(p1);
+
+	initializeLocations();
+
+	locations[18].players[0] = true;
+
+	locations[18].cmcServer = true;
+}
+
+/**
+	Two Player Constructor
+*/
+Board::Board(PlayerRoles p1Role, PlayerRoles p2Role) {
+	outbreakCounter = 2;
+	cures[4] = { false };
+	playerCards = 59;
+
+	std::string p1 = getRoleAbbreviation(p1Role);
+	std::string p2 = getRoleAbbreviation(p2Role);
+	playerRoles.push_back(p1);
+	playerRoles.push_back(p2);
 
 	initializeLocations();
 
@@ -25,14 +44,17 @@ Board::Board(std::string p1Role, std::string p2Role) {
 /**
 	Three Player Constructor
 */
-Board::Board(std::string p1Role, std::string p2Role, std::string p3Role) {
+Board::Board(PlayerRoles p1Role, PlayerRoles p2Role, PlayerRoles p3Role) {
 	outbreakCounter = 2;
 	cures[4] = { false };
 	playerCards = 59;
 
-	playerRoles.push_back(p1Role);
-	playerRoles.push_back(p2Role);
-	playerRoles.push_back(p3Role);
+	std::string p1 = getRoleAbbreviation(p1Role);
+	std::string p2 = getRoleAbbreviation(p2Role);
+	std::string p3 = getRoleAbbreviation(p3Role);
+	playerRoles.push_back(p1);
+	playerRoles.push_back(p2);
+	playerRoles.push_back(p3);
 
 	initializeLocations();
 
@@ -46,15 +68,19 @@ Board::Board(std::string p1Role, std::string p2Role, std::string p3Role) {
 /**
 	Four Player Constructor
 */
-Board::Board(std::string p1Role, std::string p2Role, std::string p3Role, std::string p4Role) {
+Board::Board(PlayerRoles p1Role, PlayerRoles p2Role, PlayerRoles p3Role, PlayerRoles p4Role) {
 	outbreakCounter = 2;
 	cures[4] = { false };
 	playerCards = 59;
 
-	playerRoles.push_back(p1Role);
-	playerRoles.push_back(p2Role);
-	playerRoles.push_back(p3Role);
-	playerRoles.push_back(p4Role);
+	std::string p1 = getRoleAbbreviation(p1Role);
+	std::string p2 = getRoleAbbreviation(p2Role);
+	std::string p3 = getRoleAbbreviation(p3Role);
+	std::string p4 = getRoleAbbreviation(p4Role);
+	playerRoles.push_back(p1);
+	playerRoles.push_back(p2);
+	playerRoles.push_back(p3);
+	playerRoles.push_back(p4);
 
 	initializeLocations();
 
@@ -70,7 +96,7 @@ Board::Board(std::string p1Role, std::string p2Role, std::string p3Role, std::st
 	TODO: Destructor
 */
 Board::~Board() {
-	
+
 }
 
 /**
@@ -82,11 +108,30 @@ void Board::initializeLocations() {
 	}
 }
 
+std::string Board::getRoleAbbreviation(PlayerRoles role) {
+	switch (role) {
+	case 0 :
+		return "ME";
+	case 1 :
+		return "HA";
+	case 2 :
+		return "MO";
+	case 3 : 
+		return "RO";
+	case 4 :
+		return "FI";
+	case 5 :
+		return "MI";
+	default :
+		return "NA";
+	}
+}
+
 /**
 	Adds a meme cube to the given location
 */
-void Board::addMemeCube(int loc, int meme) {
-	locations[loc].memes[meme] = locations[loc].memes[meme] + 1;
+void Board::addMemeCubes(int loc, int meme, int count) {
+	locations[loc].memes[meme] = locations[loc].memes[meme] + count;
 }
 
 /**

@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include "Enums.h"
 
 class Board {
 
@@ -10,13 +11,14 @@ public:
 		bool cmcServer = false;
 	};
 
-	Board(std::string p1Role, std::string p2Role);
-	Board(std::string p1Role, std::string p2Role, std::string p3Role);
-	Board(std::string p1Role, std::string p2Role, std::string p3Role, std::string p4Role);
+	Board(PlayerRoles p1Role);
+	Board(PlayerRoles p1Role, PlayerRoles p2Role);
+	Board(PlayerRoles p1Role, PlayerRoles p2Role, PlayerRoles p3Role);
+	Board(PlayerRoles p1Role, PlayerRoles p2Role, PlayerRoles p3Role, PlayerRoles p4Role);
 	~Board();
 
 	void printBoard();
-	void addMemeCube(int loc, int meme);
+	void addMemeCubes(int loc, int meme, int count);
 	void removeMemeCube(int loc, int meme);
 	void addCMC(int loc);
 	void removeCMC(int loc);
@@ -41,6 +43,7 @@ private:
 	int playerCards;
 
 	void initializeLocations();
+	std::string getRoleAbbreviation(PlayerRoles role) {
 	void printCounters(int loc);
 	void printCMC(int loc);
 	void printPlayers(int loc);

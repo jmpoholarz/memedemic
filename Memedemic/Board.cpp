@@ -533,3 +533,14 @@ void Board::printCures() {
 void Board::printPlayerCards() {
 	std::cout << "P-Cards: " << playerCards << "/59";
 }
+
+void Board::setCMCServer(int location, bool exists) {
+	locations[location].cmcServer = exists;
+}
+void Board::setMemes(int location, int values[]) {
+	for (int i = 0; i < 4; i++)
+		locations[location].memes[i] = values[i];
+}
+void Board::setPlayers(int location, int playerNumber, bool present) {
+	locations[location].players[playerNumber] = present;
+}

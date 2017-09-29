@@ -460,3 +460,47 @@ std::string Parser::getUsage(std::string command) {
 		}
 		else return "No information found on " + command;
 }
+
+int Parser::loadSaveFile() {
+	std::string filename = "save.txt";
+	std::fstream fs(filename);
+	std::string line; // current line in save file
+	std::string elem; // current comma separated item
+	std::vector<std::string> tokens;
+	// First 24 lines are each location
+	for (int i = 0; i < 24; i++) {
+		std::getline(fs, line);
+		std::stringstream ss(line);
+		// Split line by commas
+		while (getline(ss, elem, ',')) {
+			tokens.push_back(elem);
+		}
+		// Set the meme serverity of the site
+		int levels[4] = {
+			atoi(tokens[1].c_str()), atoi(tokens[2].c_str()),
+			atoi(tokens[2].c_str()), atoi(tokens[3].c_str())
+		};
+		gsm.getBoard().setMemes(atoi(tokens[0].c_str()), levels);
+		gsm.getBoard().setCMCServer(atoi(tokens[0].c_str()), 
+			atoi(tokens[5].c_str()));
+	}
+
+
+	/*
+	// Create a stringstream to read through the command
+	std::stringstream ss(command);
+	// Temp string to store each "word" of the command
+	std::string str = "";
+	// Create a vector to hold parts of the command
+	std::vector<std::string> tokens;
+	// Split based on spaces
+	while (std::getline(ss, str, ' ')) {
+		if (1) { //str != " ") {
+				 // Make all characters lowercase
+			for (int i = 0; i < str.length(); i++) {
+				str[i] = std::tolower(str[i]);
+			}
+			tokens.push_back(str);
+		}
+	}*/
+}

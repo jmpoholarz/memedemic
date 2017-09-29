@@ -33,6 +33,10 @@ public:
 	int getPlayerCards(); // For testing purposes
 	std::vector<std::string> getPlayerRoles(); // For testing purposes
 
+	void setMemes(int location, int values[]);
+	void setPlayers(int location, int playerNumber, bool present);
+	void setCMCServer(int location, bool exists);
+
 private:
 	std::vector<BoardLocation> locations;
 

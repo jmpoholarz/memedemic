@@ -133,9 +133,15 @@ Location::Location(int name) {
 std::vector<int> Location::getMemeStatus() {
 	return this->memeStatus;
 }
+void Location::setMemeStatus(int meme, int level) {
+	memeStatus[meme] = level;
+}
 
 bool Location::hasCMCServer() {
 	return this->CMCServer;
+}
+void Location::setCMCServer(bool exists) {
+	CMCServer = exists;
 }
 
 std::vector<int> Location::getAdjacentLocations(int name) {

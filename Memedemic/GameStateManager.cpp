@@ -160,12 +160,32 @@ int GameStateManager::infect(int location, int meme, int count) {
 
 	return 0;
 }
-std::string GameStateManager::getMemeStatus() {
-	return "";
+int GameStateManager::getMemeStatus(int memeNumber) {
+	return board->getCure(memeNumber);
 }
-std::string GameStateManager::getOutbreakTrack() {
-	return "";
+int GameStateManager::getOutbreakTrack() {
+	return outbreakTrack;
 }
-std::string GameStateManager::getViralQuotient() {
-	return "";
+int GameStateManager::getViralQuotient() {
+	return viralQuotient;
+}
+Board& GameStateManager::getBoard() {
+	return *board;
+}
+int GameStateManager::getActionsRemaining() {
+	return actionsRemaining;
+}
+
+int GameStateManager::setMemeStatus(int meme, bool filtered) {
+	if (filtered)
+		board->addCure(meme);
+}
+int GameStateManager::setOutbreakTrack(int value) {
+	outbreakTrack = value;
+}
+int GameStateManager::setViralQuotient(int value) {
+	viralQuotient = value;
+}
+int GameStateManager::setActionsRemaining(int value) {
+	actionsRemaining = value;
 }

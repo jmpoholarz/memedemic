@@ -34,9 +34,18 @@ public:
 	int nextTurn();
 	int initialInfection();
 	int infect(int location, int meme, int count);
-	std::string getOutbreakTrack();
-	std::string getViralQuotient();
-	std::string getMemeStatus();
+	
+	int getOutbreakTrack();
+	int getViralQuotient();
+	int getMemeStatus(int memeNumber);
+	int getActionsRemaining();
+	Board& getBoard();
+	//std::vector<Card*> getCards();
+	
+	int setOutbreakTrack(int value);
+	int setViralQuotient(int value);
+	int setMemeStatus(int meme, bool filtered);
+	int setActionsRemaining(int value);
 
 
 private:

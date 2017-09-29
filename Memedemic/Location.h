@@ -10,7 +10,9 @@ public:
 	~Location();
 
 	std::vector<int> getMemeStatus();
+	void setMemeStatus(int meme, int level);
 	bool hasCMCServer();
+	void setCMCServer(bool exists);
 	std::vector<int> getAdjacentLocations(int name);
 	bool isAdjacent(int current, int location);
 

@@ -1,4 +1,5 @@
 #include "GameStateManager.h"
+#include <iostream>
 
 GameStateManager::GameStateManager() {
 	// Placeholder default constructor\
@@ -12,7 +13,6 @@ GameStateManager::GameStateManager() {
 	// Create a new board
 	board = new Board(players[0]->getPlayerRole());
 	// Create a new location
-	locations = new Location();
 
 	// Initialize variables 
 	outbreakTrack = 8;
@@ -26,6 +26,7 @@ GameStateManager::GameStateManager(int numPlayers) {
 		Player* p = new Player();
 		players.push_back(p);
 	}
+	locations = new Location();
 
 	// Create a new board.  Constructor depends on number of players and player roles.
 	switch (numPlayers) {
@@ -63,6 +64,8 @@ int GameStateManager::movePlayer(int location) {
 	if (locations->isAdjacent(players[currentPlayer]->getPlayerLocation(), location)) {
 		// Update player location in the Board class
 		board->movePlayer(location, currentPlayer);
+        players[currentPlayer]->setPlayerLocation((CardNames) location);
+        std::cout << players[currentPlayer] -> getPlayerLocation() << std::endl;
 		return 1;
 	}
 

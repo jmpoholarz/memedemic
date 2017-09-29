@@ -55,7 +55,7 @@ GameStateManager::~GameStateManager() {
 	delete board;
 	while (players.size() > 0)
 		delete players[0];
-	}
+	
 }
 
 int GameStateManager::movePlayer(int location) {

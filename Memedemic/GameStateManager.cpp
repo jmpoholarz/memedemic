@@ -1,4 +1,5 @@
 #include "GameStateManager.h"
+#include <iostream>
 
 GameStateManager::GameStateManager() : board(Board(1)), locations(Location()) {
 
@@ -11,7 +12,6 @@ GameStateManager::GameStateManager() : board(Board(1)), locations(Location()) {
 	// Create a new board
 	//board = new Board(players[0]->getPlayerRole());
 	// Create a new location
-	//locations = new Location();
 
 	// Initialize variables 
 	outbreakTrack = 8;
@@ -44,7 +44,9 @@ int GameStateManager::movePlayer(int location) {
 	// Check if location is a valid move for the player
 	if (locations.isAdjacent(players[currentPlayer]->getPlayerLocation(), location)) {
 		// Update player location in the Board class
-		board.movePlayer(location, currentPlayer);
+		board->movePlayer(location, currentPlayer);
+        players[currentPlayer]->setPlayerLocation((CardNames) location);
+        std::cout << players[currentPlayer] -> getPlayerLocation() << std::endl;
 		return 1;
 	}
 
@@ -62,7 +64,18 @@ int GameStateManager::banMeme(int memeNumber) {
 int GameStateManager::developMemeFilter(int card1, int card2, int card3, 
 	int card4, int card5) {
 	// Note: card5 might be empty
-
+	//check if the current player is allowed to make a filter without a 5th card
+	if(players[currentPlayer]->getPlayerRole() != HACKER && card5 == -1)
+	{
+		//invalid number of cards for role
+		return -2;
+	}
+	//check the usual requirement on number of cards
+	if(card1 == -1 || card2 == -1 || card3 == -1 || card4 == -1)
+	{
+		//invalid cards for any role
+		return -2;
+	}
 
 	// Need memeNumber to update Board class
 	int memeNumber = NULL;

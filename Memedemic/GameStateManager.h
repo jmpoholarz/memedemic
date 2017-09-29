@@ -13,7 +13,7 @@ public:
 	GameStateManager();
 
 	// Sets up initial game starting conditions
-	GameStateManager(int numPlayers);
+	GameStateManager(Board& b, Location& l, int numPlayers);
 	
 	// Frees all objects and readies the game for closing
 	~GameStateManager();
@@ -50,8 +50,8 @@ public:
 
 
 private:
-	Board* board;
-	Location* locations;
+	Board& board;
+	Location& locations;
 	std::vector<Player*> players;
 	int outbreakTrack;
 	int viralQuotient;

@@ -5,7 +5,7 @@
 /**
 	One Player Constructor
 */
-Board::Board(PlayerRoles p1Role) {
+Board::Board(int players) {
 	outbreakCounter = 2;
 	cures[0] = false;
 	cures[1] = false;
@@ -13,93 +13,11 @@ Board::Board(PlayerRoles p1Role) {
 	cures[3] = false;
 	playerCards = 59;
 
-	std::string p1 = getRoleAbbreviation(p1Role);
-	playerRoles.push_back(p1);
+	setupPlayers(players);
 
 	initializeLocations();
 
 	locations[18].players[0] = true;
-
-	locations[18].cmcServer = true;
-}
-
-/**
-	Two Player Constructor
-*/
-Board::Board(PlayerRoles p1Role, PlayerRoles p2Role) {
-	outbreakCounter = 2;
-	cures[0] = false;
-	cures[1] = false;
-	cures[2] = false;
-	cures[3] = false;
-	playerCards = 59;
-
-	std::string p1 = getRoleAbbreviation(p1Role);
-	std::string p2 = getRoleAbbreviation(p2Role);
-	playerRoles.push_back(p1);
-	playerRoles.push_back(p2);
-
-	initializeLocations();
-
-	locations[18].players[0] = true;
-	locations[18].players[1] = true;
-
-	locations[18].cmcServer = true;
-}
-
-/**
-	Three Player Constructor
-*/
-Board::Board(PlayerRoles p1Role, PlayerRoles p2Role, PlayerRoles p3Role) {
-	outbreakCounter = 2;
-	cures[0] = false;
-	cures[1] = false;
-	cures[2] = false;
-	cures[3] = false;
-	playerCards = 59;
-
-	std::string p1 = getRoleAbbreviation(p1Role);
-	std::string p2 = getRoleAbbreviation(p2Role);
-	std::string p3 = getRoleAbbreviation(p3Role);
-	playerRoles.push_back(p1);
-	playerRoles.push_back(p2);
-	playerRoles.push_back(p3);
-
-	initializeLocations();
-
-	locations[18].players[0] = true;
-	locations[18].players[1] = true;
-	locations[18].players[2] = true;
-
-	locations[18].cmcServer = true;
-}
-
-/**
-	Four Player Constructor
-*/
-Board::Board(PlayerRoles p1Role, PlayerRoles p2Role, PlayerRoles p3Role, PlayerRoles p4Role) {
-	outbreakCounter = 2;
-	cures[0] = false;
-	cures[1] = false;
-	cures[2] = false;
-	cures[3] = false;
-	playerCards = 59;
-
-	std::string p1 = getRoleAbbreviation(p1Role);
-	std::string p2 = getRoleAbbreviation(p2Role);
-	std::string p3 = getRoleAbbreviation(p3Role);
-	std::string p4 = getRoleAbbreviation(p4Role);
-	playerRoles.push_back(p1);
-	playerRoles.push_back(p2);
-	playerRoles.push_back(p3);
-	playerRoles.push_back(p4);
-
-	initializeLocations();
-
-	locations[18].players[0] = true;
-	locations[18].players[1] = true;
-	locations[18].players[2] = true;
-	locations[18].players[3] = true;
 
 	locations[18].cmcServer = true;
 }
@@ -109,6 +27,13 @@ Board::Board(PlayerRoles p1Role, PlayerRoles p2Role, PlayerRoles p3Role, PlayerR
 */
 Board::~Board() {
 
+}
+
+void Board::setupPlayers(int players) {
+	for (int i = 0; i < players; i++) {
+
+		playerRoles.push_back("ZZ");
+	}
 }
 
 /**

@@ -1,7 +1,6 @@
 #include "GameStateManager.h"
 
-GameStateManager::GameStateManager() {
-	// Placeholder default constructor\
+GameStateManager::GameStateManager() : board(Board(1)), locations(Location()) {
 
 	// Add players to a vector
 	for (int i = 0; i < 1; i++) {
@@ -10,9 +9,9 @@ GameStateManager::GameStateManager() {
 	}
 
 	// Create a new board
-	board = new Board(players[0]->getPlayerRole());
+	//board = new Board(players[0]->getPlayerRole());
 	// Create a new location
-	locations = new Location();
+	//locations = new Location();
 
 	// Initialize variables 
 	outbreakTrack = 8;
@@ -20,30 +19,13 @@ GameStateManager::GameStateManager() {
 	currentPlayer = 0;
 }
 
-GameStateManager::GameStateManager(int numPlayers) {
+GameStateManager::GameStateManager(Board& b, Location& l, int numPlayers) : board(b), locations(l) {
 	// Add players to a vector
 	for (int i = 0; i < numPlayers; i++) {
-		Player* p = new Player();
+		Player* p = new Player("testman", UNASSIGNED, EMAIL);
 		players.push_back(p);
 	}
-
-	// Create a new board.  Constructor depends on number of players and player roles.
-	switch (numPlayers) {
-	case 1 :
-		board = new Board(players[0]->getPlayerRole());
-		break;
-	case 2 :
-		board = new Board(players[0]->getPlayerRole(), players[1]->getPlayerRole());
-		break;
-	case 3 :
-		board = new Board(players[0]->getPlayerRole(), players[1]->getPlayerRole(),
-						  players[2]->getPlayerRole());
-		break;
-	default :
-		board = new Board(players[0]->getPlayerRole(), players[1]->getPlayerRole(),
-						  players[2]->getPlayerRole(), players[3]->getPlayerRole());
-		break;
-	}
+	// Add role setup here based on the players roles
 
 	// Initialize variables 
 	outbreakTrack = 8;
@@ -52,7 +34,7 @@ GameStateManager::GameStateManager(int numPlayers) {
 }
 
 GameStateManager::~GameStateManager() {
-	delete board;
+	delete &board;
 	while (players.size() > 0)
 		delete players[0];
 	
@@ -60,9 +42,9 @@ GameStateManager::~GameStateManager() {
 
 int GameStateManager::movePlayer(int location) {
 	// Check if location is a valid move for the player
-	if (locations->isAdjacent(players[currentPlayer]->getPlayerLocation(), location)) {
+	if (locations.isAdjacent(players[currentPlayer]->getPlayerLocation(), location)) {
 		// Update player location in the Board class
-		board->movePlayer(location, currentPlayer);
+		board.movePlayer(location, currentPlayer);
 		return 1;
 	}
 
@@ -73,7 +55,7 @@ int GameStateManager::banMeme(int memeNumber) {
 
 
 	// Update meme cube in the Board class
-	board->removeMemeCube(players[currentPlayer]->getPlayerLocation(), memeNumber);
+	board.removeMemeCube(players[currentPlayer]->getPlayerLocation(), memeNumber);
 
 	return 0;
 }
@@ -85,7 +67,7 @@ int GameStateManager::developMemeFilter(int card1, int card2, int card3,
 	// Need memeNumber to update Board class
 	int memeNumber = NULL;
 	// Add cure to Board class
-	board->addCure(memeNumber);
+	board.addCure(memeNumber);
 
 	return 0;
 }
@@ -97,9 +79,9 @@ int GameStateManager::buildCMCServer() {
 	bool removeCMC = false;
 	int removeLocation = NULL;
 	// Build CMC server at the player's current location in the Board class
-	board->addCMC(players[currentPlayer]->getPlayerLocation());
+	board.addCMC(players[currentPlayer]->getPlayerLocation());
 	if (removeCMC) {
-		board->removeCMC(removeLocation);
+		board.removeCMC(removeLocation);
 	}
 
 	return 0;
@@ -115,8 +97,8 @@ int GameStateManager::drawCards() {
 
 
 	// Reduce number of player cards in Board class by two
-	board->removePlayerCard();
-	board->removePlayerCard();
+	board.removePlayerCard();
+	board.removePlayerCard();
 
 	return 0;
 }
@@ -158,13 +140,13 @@ int GameStateManager::infect(int location, int meme, int count) {
 
 
 	// Add count number of meme cubes of the given meme to the given location in the Board class
-	board->addMemeCubes(location, meme, count);
+	board.addMemeCubes(location, meme, count);
 	// If outbreak occurs, use < board->addOutbreak(); >
 
 	return 0;
 }
 int GameStateManager::getMemeStatus(int memeNumber) {
-	return board->getCure(memeNumber);
+	return board.getCure(memeNumber);
 }
 int GameStateManager::getOutbreakTrack() {
 	return outbreakTrack;
@@ -173,7 +155,7 @@ int GameStateManager::getViralQuotient() {
 	return viralQuotient;
 }
 Board& GameStateManager::getBoard() {
-	return *board;
+	return board;
 }
 int GameStateManager::getActionsRemaining() {
 	return actionsRemaining;
@@ -181,7 +163,7 @@ int GameStateManager::getActionsRemaining() {
 
 int GameStateManager::setMemeStatus(int meme, bool filtered) {
 	if (filtered)
-		board->addCure(meme);
+		board.addCure(meme);
 	return 0;
 }
 int GameStateManager::setOutbreakTrack(int value) {

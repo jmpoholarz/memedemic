@@ -86,6 +86,12 @@ int GameStateManager::developMemeFilter(int card1, int card2, int card3,
 		//invalid number of cards for role
 		return -2;
 	}
+	//check the usual requirement on number of cards
+	if(card1 == -1 || card2 == -1 || card3 == -1 || card4 == -1)
+	{
+		//invalid cards for any role
+		return -2;
+	}
 
 	// Need memeNumber to update Board class
 	int memeNumber = NULL;

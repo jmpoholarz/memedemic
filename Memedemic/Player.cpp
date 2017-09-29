@@ -3,10 +3,19 @@
 #include <string>
 #include <vector>
 
+Player::Player() : playerName(""), playerRole(UNASSIGNED), 
+playerLocation(EMAIL) {
+
+}
+
 Player::Player(std::string name, PlayerRoles role, CardNames location) {
     this -> playerName = name;
     this -> playerRole = role;
     this -> playerLocation = location;
+}
+
+Player::~Player() {
+
 }
 
 // Sets player's name

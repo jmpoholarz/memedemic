@@ -173,7 +173,7 @@ std::string Parser::parse(std::string command) {
 			return "Incorrect usage of outbreak: " + getUsage("outbreak");
 		}
 		// Try to print outbreak track
-		return gsm.getOutbreakTrack();
+		return 0;
 	}
 	else if (tokens[0] == "viral") {
 		// Check for wrong number of arguments
@@ -181,7 +181,7 @@ std::string Parser::parse(std::string command) {
 			return "Incorrect usage of viral: " + getUsage("viral");
 		}
 		// Try to print viral quotient
-		return gsm.getViralQuotient();
+		return 0;
 	}
 	else if (tokens[0] == "meme") {
 		// Check for wrong number of arguments
@@ -189,7 +189,7 @@ std::string Parser::parse(std::string command) {
 			return "Incorrect usage of meme: " + getUsage("meme");
 		}
 		// Attempt to print meme status
-		return gsm.getMemeStatus();
+		return 0;
 	}
 	else if (tokens[0] == "players") {
 		// Check for wrong number of arguments
@@ -484,6 +484,9 @@ int Parser::loadSaveFile() {
 		gsm.getBoard().setCMCServer(atoi(tokens[0].c_str()), 
 			atoi(tokens[5].c_str()));
 	}
+
+
+	return 0;
 
 
 	/*

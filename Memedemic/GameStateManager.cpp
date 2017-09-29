@@ -118,7 +118,7 @@ int GameStateManager::drawCards() {
 	return 0;
 }
 int GameStateManager::discardCard(int card1, int card2) {
-
+	return 0;
 }
 std::string GameStateManager::printPlayerRoles() {
 	return "";
@@ -179,13 +179,17 @@ int GameStateManager::getActionsRemaining() {
 int GameStateManager::setMemeStatus(int meme, bool filtered) {
 	if (filtered)
 		board->addCure(meme);
+	return 0;
 }
 int GameStateManager::setOutbreakTrack(int value) {
 	outbreakTrack = value;
+	return 0;
 }
 int GameStateManager::setViralQuotient(int value) {
 	viralQuotient = value;
+	return 0;
 }
 int GameStateManager::setActionsRemaining(int value) {
 	actionsRemaining = value;
+	return 0;
 }

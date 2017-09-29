@@ -80,7 +80,12 @@ int GameStateManager::banMeme(int memeNumber) {
 int GameStateManager::developMemeFilter(int card1, int card2, int card3, 
 	int card4, int card5) {
 	// Note: card5 might be empty
-
+	//check if the current player is allowed to make a filter without a 5th card
+	if(players[currentPlayer]->getPlayerRole() != HACKER && card5 == -1)
+	{
+		//invalid number of cards for role
+		return -2;
+	}
 
 	// Need memeNumber to update Board class
 	int memeNumber = NULL;

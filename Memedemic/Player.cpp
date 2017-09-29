@@ -8,9 +8,6 @@ playerLocation(EMAIL) {
 
 }
 
-Player::player() {
-}
-
 Player::Player(std::string name, PlayerRoles role, CardNames location) {
     this -> playerName = name;
     this -> playerRole = role;
@@ -53,7 +50,7 @@ bool Player::setPlayerLocation(CardNames location) {
     return true;
 }
 
-bool Player::setPlayerRold(PlayerRoles role) {
+bool Player::setPlayerRole(PlayerRoles role) {
     this -> playerRole = role;
 }
 

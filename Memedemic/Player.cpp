@@ -8,6 +8,9 @@ playerLocation(EMAIL) {
 
 }
 
+Player::player() {
+}
+
 Player::Player(std::string name, PlayerRoles role, CardNames location) {
     this -> playerName = name;
     this -> playerRole = role;
@@ -48,6 +51,10 @@ CardNames Player::getPlayerLocation() {
 bool Player::setPlayerLocation(CardNames location) {
     this -> playerLocation = location;
     return true;
+}
+
+bool Player::setPlayerRold(PlayerRoles role) {
+    this -> playerRole = role;
 }
 
 // Checks if player holds n instances of the specified card

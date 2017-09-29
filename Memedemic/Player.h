@@ -16,6 +16,7 @@ public:
 	std::vector<CardNames> getPlayerCards();
 	CardNames getPlayerLocation();
     bool setPlayerLocation(CardNames location);
+    bool setPlayerRole(PlayerRoles role);
     bool holdsNCards(CardNames card, int n);
     bool addCard(CardNames card);
     bool removeNCards(CardNames card, int n);

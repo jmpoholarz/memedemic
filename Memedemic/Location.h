@@ -6,7 +6,7 @@
 class Location {
 public:
 	Location();
-	Location(int name);
+	//Location(int name);
 	~Location();
 
 	std::vector<int> getMemeStatus();

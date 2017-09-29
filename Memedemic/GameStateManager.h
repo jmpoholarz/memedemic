@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "Board.h"
+#include "Location.h"
 #include "Card.h"
 #include "Player.h"
 
@@ -50,6 +51,7 @@ public:
 
 private:
 	Board* board;
+	Location* locations;
 	std::vector<Player*> players;
 	int outbreakTrack;
 	int viralQuotient;

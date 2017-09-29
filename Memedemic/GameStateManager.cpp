@@ -9,8 +9,10 @@ GameStateManager::GameStateManager() {
 		players.push_back(p);
 	}
 
-	// Create a new board.
+	// Create a new board
 	board = new Board(players[0]->getPlayerRole());
+	// Create a new location
+	locations = new Location();
 
 	// Initialize variables 
 	outbreakTrack = 8;
@@ -58,12 +60,13 @@ GameStateManager::~GameStateManager() {
 
 int GameStateManager::movePlayer(int location) {
 	// Check if location is a valid move for the player
-	
+	if (locations->isAdjacent(players[currentPlayer]->getPlayerLocation(), location)) {
+		// Update player location in the Board class
+		board->movePlayer(location, currentPlayer);
+		return 1;
+	}
 
-	// Update player location in the Board class
-	board->movePlayer(location, currentPlayer);
-
-	return 0;
+	else return 0;
 }
 
 int GameStateManager::banMeme(int memeNumber) {

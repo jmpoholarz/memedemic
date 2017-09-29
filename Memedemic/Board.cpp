@@ -7,7 +7,10 @@
 */
 Board::Board(PlayerRoles p1Role) {
 	outbreakCounter = 2;
-	cures[4] = { false };
+	cures[0] = false;
+	cures[1] = false;
+	cures[2] = false;
+	cures[3] = false;
 	playerCards = 59;
 
 	std::string p1 = getRoleAbbreviation(p1Role);
@@ -25,7 +28,10 @@ Board::Board(PlayerRoles p1Role) {
 */
 Board::Board(PlayerRoles p1Role, PlayerRoles p2Role) {
 	outbreakCounter = 2;
-	cures[4] = { false };
+	cures[0] = false;
+	cures[1] = false;
+	cures[2] = false;
+	cures[3] = false;
 	playerCards = 59;
 
 	std::string p1 = getRoleAbbreviation(p1Role);
@@ -46,7 +52,10 @@ Board::Board(PlayerRoles p1Role, PlayerRoles p2Role) {
 */
 Board::Board(PlayerRoles p1Role, PlayerRoles p2Role, PlayerRoles p3Role) {
 	outbreakCounter = 2;
-	cures[4] = { false };
+	cures[0] = false;
+	cures[1] = false;
+	cures[2] = false;
+	cures[3] = false;
 	playerCards = 59;
 
 	std::string p1 = getRoleAbbreviation(p1Role);
@@ -70,7 +79,10 @@ Board::Board(PlayerRoles p1Role, PlayerRoles p2Role, PlayerRoles p3Role) {
 */
 Board::Board(PlayerRoles p1Role, PlayerRoles p2Role, PlayerRoles p3Role, PlayerRoles p4Role) {
 	outbreakCounter = 2;
-	cures[4] = { false };
+	cures[0] = false;
+	cures[1] = false;
+	cures[2] = false;
+	cures[3] = false;
 	playerCards = 59;
 
 	std::string p1 = getRoleAbbreviation(p1Role);

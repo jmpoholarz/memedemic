@@ -126,9 +126,10 @@ Location::Location() {
 	this->sites.push_back(VK);
 }
 
+/*
 Location::Location(int name) {
 	this->name = name;
-}
+}*/
 
 std::vector<int> Location::getMemeStatus() {
 	return this->memeStatus;

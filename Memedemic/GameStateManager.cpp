@@ -44,7 +44,7 @@ int GameStateManager::movePlayer(int location) {
 	// Check if location is a valid move for the player
 	if (locations.isAdjacent(players[currentPlayer]->getPlayerLocation(), location)) {
 		// Update player location in the Board class
-		board->movePlayer(location, currentPlayer);
+		board.movePlayer(location, currentPlayer);
         players[currentPlayer]->setPlayerLocation((CardNames) location);
         std::cout << players[currentPlayer] -> getPlayerLocation() << std::endl;
 		return 1;

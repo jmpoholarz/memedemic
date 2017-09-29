@@ -110,17 +110,17 @@ void Board::initializeLocations() {
 
 std::string Board::getRoleAbbreviation(PlayerRoles role) {
 	switch (role) {
-	case 0 :
+	case MEMESTUDIESPROFESSOR:
 		return "ME";
-	case 1 :
+	case HACKER:
 		return "HA";
-	case 2 :
+	case MODERATOR:
 		return "MO";
-	case 3 : 
+	case ROUTER:
 		return "RO";
-	case 4 :
+	case FIREWALL:
 		return "FI";
-	case 5 :
+	case MILLENIAL:
 		return "MI";
 	default :
 		return "NA";

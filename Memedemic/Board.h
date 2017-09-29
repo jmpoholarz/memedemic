@@ -43,7 +43,7 @@ private:
 	int playerCards;
 
 	void initializeLocations();
-	std::string getRoleAbbreviation(PlayerRoles role) {
+	std::string getRoleAbbreviation(PlayerRoles role);
 	void printCounters(int loc);
 	void printCMC(int loc);
 	void printPlayers(int loc);

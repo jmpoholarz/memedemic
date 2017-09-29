@@ -154,7 +154,7 @@ void boardTest07(Board &b) {
 */
 void boardTest08(Board &b) {
 	std::string number = "08";
-	b.addMemeCube(0, 0);
+	b.addMemeCubes(0, 0, 1);
 	int memeCubeCount = b.getLocation(0).memes[0];
 
 	std::cout << "Test number: " << number << std::endl;
@@ -171,7 +171,7 @@ void boardTest08(Board &b) {
 
 void boardTest09(Board &b) {
 	std::string number = "09";
-	b.addMemeCube(23, 0);
+	b.addMemeCubes(23, 0, 1);
 	int memeCubeCount = b.getLocation(23).memes[0];
 
 	std::cout << "Test number: " << number << std::endl;
@@ -188,7 +188,7 @@ void boardTest09(Board &b) {
 
 void boardTest10(Board &b) {
 	std::string number = "10";
-	b.addMemeCube(0, 1);
+	b.addMemeCubes(0, 1, 1);
 	int memeCubeCount = b.getLocation(0).memes[1];
 
 	std::cout << "Test number: " << number << std::endl;
@@ -205,7 +205,7 @@ void boardTest10(Board &b) {
 
 void boardTest11(Board &b) {
 	std::string number = "11";
-	b.addMemeCube(23, 1);
+	b.addMemeCubes(23, 1, 1);
 	int memeCubeCount = b.getLocation(23).memes[1];
 
 	std::cout << "Test number: " << number << std::endl;
@@ -222,7 +222,7 @@ void boardTest11(Board &b) {
 
 void boardTest12(Board &b) {
 	std::string number = "12";
-	b.addMemeCube(0, 2);
+	b.addMemeCubes(0, 2, 1);
 	int memeCubeCount = b.getLocation(0).memes[2];
 
 	std::cout << "Test number: " << number << std::endl;
@@ -239,7 +239,7 @@ void boardTest12(Board &b) {
 
 void boardTest13(Board &b) {
 	std::string number = "13";
-	b.addMemeCube(23, 2);
+	b.addMemeCubes(23, 2, 1);
 	int memeCubeCount = b.getLocation(23).memes[2];
 
 	std::cout << "Test number: " << number << std::endl;
@@ -256,7 +256,7 @@ void boardTest13(Board &b) {
 
 void boardTest14(Board &b) {
 	std::string number = "14";
-	b.addMemeCube(0, 3);
+	b.addMemeCubes(0, 3, 1);
 	int memeCubeCount = b.getLocation(0).memes[3];
 
 	std::cout << "Test number: " << number << std::endl;
@@ -273,7 +273,7 @@ void boardTest14(Board &b) {
 
 void boardTest15(Board &b) {
 	std::string number = "15";
-	b.addMemeCube(23, 3);
+	b.addMemeCubes(23, 3, 1);
 	int memeCubeCount = b.getLocation(23).memes[3];
 
 	std::cout << "Test number: " << number << std::endl;
@@ -617,16 +617,16 @@ void boardTest33(Board &b) {
 */
 void boardTest34(Board &b) {
 	std::string number = "34";
-	Board* tempBoard = new Board("p1", "p2");
+	Board* tempBoard = new Board(MEMESTUDIESPROFESSOR, HACKER);
 	std::vector<std::string> playerRoles = tempBoard->getPlayerRoles();
 
 	std::cout << "Test number: " << number << std::endl;
-	if (playerRoles[0] == "p1" && playerRoles[1] == "p2") {
+	if (playerRoles[0] == "ME" && playerRoles[1] == "HA") {
 		std::cout << "\tTest " << number << " passed" << std::endl;
 	}
 	else {
 		std::cout << "\tTest " << number << " failed" << std::endl;
-		std::cout << "\tExpected: " << "playerRoles[0]: " << "p1" << " playerRoles[1]: " << "p2" << std::endl;
+		std::cout << "\tExpected: " << "playerRoles[0]: " << "ME" << " playerRoles[1]: " << "HA" << std::endl;
 		std::cout << "\tReceived: " << "playerRoles[0]: " << playerRoles[0] << " playerRoles[1]: " << playerRoles[1] << std::endl;
 	}
 	std::cout << std::endl;
@@ -634,16 +634,16 @@ void boardTest34(Board &b) {
 
 void boardTest35(Board &b) {
 	std::string number = "35";
-	Board* tempBoard = new Board("p1", "p2", "p3");
+	Board* tempBoard = new Board(MEMESTUDIESPROFESSOR, HACKER, MODERATOR);
 	std::vector<std::string> playerRoles = tempBoard->getPlayerRoles();
 
 	std::cout << "Test number: " << number << std::endl;
-	if (playerRoles[0] == "p1" && playerRoles[1] == "p2" && playerRoles[2] == "p3") {
+	if (playerRoles[0] == "ME" && playerRoles[1] == "HA" && playerRoles[2] == "MO") {
 		std::cout << "\tTest " << number << " passed" << std::endl;
 	}
 	else {
 		std::cout << "\tTest " << number << " failed" << std::endl;
-		std::cout << "\tExpected: " << "playerRoles[0]: " << "p1" << " playerRoles[1]: " << "p2" << "playerRoles[2]: " << "p3" << std::endl;
+		std::cout << "\tExpected: " << "playerRoles[0]: " << "ME" << " playerRoles[1]: " << "HA" << "playerRoles[2]: " << "MO" << std::endl;
 		std::cout << "\tReceived: " << "playerRoles[0]: " << playerRoles[0] << " playerRoles[1]: " << playerRoles[1] << " playerRoles[2]: " << playerRoles[2] << std::endl;
 	}
 	std::cout << std::endl;
@@ -651,16 +651,16 @@ void boardTest35(Board &b) {
 
 void boardTest36(Board &b) {
 	std::string number = "36";
-	Board* tempBoard = new Board("p1", "p2", "p3", "p4");
+	Board* tempBoard = new Board(MEMESTUDIESPROFESSOR, HACKER, MODERATOR, ROUTER);
 	std::vector<std::string> playerRoles = tempBoard->getPlayerRoles();
 
 	std::cout << "Test number: " << number << std::endl;
-	if (playerRoles[0] == "p1" && playerRoles[1] == "p2" && playerRoles[2] == "p3" && playerRoles[3] == "p4") {
+	if (playerRoles[0] == "ME" && playerRoles[1] == "HA" && playerRoles[2] == "MO" && playerRoles[3] == "RO") {
 		std::cout << "\tTest " << number << " passed" << std::endl;
 	}
 	else {
 		std::cout << "\tTest " << number << " failed" << std::endl;
-		std::cout << "\tExpected: " << "playerRoles[0]: " << "p1" << " playerRoles[1]: " << "p2" << "playerRoles[2]: " << "p3" << "playerRoles[3]: " << "p4" << std::endl;
+		std::cout << "\tExpected: " << "playerRoles[0]: " << "ME" << " playerRoles[1]: " << "HA" << "playerRoles[2]: " << "MO" << "playerRoles[3]: " << "RO" << std::endl;
 		std::cout << "\tReceived: " << "playerRoles[0]: " << playerRoles[0] << " playerRoles[1]: " << playerRoles[1] << " playerRoles[2]: " << playerRoles[2] << " playerRoles[3]: " << playerRoles[3] << std::endl;
 	}
 	std::cout << std::endl;
@@ -670,7 +670,7 @@ void boardTest36(Board &b) {
 	Runs the previous tests
 */
 int main() {
-	Board* b = new Board("p1", "p2", "p3", "p4");
+	Board* b = new Board(MEMESTUDIESPROFESSOR, HACKER, MODERATOR, ROUTER);
 
 	boardTest00(*b);
 	boardTest01(*b);

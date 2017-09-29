@@ -10,7 +10,7 @@ GameStateManager::GameStateManager() {
 	}
 
 	// Create a new board.
-	board = new Board(players[0]->getPlayerRole);
+	board = new Board(players[0]->getPlayerRole());
 
 	// Initialize variables 
 	outbreakTrack = 8;
@@ -28,18 +28,18 @@ GameStateManager::GameStateManager(int numPlayers) {
 	// Create a new board.  Constructor depends on number of players and player roles.
 	switch (numPlayers) {
 	case 1 :
-		board = new Board(players[0]->getPlayerRole);
+		board = new Board(players[0]->getPlayerRole());
 		break;
 	case 2 :
-		board = new Board(players[0]->getPlayerRole, players[1]->getPlayerRole);
+		board = new Board(players[0]->getPlayerRole(), players[1]->getPlayerRole());
 		break;
 	case 3 :
-		board = new Board(players[0]->getPlayerRole, players[1]->getPlayerRole,
-						  players[2]->getPlayerRole);
+		board = new Board(players[0]->getPlayerRole(), players[1]->getPlayerRole(),
+						  players[2]->getPlayerRole());
 		break;
 	default :
-		board = new Board(players[0]->getPlayerRole, players[1]->getPlayerRole, 
-						  players[2]->getPlayerRole, players[3]->getPlayerRole);
+		board = new Board(players[0]->getPlayerRole(), players[1]->getPlayerRole(),
+						  players[2]->getPlayerRole(), players[3]->getPlayerRole());
 		break;
 	}
 
@@ -70,7 +70,7 @@ int GameStateManager::banMeme(int memeNumber) {
 
 
 	// Update meme cube in the Board class
-	board->removeMemeCube(players[currentPlayer]->getPlayerLocation, memeNumber);
+	board->removeMemeCube(players[currentPlayer]->getPlayerLocation(), memeNumber);
 
 	return 0;
 }

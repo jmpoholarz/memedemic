@@ -53,8 +53,8 @@ GameStateManager::GameStateManager(int numPlayers) {
 
 GameStateManager::~GameStateManager() {
 	delete board;
-	for each (Player* p in players) {
-		delete p;
+	while (players.size() > 0)
+		delete players[0];
 	}
 }
 

@@ -19,6 +19,9 @@ Board::Board(int players) {
 	initializeLocations();
 
 	locations[18].players[0] = true;
+	locations[18].players[1] = true;
+	locations[18].players[2] = true;
+	locations[18].players[3] = true;
 
 	locations[18].cmcServer = true;
 }
@@ -31,9 +34,10 @@ Board::~Board() {
 }
 
 void Board::setupPlayers(int players) {
-	for (int i = 0; i < players; i++) {
-		playerRoles.push_back("ZZ");
-	}
+	playerRoles.push_back("ZZ");
+	playerRoles.push_back("AA");
+	playerRoles.push_back("BB");
+	playerRoles.push_back("CC");
 }
 
 /**

@@ -23,14 +23,16 @@ public:
 	void removeCMC(int loc);
 	void movePlayer(int location, int player);
 	void addOutbreak();
+	void increaseInfectionRateCounter();
 	void addCure(int meme);
+	void eradicateMeme(int meme);
 	void removePlayerCard();
 
-	BoardLocation getLocation(int loc); // For testing purposes
-	int getOutbreakCounter(); // For testing purposes
-	bool getCure(int meme); // For testing purposes
-	int getPlayerCards(); // For testing purposes
-	std::vector<std::string> getPlayerRoles(); // For testing purposes
+	BoardLocation getLocation(int loc);
+	int getOutbreakCounter();
+	int getCure(int meme);
+	int getPlayerCards();
+	std::vector<std::string> getPlayerRoles();
 
 	void setMemes(int location, int values[]);
 	void setPlayers(int location, int playerNumber, bool present);
@@ -42,7 +44,8 @@ private:
 	std::vector<std::string> playerRoles;
 
 	int outbreakCounter;
-	bool cures[4];
+	int infectionRateCounter;
+	int cures[4]; // 0 = not cured, 1 = cured, 2 = eradicated
 	int playerCards;
 
 	void initializeLocations();
@@ -51,6 +54,7 @@ private:
 	void printCMC(int loc);
 	void printPlayers(int loc);
 	void printOutbreaks();
+	void printInfectionRate();
 	void printCures();
 	void printPlayerCards();
 

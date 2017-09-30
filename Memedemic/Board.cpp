@@ -113,10 +113,21 @@ void Board::addOutbreak() {
 }
 
 /**
+	Increases the infection rate counter by one
+*/
+void Board::increaseInfectionRateCounter() {
+	infectionRateCounter++;
+}
+
+/**
 	Sets the boolean for the given cure to true
 */
 void Board::addCure(int meme) {
-	cures[meme] = true;
+	cures[meme] = 1;
+}
+
+void Board::eradicateMeme(int meme) {
+	cures[meme] = 2;
 }
 
 /**
@@ -127,35 +138,35 @@ void Board::removePlayerCard() {
 }
 
 /**
-	Returns the given location.  Used for testing purposes
+	Returns the given location.
 */
 Board::BoardLocation Board::getLocation(int loc) {
 	return locations[loc];
 }
 
 /**
-	Returns the outbreak counter.  Used for testing purposes
+	Returns the outbreak counter.
 */
 int Board::getOutbreakCounter() {
 	return outbreakCounter;
 }
 
 /**
-	Returns whether the given meme has been cured or not.  Used for testing purposes
+	Returns whether the given meme has been cured or not.
 */
-bool Board::getCure(int meme) {
+int Board::getCure(int meme) {
 	return cures[meme];
 }
 
 /**
-	Returns the player card count.  Used for testing purposes
+	Returns the player card count.
 */
 int Board::getPlayerCards() {
 	return playerCards;
 }
 
 /**
-	Returns the player roles.  Used for testing purposes
+	Returns the player roles.
 */
 std::vector<std::string> Board::getPlayerRoles() {
 	return playerRoles;
@@ -195,8 +206,8 @@ void Board::printBoard() {
 	std::cout << "┌─────┴─────┐ \┌─────┴─────┐ \┌───────────┐  ┌─────┴─────┐/              \n";
 	std::cout << "│   Weibo   │  │    QQ     │  │    VK     │  │ Instagram │ Cures: C C C C\n";
 	std::cout << "│           ├--┤           ├--┤           │  │           │ Outbreaks: 3/8\n";
-	std::cout << "│           │  │           │  │           │  │           │ P-Cards: 14/59\n";
-	std::cout << "└───────────┘  └───────────┘  └───────────┘  └───────────┘               \n";
+	std::cout << "│           │  │           │  │           │  │           │ Infect Rate: 2\n";
+	std::cout << "└───────────┘  └───────────┘  └───────────┘  └───────────┘ P-Cards: 14/59\n";
 	*/
 
 	// First row of locations
@@ -356,11 +367,11 @@ void Board::printBoard() {
 	
 	// Fifth row of locations
 	std::cout << "+-----+-----+ \\+-----+-----+ \\+-----------+  +-----------+/              \n";
-	std::cout << "|   Weibo   |  |    QQ     |  |    VK     |  | Instagram | ";
+	std::cout << "|   Weibo   |  |    QQ     |  |    VK     |  | Instagram |                 \n";
+
+	std::cout << "|           |  |           |  |           |  |           | ";
 	printCures();
 	std::cout << "\n";
-
-	std::cout << "|           |  |           |  |           |  |           |               \n";
 
 	std::cout << "|";
 	printCounters(21);
@@ -378,7 +389,9 @@ void Board::printBoard() {
 	printOutbreaks();
 	std::cout << "\n";
 
-	std::cout << "|           |  |           |  |           |  |           |               \n";
+	std::cout << "|           |  |           |  |           |  |           | ";
+	printInfectionRate();
+	std::cout << "\n";
 
 	std::cout << "|";
 	printPlayers(21);
@@ -449,11 +462,18 @@ void Board::printOutbreaks() {
 	std::cout << "Outbreaks: " << outbreakCounter << "/8";
 }
 
+void Board::printInfectionRate() {
+	std::cout << "Infect Rate: " << infectionRateCounter;
+}
+
 void Board::printCures() {
 	std::cout << "Cures: ";
 	for (int i = 0; i < 4; i++) {
-		if (cures[i]) {
+		if (cures[i] == 1) {
 			std::cout << "C";
+		}
+		else if (cures[i] == 2) {
+			std::cout << "E";
 		}
 		else {
 			std::cout << " ";

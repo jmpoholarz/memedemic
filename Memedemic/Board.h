@@ -1,6 +1,5 @@
 #pragma once
 #include <vector>
-#include <string>
 #include "Enums.h"
 
 class Board {
@@ -12,10 +11,12 @@ public:
 		bool cmcServer = false;
 	};
 
-	Board(int players);
+	Board(PlayerRoles p1Role);
+	Board(PlayerRoles p1Role, PlayerRoles p2Role);
+	Board(PlayerRoles p1Role, PlayerRoles p2Role, PlayerRoles p3Role);
+	Board(PlayerRoles p1Role, PlayerRoles p2Role, PlayerRoles p3Role, PlayerRoles p4Role);
 	~Board();
 
-	void setupPlayers(int players);
 	void printBoard();
 	void addMemeCubes(int loc, int meme, int count);
 	void removeMemeCube(int loc, int meme);

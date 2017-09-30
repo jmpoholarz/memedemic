@@ -90,8 +90,8 @@ Location::Location() {
 	
 	site WEIBO = {0};
 	WEIBO.id = 21;
-	
 	WEIBO.adjacencies = {20,22};
+	
 	site QQ = {0};
 	QQ.id = 22;
 	QQ.adjacencies = {21,20,19,23};

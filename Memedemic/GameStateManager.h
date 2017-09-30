@@ -10,7 +10,7 @@
 class GameStateManager {
 	
 public:
-	GameStateManager();
+	//GameStateManager();
 
 	// Sets up initial game starting conditions
 	GameStateManager(Board& b, Location& l, int numPlayers);

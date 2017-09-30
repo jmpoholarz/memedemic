@@ -178,10 +178,12 @@ int GameStateManager::autoSave() {
 }
 int GameStateManager::nextTurn() {
     actionsRemaining = 4;
+	currentPlayer++;
+	currentPlayer %= 4;
 
 	// Perhaps print board with each new turn? board->printBoard();
 
-	return 0;
+	return 1;
 }
 int GameStateManager::initialInfection() {
 	return 0;

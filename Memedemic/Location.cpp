@@ -58,7 +58,7 @@ Location::Location() {
 	
 	site TWITTER = {0};
 	TWITTER.id = 13;
-	TWITCH.adjacencies = {14,9,12};
+	TWITTER.adjacencies = {14,9,12};
 	
 	site FACEBOOK = {0};
 	FACEBOOK.id = 14;
@@ -131,24 +131,46 @@ Location::Location(int name) {
 	this->name = name;
 }*/
 
-std::vector<int> Location::getMemeStatus() {
-	return this->memeStatus;
+std::vector<int> Location::getMemeStatus(int name) {
+	std::list<site>::iterator it;
+	for (it = this->sites.begin(); it != this->sites.end(); ++it) {
+    		if (it->id == name) {
+			return it->memeStatus;
+		}
+	}
+	std::vector<int> error = {-1};
+	return error;
 }
-void Location::setMemeStatus(int meme, int level) {
-	memeStatus[meme] = level;
+void Location::setMemeStatus(int meme, int level, int name) {
+	std::list<site>::iterator it;
+	for (it = this->sites.begin(); it != this->sites.end(); ++it) {
+    		if (it->id == name) {
+			it->memeStatus[meme] = level;
+		}
+	}
 }
 
-bool Location::hasCMCServer() {
-	return this->CMCServer;
+bool Location::hasCMCServer(int name) {
+	std::list<site>::iterator it;
+	for (it = this->sites.begin(); it != this->sites.end(); ++it) {
+    		if (it->id == name) {
+			return it->CMCServer;
+		}
+	}
 }
-void Location::setCMCServer(bool exists) {
-	CMCServer = exists;
+void Location::setCMCServer(int name) {
+	std::list<site>::iterator it;
+	for (it = this->sites.begin(); it != this->sites.end(); ++it) {
+    		if (it->id == name) {
+			it->CMCServer = true;
+		}
+	}
 }
 
 std::vector<int> Location::getAdjacentLocations(int name) {
 	std::list<site>::iterator it;
 	for (it = this->sites.begin(); it != this->sites.end(); ++it) {
-    	if (it->id == name) {
+    		if (it->id == name) {
 			return it->adjacencies;
 		}
 	}

@@ -54,12 +54,43 @@ int GameStateManager::movePlayer(int location) {
 }
 
 int GameStateManager::banMeme(int memeNumber) {
+	if (board.getCure(memeNumber == 2)) {
+		return 0;
+	}
+	else if (board.getCure(memeNumber) == 1) {
+		int numberOfRemainingCubes = board.getLocation(players[currentPlayer]->getPlayerLocation()).memes[memeNumber];
+		if (numberOfRemainingCubes == 0) {
+			return 0;
+		}
+		else {
+			for (int i = 0; i < numberOfRemainingCubes; i++) {
+				board.removeMemeCube(players[currentPlayer]->getPlayerLocation(), memeNumber);
+			}
+			locations[players[currentPlayer]->getPlayerLocation()].setMemeStatus[memeNumber] = 0;
 
+			for (int i = 0; i < 24; i++) {
+				if (locations[i].getMemeStatus[memeNumber] != 0) {
+					break;
+				}
+				if (i == 23) {
+					board.eradicateMeme(memeNumber);
+				}
+			}
 
-	// Update meme cube in the Board class
-	board.removeMemeCube(players[currentPlayer]->getPlayerLocation(), memeNumber);
-
-	return 0;
+			return 1;
+		}
+	}
+	else {
+		int numberOfRemainingCubes = board.getLocation(players[currentPlayer]->getPlayerLocation()).memes[memeNumber];
+		if (numberOfRemainingCubes == 0) {
+			return 0;
+		}
+		else {
+			board.removeMemeCube(players[currentPlayer]->getPlayerLocation(), memeNumber);
+			locations[players[currentPlayer]->getPlayerLocation()].setMemeStatus[memeNumber] = locations[players[currentPlayer]->getPlayerLocation()].setMemeStatus[memeNumber] - 1;
+			return 1;
+		}
+	}
 }
 int GameStateManager::developMemeFilter(int card1, int card2, int card3, 
 	int card4, int card5) {

@@ -116,7 +116,11 @@ void Board::addOutbreak() {
 	Sets the boolean for the given cure to true
 */
 void Board::addCure(int meme) {
-	cures[meme] = true;
+	cures[meme] = 1;
+}
+
+void Board::eradicateMeme(int meme) {
+	cures[meme] = 2;
 }
 
 /**

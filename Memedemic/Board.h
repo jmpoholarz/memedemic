@@ -24,6 +24,7 @@ public:
 	void movePlayer(int location, int player);
 	void addOutbreak();
 	void addCure(int meme);
+	void eradicateMeme(int meme);
 	void removePlayerCard();
 
 	BoardLocation getLocation(int loc); // For testing purposes

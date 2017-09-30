@@ -6,7 +6,8 @@
 	One Player Constructor
 */
 Board::Board(int players) {
-	outbreakCounter = 2;
+	outbreakCounter = 0;
+	infectionRateCounter = 0;
 	cures[0] = 0;
 	cures[1] = 0;
 	cures[2] = 0;
@@ -179,13 +180,13 @@ void Board::printBoard() {
 	Example print out of the game board (using old extending Ascii characters):
 
 	std::cout << "┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐\n";
-	std::cout << "│  Tumbler  │  │  iFunny   │  │   9GAG    │  │   Imgur   │  │   4chan   │\n";
+	std::cout << "│  Tumblr   │  │  iFunny   │  │   9GAG    │  │   Imgur   │  │   4chan   │\n";
 	std::cout << "│           │  │           ├--┤           ├--┤           ├--┤           │\n";
 	std::cout << "│           │  │           │  │           │  │           │  │           │\n";
 	std::cout << "└─────┬─────┘\ └─────┬─────┘ /└───────────┘  └───────────┘\ └─────┬─────┘\n";
 	std::cout << "      |      \\      |      //                            \\      |      \n";
 	std::cout << "┌─────┴─────┐ \┌─────┴─────┐/ ┌───────────┐  ┌───────────┐ \┌─────┴─────┐\n";
-	std::cout << "│  Myspace  │  │ BuzzFeed  │  │  Youtube  │  │  Twitch   │  │  Reddit   │\n";
+	std::cout << "│  Myspace  │  │ BuzzFeed  │  │  YouTube  │  │  Twitch   │  │  Reddit   │\n";
 	std::cout << "│           │  │           ├--┤           ├--┤           ├--┤           │\n";
 	std::cout << "│           │  │           │  │           │  │           │  │           │\n";
 	std::cout << "└───────────┘\ └─────┬─────┘  └─────┬─────┘  └─────┬─────┘\ └───────────┘\n";
@@ -211,7 +212,7 @@ void Board::printBoard() {
 
 	// First row of locations
 	std::cout << "+-----------+  +-----------+  +-----------+  +-----------+  +-----------+\n";
-	std::cout << "|  Tumbler  |  |  iFunny   |  |   9GAG    |  |   Imgur   |  |   4chan   |\n";
+	std::cout << "|  Tumblr   |  |  iFunny   |  |   9GAG    |  |   Imgur   |  |   4chan   |\n";
 	std::cout << "|           |  |           |  |           |  |           |  |           |\n";
 	std::cout << "|";
 	printCounters(16);
@@ -249,7 +250,7 @@ void Board::printBoard() {
 	
 	// Second row of locations
 	std::cout << "+-----+-----+ \\+-----+-----+/ +-----------+  +-----------+ \\+-----+-----+\n";
-	std::cout << "|  Myspace  |  | BuzzFeed  |  |  Youtube  |  |  Twitch   |  |  Reddit   |\n";
+	std::cout << "|  Myspace  |  | BuzzFeed  |  |  YouTube  |  |  Twitch   |  |  Reddit   |\n";
 	std::cout << "|           |  |           |  |           |  |           |  |           |\n";
 
 	std::cout << "|";

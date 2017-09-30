@@ -23,7 +23,7 @@ public:
 	void removeCMC(int loc);
 	void movePlayer(int location, int player);
 	void addOutbreak();
-	void increaseInfectionRateCounter();
+	void increaseViralQuotient();
 	void addCure(int meme);
 	void eradicateMeme(int meme);
 	void removePlayerCard();
@@ -44,7 +44,7 @@ private:
 	std::vector<std::string> playerRoles;
 
 	int outbreakCounter;
-	int infectionRateCounter;
+	int viralQuotientCounter;
 	int cures[4]; // 0 = not cured, 1 = cured, 2 = eradicated
 	int playerCards;
 
@@ -54,7 +54,7 @@ private:
 	void printCMC(int loc);
 	void printPlayers(int loc);
 	void printOutbreaks();
-	void printInfectionRate();
+	void printViralQuotient();
 	void printCures();
 	void printPlayerCards();
 

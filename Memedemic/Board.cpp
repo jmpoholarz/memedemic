@@ -7,7 +7,7 @@
 */
 Board::Board(int players) {
 	outbreakCounter = 0;
-	infectionRateCounter = 0;
+	viralQuotientCounter = 0;
 	cures[0] = 0;
 	cures[1] = 0;
 	cures[2] = 0;
@@ -119,8 +119,8 @@ void Board::addOutbreak() {
 /**
 	Increases the infection rate counter by one
 */
-void Board::increaseInfectionRateCounter() {
-	infectionRateCounter++;
+void Board::increaseViralQuotient() {
+	viralQuotientCounter++;
 }
 
 /**
@@ -394,7 +394,7 @@ void Board::printBoard() {
 	std::cout << "\n";
 
 	std::cout << "|           |  |           |  |           |  |           | ";
-	printInfectionRate();
+	printViralQuotient();
 	std::cout << "\n";
 
 	std::cout << "|";
@@ -466,8 +466,8 @@ void Board::printOutbreaks() {
 	std::cout << "Outbreaks: " << outbreakCounter << "/8";
 }
 
-void Board::printInfectionRate() {
-	std::cout << "Infect Rate: " << infectionRateCounter;
+void Board::printViralQuotient() {
+	std::cout << "Viral Quote: " << viralQuotientCounter;
 }
 
 void Board::printCures() {

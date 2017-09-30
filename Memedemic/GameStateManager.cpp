@@ -1,7 +1,7 @@
 #include "GameStateManager.h"
 #include <iostream>
 
-GameStateManager::GameStateManager() : board(Board(1)), locations(Location()) {
+/*GameStateManager::GameStateManager() : board(Board(1)), locations(Location()) {
 
 	// Add players to a vector
 	for (int i = 0; i < 1; i++) {
@@ -17,7 +17,7 @@ GameStateManager::GameStateManager() : board(Board(1)), locations(Location()) {
 	outbreakTrack = 8;
 	viralQuotient = 8;
 	currentPlayer = 0;
-}
+}*/
 
 GameStateManager::GameStateManager(Board& b, Location& l, int numPlayers) : board(b), locations(l) {
 	// Add players to a vector

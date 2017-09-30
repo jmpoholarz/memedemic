@@ -31,6 +31,7 @@ GameStateManager::GameStateManager(Board& b, Location& l, int numPlayers) : boar
 	outbreakTrack = 8;
 	viralQuotient = 8;
 	currentPlayer = 0;
+    actionsRemaining = 4;
 }
 
 GameStateManager::~GameStateManager() {
@@ -43,10 +44,15 @@ GameStateManager::~GameStateManager() {
 int GameStateManager::movePlayer(int location) {
 	// Check if location is a valid move for the player
 	if (locations.isAdjacent(players[currentPlayer]->getPlayerLocation(), location)) {
+        // Make sure player has actions left in their turn
+        if (actionsRemaining <= 0) {
+            return 0;
+        }
 		// Update player location in the Board class
 		board.movePlayer(location, currentPlayer);
         players[currentPlayer]->setPlayerLocation((CardNames) location);
         std::cout << players[currentPlayer] -> getPlayerLocation() << std::endl;
+        actionsRemaining--;
 		return 1;
 	}
 
@@ -140,7 +146,7 @@ int GameStateManager::autoSave() {
 	return 0;
 }
 int GameStateManager::nextTurn() {
-
+    actionsRemaining = 4;
 
 	// Perhaps print board with each new turn? board->printBoard();
 

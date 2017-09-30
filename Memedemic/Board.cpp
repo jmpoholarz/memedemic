@@ -7,7 +7,7 @@
 */
 Board::Board(int players) {
 	outbreakCounter = 0;
-	infectionRateCounter = 0;
+	viralQuotientCounter = 0;
 	cures[0] = 0;
 	cures[1] = 0;
 	cures[2] = 0;
@@ -18,10 +18,9 @@ Board::Board(int players) {
 
 	initializeLocations();
 
-	locations[18].players[0] = true;
-	locations[18].players[1] = true;
-	locations[18].players[2] = true;
-	locations[18].players[3] = true;
+	for (int i = 0; i < players; i++) {
+		locations[18].players[i] = true;
+	}
 
 	locations[18].cmcServer = true;
 }
@@ -34,10 +33,23 @@ Board::~Board() {
 }
 
 void Board::setupPlayers(int players) {
-	playerRoles.push_back("ZZ");
-	playerRoles.push_back("AA");
-	playerRoles.push_back("BB");
-	playerRoles.push_back("CC");
+	switch (players) {
+	case 1:
+		playerRoles.push_back("p1");
+	case 2:
+		playerRoles.push_back("p1");
+		playerRoles.push_back("p2");
+	case 3:
+		playerRoles.push_back("p1");
+		playerRoles.push_back("p2");
+		playerRoles.push_back("p3");
+	default:
+		playerRoles.push_back("p1");
+		playerRoles.push_back("p2");
+		playerRoles.push_back("p3");
+		playerRoles.push_back("p4");
+		break;
+	}
 }
 
 /**
@@ -119,8 +131,8 @@ void Board::addOutbreak() {
 /**
 	Increases the infection rate counter by one
 */
-void Board::increaseInfectionRateCounter() {
-	infectionRateCounter++;
+void Board::increaseViralQuotient() {
+	viralQuotientCounter++;
 }
 
 /**
@@ -394,7 +406,7 @@ void Board::printBoard() {
 	std::cout << "\n";
 
 	std::cout << "|           |  |           |  |           |  |           | ";
-	printInfectionRate();
+	printViralQuotient();
 	std::cout << "\n";
 
 	std::cout << "|";
@@ -466,8 +478,8 @@ void Board::printOutbreaks() {
 	std::cout << "Outbreaks: " << outbreakCounter << "/8";
 }
 
-void Board::printInfectionRate() {
-	std::cout << "Infect Rate: " << infectionRateCounter;
+void Board::printViralQuotient() {
+	std::cout << "Viral Quote: " << viralQuotientCounter;
 }
 
 void Board::printCures() {

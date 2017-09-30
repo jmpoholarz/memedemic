@@ -27,7 +27,9 @@ std::string Parser::parse(std::string command) {
 
 	// At this point, we have our vector of words to deal with
 	if (tokens[0] == "usage") {
-		return getUsage(tokens[1]);
+		if (tokens[1] != "") 
+			return "Incorrect usage of access: " + getUsage("access");
+		else return getUsage(tokens[1]);
 	}
 	else if (tokens[0] == "access") {
 		// Check for wrong number of arguments

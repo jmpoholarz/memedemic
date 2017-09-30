@@ -16,6 +16,7 @@ std::string Parser::parse(std::string command) {
 	std::vector<std::string> tokens;
 	// Split based on spaces
 	while (std::getline(ss, str, ' ')) {
+		
 		if (1){ //str != " ") {
 			// Make all characters lowercase
 			for (int i = 0; i < str.length(); i++) {
@@ -24,12 +25,13 @@ std::string Parser::parse(std::string command) {
 			tokens.push_back(str);
 		}
 	}
+	if (tokens.empty()) {
+		return "Empty line";
+	}
 
 	// At this point, we have our vector of words to deal with
 	if (tokens[0] == "usage") {
-		if (tokens[1] != "") 
-			return "Incorrect usage of access: " + getUsage("access");
-		else return getUsage(tokens[1]);
+		return getUsage(tokens[1]);
 	}
 	else if (tokens[0] == "access") {
 		// Check for wrong number of arguments

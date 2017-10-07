@@ -4,10 +4,19 @@
 #include <string>
 #include <vector>
 
+Player::Player() : playerName(""), playerRole(UNASSIGNED), 
+playerLocation(EMAIL) {
+
+}
+
 Player::Player(std::string name, PlayerRoles role, CardNames location) {
     this -> playerName = name;
     this -> playerRole = role;
     this -> playerLocation = location;
+}
+
+Player::~Player() {
+
 }
 
 // Sets player's name
@@ -40,6 +49,11 @@ CardNames Player::getPlayerLocation() {
 bool Player::setPlayerLocation(CardNames location) {
     this -> playerLocation = location;
     return true;
+}
+
+bool Player::setPlayerRole(PlayerRoles role) {
+    this -> playerRole = role;
+	return true;
 }
 
 // Checks if player holds n instances of the specified card

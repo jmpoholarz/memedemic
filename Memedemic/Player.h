@@ -7,6 +7,7 @@
 class Player {
 	
 public:
+	Player();
 	Player(std::string name, PlayerRoles playerRole, CardNames location);
 	~Player();
 
@@ -16,9 +17,10 @@ public:
 	std::vector<Card> getPlayerCards();
 	CardNames getPlayerLocation();
     bool setPlayerLocation(CardNames location);
-    bool holdsNCards(Card card, int n);
-    bool addCard(Card card);
-    bool removeNCards(Card card, int n);
+    bool setPlayerRole(PlayerRoles role);
+    bool holdsNCards(CardNames card, int n);
+    bool addCard(CardNames card);
+    bool removeNCards(CardNames card, int n);
 private:
 	std::string playerName;
 	PlayerRoles playerRole;

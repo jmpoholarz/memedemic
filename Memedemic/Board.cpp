@@ -1,67 +1,26 @@
 ﻿#include "Board.h"
 #include <string>
 #include <iostream>
-#include <vector>
 
 /**
-	Two Player Constructor
+	One Player Constructor
 */
-Board::Board(std::string p1Role, std::string p2Role) {
-	outbreakCounter = 2;
-	cures[4] = { false };
+Board::Board(int players) {
+	outbreakCounter = 0;
+	viralQuotientCounter = 0;
+	cures[0] = 0;
+	cures[1] = 0;
+	cures[2] = 0;
+	cures[3] = 0;
 	playerCards = 59;
 
-	playerRoles.push_back(p1Role);
-	playerRoles.push_back(p2Role);
+	setupPlayers(players);
 
 	initializeLocations();
 
-	locations[18].players[0] = true;
-	locations[18].players[1] = true;
-
-	locations[18].cmcServer = true;
-}
-
-/**
-	Three Player Constructor
-*/
-Board::Board(std::string p1Role, std::string p2Role, std::string p3Role) {
-	outbreakCounter = 2;
-	cures[4] = { false };
-	playerCards = 59;
-
-	playerRoles.push_back(p1Role);
-	playerRoles.push_back(p2Role);
-	playerRoles.push_back(p3Role);
-
-	initializeLocations();
-
-	locations[18].players[0] = true;
-	locations[18].players[1] = true;
-	locations[18].players[2] = true;
-
-	locations[18].cmcServer = true;
-}
-
-/**
-	Four Player Constructor
-*/
-Board::Board(std::string p1Role, std::string p2Role, std::string p3Role, std::string p4Role) {
-	outbreakCounter = 2;
-	cures[4] = { false };
-	playerCards = 59;
-
-	playerRoles.push_back(p1Role);
-	playerRoles.push_back(p2Role);
-	playerRoles.push_back(p3Role);
-	playerRoles.push_back(p4Role);
-
-	initializeLocations();
-
-	locations[18].players[0] = true;
-	locations[18].players[1] = true;
-	locations[18].players[2] = true;
-	locations[18].players[3] = true;
+	for (int i = 0; i < players; i++) {
+		locations[18].players[i] = true;
+	}
 
 	locations[18].cmcServer = true;
 }
@@ -70,7 +29,27 @@ Board::Board(std::string p1Role, std::string p2Role, std::string p3Role, std::st
 	TODO: Destructor
 */
 Board::~Board() {
-	
+
+}
+
+void Board::setupPlayers(int players) {
+	switch (players) {
+	case 1:
+		playerRoles.push_back("p1");
+	case 2:
+		playerRoles.push_back("p1");
+		playerRoles.push_back("p2");
+	case 3:
+		playerRoles.push_back("p1");
+		playerRoles.push_back("p2");
+		playerRoles.push_back("p3");
+	default:
+		playerRoles.push_back("p1");
+		playerRoles.push_back("p2");
+		playerRoles.push_back("p3");
+		playerRoles.push_back("p4");
+		break;
+	}
 }
 
 /**
@@ -82,11 +61,30 @@ void Board::initializeLocations() {
 	}
 }
 
+std::string Board::getRoleAbbreviation(PlayerRoles role) {
+	switch (role) {
+	case MEMESTUDIESPROFESSOR:
+		return "ME";
+	case HACKER:
+		return "HA";
+	case MODERATOR:
+		return "MO";
+	case ROUTER:
+		return "RO";
+	case FIREWALL:
+		return "FI";
+	case MILLENIAL:
+		return "MI";
+	default :
+		return "NA";
+	}
+}
+
 /**
 	Adds a meme cube to the given location
 */
-void Board::addMemeCube(int loc, int meme) {
-	locations[loc].memes[meme] = locations[loc].memes[meme] + 1;
+void Board::addMemeCubes(int loc, int meme, int count) {
+	locations[loc].memes[meme] = locations[loc].memes[meme] + count;
 }
 
 /**
@@ -131,10 +129,21 @@ void Board::addOutbreak() {
 }
 
 /**
+	Increases the infection rate counter by one
+*/
+void Board::increaseViralQuotient() {
+	viralQuotientCounter++;
+}
+
+/**
 	Sets the boolean for the given cure to true
 */
 void Board::addCure(int meme) {
-	cures[meme] = true;
+	cures[meme] = 1;
+}
+
+void Board::eradicateMeme(int meme) {
+	cures[meme] = 2;
 }
 
 /**
@@ -145,35 +154,35 @@ void Board::removePlayerCard() {
 }
 
 /**
-	Returns the given location.  Used for testing purposes
+	Returns the given location.
 */
 Board::BoardLocation Board::getLocation(int loc) {
 	return locations[loc];
 }
 
 /**
-	Returns the outbreak counter.  Used for testing purposes
+	Returns the outbreak counter.
 */
 int Board::getOutbreakCounter() {
 	return outbreakCounter;
 }
 
 /**
-	Returns whether the given meme has been cured or not.  Used for testing purposes
+	Returns whether the given meme has been cured or not.
 */
-bool Board::getCure(int meme) {
+int Board::getCure(int meme) {
 	return cures[meme];
 }
 
 /**
-	Returns the player card count.  Used for testing purposes
+	Returns the player card count.
 */
 int Board::getPlayerCards() {
 	return playerCards;
 }
 
 /**
-	Returns the player roles.  Used for testing purposes
+	Returns the player roles.
 */
 std::vector<std::string> Board::getPlayerRoles() {
 	return playerRoles;
@@ -187,13 +196,13 @@ void Board::printBoard() {
 	Example print out of the game board (using old extending Ascii characters):
 
 	std::cout << "┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐\n";
-	std::cout << "│  Tumbler  │  │  iFunny   │  │   9GAG    │  │   Imgur   │  │   4chan   │\n";
+	std::cout << "│  Tumblr   │  │  iFunny   │  │   9GAG    │  │   Imgur   │  │   4chan   │\n";
 	std::cout << "│           │  │           ├--┤           ├--┤           ├--┤           │\n";
 	std::cout << "│           │  │           │  │           │  │           │  │           │\n";
 	std::cout << "└─────┬─────┘\ └─────┬─────┘ /└───────────┘  └───────────┘\ └─────┬─────┘\n";
 	std::cout << "      |      \\      |      //                            \\      |      \n";
 	std::cout << "┌─────┴─────┐ \┌─────┴─────┐/ ┌───────────┐  ┌───────────┐ \┌─────┴─────┐\n";
-	std::cout << "│  Myspace  │  │ BuzzFeed  │  │  Youtube  │  │  Twitch   │  │  Reddit   │\n";
+	std::cout << "│  Myspace  │  │ BuzzFeed  │  │  YouTube  │  │  Twitch   │  │  Reddit   │\n";
 	std::cout << "│           │  │           ├--┤           ├--┤           ├--┤           │\n";
 	std::cout << "│           │  │           │  │           │  │           │  │           │\n";
 	std::cout << "└───────────┘\ └─────┬─────┘  └─────┬─────┘  └─────┬─────┘\ └───────────┘\n";
@@ -213,13 +222,13 @@ void Board::printBoard() {
 	std::cout << "┌─────┴─────┐ \┌─────┴─────┐ \┌───────────┐  ┌─────┴─────┐/              \n";
 	std::cout << "│   Weibo   │  │    QQ     │  │    VK     │  │ Instagram │ Cures: C C C C\n";
 	std::cout << "│           ├--┤           ├--┤           │  │           │ Outbreaks: 3/8\n";
-	std::cout << "│           │  │           │  │           │  │           │ P-Cards: 14/59\n";
-	std::cout << "└───────────┘  └───────────┘  └───────────┘  └───────────┘               \n";
+	std::cout << "│           │  │           │  │           │  │           │ Infect Rate: 2\n";
+	std::cout << "└───────────┘  └───────────┘  └───────────┘  └───────────┘ P-Cards: 14/59\n";
 	*/
 
 	// First row of locations
 	std::cout << "+-----------+  +-----------+  +-----------+  +-----------+  +-----------+\n";
-	std::cout << "|  Tumbler  |  |  iFunny   |  |   9GAG    |  |   Imgur   |  |   4chan   |\n";
+	std::cout << "|  Tumblr   |  |  iFunny   |  |   9GAG    |  |   Imgur   |  |   4chan   |\n";
 	std::cout << "|           |  |           |  |           |  |           |  |           |\n";
 	std::cout << "|";
 	printCounters(16);
@@ -257,7 +266,7 @@ void Board::printBoard() {
 	
 	// Second row of locations
 	std::cout << "+-----+-----+ \\+-----+-----+/ +-----------+  +-----------+ \\+-----+-----+\n";
-	std::cout << "|  Myspace  |  | BuzzFeed  |  |  Youtube  |  |  Twitch   |  |  Reddit   |\n";
+	std::cout << "|  Myspace  |  | BuzzFeed  |  |  YouTube  |  |  Twitch   |  |  Reddit   |\n";
 	std::cout << "|           |  |           |  |           |  |           |  |           |\n";
 
 	std::cout << "|";
@@ -374,11 +383,11 @@ void Board::printBoard() {
 	
 	// Fifth row of locations
 	std::cout << "+-----+-----+ \\+-----+-----+ \\+-----------+  +-----------+/              \n";
-	std::cout << "|   Weibo   |  |    QQ     |  |    VK     |  | Instagram | ";
+	std::cout << "|   Weibo   |  |    QQ     |  |    VK     |  | Instagram |                 \n";
+
+	std::cout << "|           |  |           |  |           |  |           | ";
 	printCures();
 	std::cout << "\n";
-
-	std::cout << "|           |  |           |  |           |  |           |               \n";
 
 	std::cout << "|";
 	printCounters(21);
@@ -396,7 +405,9 @@ void Board::printBoard() {
 	printOutbreaks();
 	std::cout << "\n";
 
-	std::cout << "|           |  |           |  |           |  |           |               \n";
+	std::cout << "|           |  |           |  |           |  |           | ";
+	printViralQuotient();
+	std::cout << "\n";
 
 	std::cout << "|";
 	printPlayers(21);
@@ -467,11 +478,18 @@ void Board::printOutbreaks() {
 	std::cout << "Outbreaks: " << outbreakCounter << "/8";
 }
 
+void Board::printViralQuotient() {
+	std::cout << "Viral Quote: " << viralQuotientCounter;
+}
+
 void Board::printCures() {
 	std::cout << "Cures: ";
 	for (int i = 0; i < 4; i++) {
-		if (cures[i]) {
+		if (cures[i] == 1) {
 			std::cout << "C";
+		}
+		else if (cures[i] == 2) {
+			std::cout << "E";
 		}
 		else {
 			std::cout << " ";
@@ -487,4 +505,15 @@ void Board::printCures() {
 */
 void Board::printPlayerCards() {
 	std::cout << "P-Cards: " << playerCards << "/59";
+}
+
+void Board::setCMCServer(int location, bool exists) {
+	locations[location].cmcServer = exists;
+}
+void Board::setMemes(int location, int values[]) {
+	for (int i = 0; i < 4; i++)
+		locations[location].memes[i] = values[i];
+}
+void Board::setPlayers(int location, int playerNumber, bool present) {
+	locations[location].players[playerNumber] = present;
 }

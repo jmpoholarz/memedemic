@@ -34,6 +34,7 @@ enum CardNames {
 };
 
 enum PlayerRoles {
+	UNASSIGNED = -1,
 	MEMESTUDIESPROFESSOR = 0,
 	HACKER = 1,
 	MODERATOR = 2,

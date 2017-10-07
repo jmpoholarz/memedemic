@@ -3,6 +3,7 @@
 #include <vector>
 #include <sstream>
 #include <cctype>
+#include <fstream>
 #include "GameStateManager.h"
 #include "Enums.h"
 
@@ -17,6 +18,9 @@ public:
 
 	// provides a usage string for correct usage of a command
 	std::string getUsage(std::string command);
+
+	int loadSaveFile();
+	int saveSaveFile();
 
 private:
 	GameStateManager& gsm;

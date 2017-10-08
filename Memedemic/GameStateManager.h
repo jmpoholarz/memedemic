@@ -13,7 +13,8 @@ public:
 	//GameStateManager();
 
 	// Sets up initial game starting conditions
-	GameStateManager(Board& b, Location& l, int numPlayers);
+	GameStateManager(Board& b, Location& l);
+	void setupPlayers(int numPlayers);
 	
 	// Frees all objects and readies the game for closing
 	~GameStateManager();
@@ -41,11 +42,12 @@ public:
 	int getMemeStatus(int memeNumber);
 	int getActionsRemaining();
 	Board& getBoard();
+	Player& getPlayer(int index);
 	//std::vector<Card*> getCards();
 	
 	int setOutbreakTrack(int value);
 	int setViralQuotient(int value);
-	int setMemeStatus(int meme, bool filtered);
+	int setMemeStatus(int meme, int filtered);
 	int setActionsRemaining(int value);
 
 

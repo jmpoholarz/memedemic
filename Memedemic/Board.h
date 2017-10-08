@@ -12,7 +12,7 @@ public:
 		bool cmcServer = false;
 	};
 
-	Board(int players);
+	Board();
 	~Board();
 
 	void setupPlayers(int players);
@@ -31,6 +31,7 @@ public:
 	BoardLocation getLocation(int loc);
 	int getOutbreakCounter();
 	int getCure(int meme);
+	void setCure(int meme, int value);
 	int getPlayerCards();
 	std::vector<std::string> getPlayerRoles();
 

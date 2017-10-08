@@ -30,8 +30,124 @@ std::string Parser::parse(std::string command) {
 	}
 
 	// At this point, we have our vector of words to deal with
-	if (tokens[0] == "usage") {
-		return getUsage(tokens[1]);
+	if (tokens[0] == "help") {
+		if (tokens.size() == 1) {
+			return "Help on the following topics is available:\n"
+				"   insert list of help topics here\n"
+				"Help for the following commands is available:\n"
+				"   usage, access, build, ban, give, take, filter, event, "
+				"outbreak, viral, \n   meme, players, roles, cmc, servers, draw, "
+				"discard, cards, end, new";
+		}
+		else if (tokens.size() == 2) {
+			if (tokens[1] == "usage") {
+				return "Provides instructions on how to use a command.\n";
+			}
+			else if (tokens[1] == "access") {
+				return "Use this to change to another location.\n"
+					"You may move to: \n"
+					"\t- An adjacent location\n"
+					"\t- A location you hold the card of\n"
+					"\t- Any location if holding the current location's card\n"
+					"\t- A location of a CMC Server if you are at a CMC Server\n"
+					"\t- (Professor) Any location by playing any location\n";
+			}
+			else if (tokens[1] == "build") {
+				return "Use this to construct a CMC Server\n"
+					"Maximum of 6 allowed. "
+					"Allows efficient board movement.\n"
+					"\t- Requires the current held card"
+					"\t- (Professor) No card required\n";
+			}
+			else if (tokens[1] == "ban") {
+				return "Use this to decrease the quantity of a meme in a site\n"
+					"Decrease depends on the following: \n"
+					"\t- Decrease a meme by 1 severity\n"
+					"\t- (Moderator) Decrease a meme to 0 severity\n"
+					"If a meme filter has been established for the given meme:\n"
+					"\t- Decrease meme presence to 0\n"
+					"\t- (Moderator) Passively reduces meme presence to 0\n";
+			}
+			else if (tokens[1] == "give") {
+				return "Use this in card transfers\n"
+					"\t- If in a held card location with another player, \n"
+					"\t\t give the held card to that player\n"
+					"\t- (Millenial) If in the same location as another player,\n"
+					"\t\t give any held card to that player\n";
+			}
+			else if (tokens[1] == "take") {
+				return "Use this in card transfers\n"
+					"\t- If in a held card location with another player, \n"
+					"\t\t take the held card from that player\n"
+					"\t- (Millenial) If in the same location as another player,\n"
+					"\t\t take any held card from that player\n";
+			}
+			else if (tokens[1] == "filter") {
+				return "Use this to develop a meme filter which can be used to "
+					"prevent additional memes from spreading\n"
+					"Requirements:\n"
+					"\t- 5 valid location cards must be played\n"
+					"\t- (H4cker) Only 4 valid location cards are required\n";
+			}
+			else if (tokens[1] == "event") {
+				return "Use this to play a particular event card. Each card may \n"
+					"only be played once.  Event cards do not consume an action when played.\n"
+					"Event cards include:\n"
+					"\t- Serious Discussion - Remove the card of a given site\n"
+					"\t\t from the infection deck, preventing direct meme spawns\n"
+					"\t\t in the particular location\n"
+					"\t- Power Outage - Skip the next meme infection step of play\n"
+					"\t- Meme Forecast - Look at the next 6 infection cards and\n"
+					"\t\t rearrange them in any chosen order.\n"
+					"\t- VPN - Immediately move ot any location on the board\n"
+					"\t- Government Grant - Build a free CMC Server on any location\n"
+					"\t\t of the board";
+			}
+			else if (tokens[1] == "outbreak") {
+				return "Use this to view more information on the Outbreak Track\n";
+			}
+			else if (tokens[1] == "viral") {
+				return "Use this to view more information on the Viral Quotient\n";
+			}
+			else if (tokens[1] == "meme") {
+				return "Use this to view more information on the Meme Status\n";
+			}
+			else if (tokens[1] == "players") {
+				return "Use this to view the locations of all players\n";
+			}
+			else if (tokens[1] == "roles") {
+				return "Use this to view the roles of all players\n";
+			}
+			else if (tokens[1] == "cmc") {
+				return "Use this to view a list of all CMC locations\n";
+			}
+			else if (tokens[1] == "servers") {
+				return "Use this to view a list of all CMC Server locations\n";
+			}
+			else if (tokens[1] == "draw") {
+				return "Use this to draw 2 cards at the start of your turn\n";
+			}
+			else if (tokens[1] == "discard") {
+				return "Use this to discard as many cards as necessary to not\n"
+					"\t exceed the hand maximum of 8 cards.\n";
+			}
+			else if (tokens[1] == "cards") {
+				return "Use this to view the cards held by other players\n";
+			}
+			else if (tokens[1] == "end") {
+				return "Use this to end a turn and trigger the infection phase\n";
+			}
+			else if (tokens[1] == "new") {
+				return "Use this to quit the current game and begin another\n";
+			}
+			else return "No help available on " + tokens[1] + "\n";
+		}
+		else return "Incorrect usage of help: " + getUsage("help");
+	}
+	else if (tokens[0] == "usage") {
+		if (tokens.size() > 1)
+			return getUsage(tokens[1]);
+		else return getUsage("usage");
 	}
 	else if (tokens[0] == "access") {
 		// Check for wrong number of arguments
@@ -222,7 +338,7 @@ std::string Parser::parse(std::string command) {
 	}
 	else if (tokens[0] == "servers") {
 		// Check for wrong number of arguments
-		if (tokens.size() != 2 && tokens.size() != 3) {
+		if (tokens.size() != 1 && tokens.size() != 2) {
 			return "Incorrect usage of servers: " + getUsage("servers");
 		}
 
@@ -405,109 +521,68 @@ int Parser::convertCard(std::string name) {
 }
 
 std::string Parser::getUsage(std::string command) {
-		if (command == "access") {
-			return "access <location>";
-		}
-		else if (command == "build") {
-			return "build";
-		}
-		else if (command == "ban") {
-			return "ban <number of meme>";
-		}
-		else if (command == "give") {
-			return "give <card name> <player name>";
-		}
-		else if (command == "take") {
-			return "take <card name> <player name>";
-		}
-		else if (command == "filter") {
-			return "filter <card1> <card2> <card3> <card4> <card5>";
-		}
-		else if (command == "event") {
-			return "event <card name>";
-		}
-		else if (command == "outbreak") {
-			return "outbreak track";
-		}
-		else if (command == "viral") {
-			return "viral quotient";
-		}
-		else if (command == "meme") {
-			return "meme status";
-		}
-		else if (command == "roles") {
-			return "players roles";
-		}
-		else if (command == "players") {
-			return "players";
-		}
-		else if (command == "cmc") {
-			return "cmc servers";
-		}
-		else if (command == "servers") {
-			return "servers";
-		}
-		else if (command == "draw") {
-			return "draw cards";
-		}
-		else if (command == "discard") {
-			return "discard <card position in hand>";
-		}
-		else if (command == "cards") {
-			return "cards <player name>";
-		}
-		else if (command == "end") {
-			return "end turn";
-		}
-		else if (command == "new") {
-			return "new game";
-		}
-		else return "No information found on " + command;
-}
-
-int Parser::loadSaveFile() {
-	std::string filename = "save.txt";
-	std::fstream fs(filename);
-	std::string line; // current line in save file
-	std::string elem; // current comma separated item
-	std::vector<std::string> tokens;
-	// First 24 lines are each location
-	for (int i = 0; i < 24; i++) {
-		std::getline(fs, line);
-		std::stringstream ss(line);
-		// Split line by commas
-		while (getline(ss, elem, ',')) {
-			tokens.push_back(elem);
-		}
-		// Set the meme serverity of the site
-		int levels[4] = {
-			atoi(tokens[1].c_str()), atoi(tokens[2].c_str()),
-			atoi(tokens[2].c_str()), atoi(tokens[3].c_str())
-		};
-		gsm.getBoard().setMemes(atoi(tokens[0].c_str()), levels);
-		gsm.getBoard().setCMCServer(atoi(tokens[0].c_str()), 
-			atoi(tokens[5].c_str()));
+	if (command == "help") {
+		return "help\nhelp <topic>\nhelp <command>";
 	}
-
-
-	return 0;
-
-
-	/*
-	// Create a stringstream to read through the command
-	std::stringstream ss(command);
-	// Temp string to store each "word" of the command
-	std::string str = "";
-	// Create a vector to hold parts of the command
-	std::vector<std::string> tokens;
-	// Split based on spaces
-	while (std::getline(ss, str, ' ')) {
-		if (1) { //str != " ") {
-				 // Make all characters lowercase
-			for (int i = 0; i < str.length(); i++) {
-				str[i] = std::tolower(str[i]);
-			}
-			tokens.push_back(str);
-		}
-	}*/
+	else if (command == "usage") {
+		return "usage <command>";
+	}
+	else if (command == "access") {
+		return "access <location>";
+	}
+	else if (command == "build") {
+		return "build";
+	}
+	else if (command == "ban") {
+		return "ban <number of meme>";
+	}
+	else if (command == "give") {
+		return "give <card name> <player name>";
+	}
+	else if (command == "take") {
+		return "take <card name> <player name>";
+	}
+	else if (command == "filter") {
+		return "filter <card1> <card2> <card3> <card4> <card5>";
+	}
+	else if (command == "event") {
+		return "event <card name>";
+	}
+	else if (command == "outbreak") {
+		return "outbreak track";
+	}
+	else if (command == "viral") {
+		return "viral quotient";
+	}
+	else if (command == "meme") {
+		return "meme status";
+	}
+	else if (command == "roles") {
+		return "players roles";
+	}
+	else if (command == "players") {
+		return "players";
+	}
+	else if (command == "cmc") {
+		return "cmc servers";
+	}
+	else if (command == "servers") {
+		return "servers";
+	}
+	else if (command == "draw") {
+		return "draw cards";
+	}
+	else if (command == "discard") {
+		return "discard <card position in hand>";
+	}
+	else if (command == "cards") {
+		return "cards <player name>";
+	}
+	else if (command == "end") {
+		return "end turn";
+	}
+	else if (command == "new") {
+		return "new game";
+	}
+	else return "No information found on " + command;
 }

@@ -5,7 +5,7 @@
 /**
 	One Player Constructor
 */
-Board::Board(int players) {
+Board::Board() {
 	outbreakCounter = 0;
 	viralQuotientCounter = 0;
 	cures[0] = 0;
@@ -14,13 +14,7 @@ Board::Board(int players) {
 	cures[3] = 0;
 	playerCards = 59;
 
-	setupPlayers(players);
-
 	initializeLocations();
-
-	for (int i = 0; i < players; i++) {
-		locations[18].players[i] = true;
-	}
 
 	locations[18].cmcServer = true;
 }
@@ -49,6 +43,10 @@ void Board::setupPlayers(int players) {
 		playerRoles.push_back("p3");
 		playerRoles.push_back("p4");
 		break;
+	}
+	// Set default player locations
+	for (int i = 0; i < players; i++) {
+		locations[18].players[i] = true;
 	}
 }
 
@@ -140,6 +138,10 @@ void Board::increaseViralQuotient() {
 */
 void Board::addCure(int meme) {
 	cures[meme] = 1;
+}
+
+void Board::setCure(int meme, int value) {
+	cures[meme] = value;
 }
 
 void Board::eradicateMeme(int meme) {

@@ -27,10 +27,6 @@ GameStateManager::GameStateManager(Board& b, Location& l) : board(b), locations(
 	currentPlayer = 0;
     actionsRemaining = 4;
     setupDeck();
-    int i;
-    for (i = 0; i < cards.size(); i++) {
-        std::cout << (CardNames) cards[i] << std::endl;
-    }
 }
 void GameStateManager::setupPlayers(int numPlayers) {
 	// Handle setup for players in the board
@@ -48,7 +44,7 @@ void GameStateManager::setupDeck() {
     std::vector<int> values(24, 0);
     std::random_device rd;
     std::mt19937 eng(rd());
-    std::uniform_int_distribution<> distr(0, 24);
+    std::uniform_int_distribution<> distr(0, 23);
     int i = 0;
     while (i < 24) {
         int randomValue = distr(eng);
@@ -171,13 +167,21 @@ int GameStateManager::shareCard(int card, std::string playerName) {
 	return 0;
 }
 int GameStateManager::drawCards() {
-
-
-
-	// Reduce number of player cards in Board class by two
-	board.removePlayerCard();
-	board.removePlayerCard();
-
+    if (cards.size() <= 0) {
+        std::cout << "Error: no cards remaining" << std::endl;
+        return 1;
+    } else if (cards.size() == 1) { // Add one card to player's deck
+        players[currentPlayer] -> addCard(cards.back());
+        cards.pop_back();
+        board.removePlayerCard();
+    } else { // Add two cards to player's deck
+        players[currentPlayer] -> addCard(cards.back());
+        cards.pop_back();
+        players[currentPlayer] -> addCard(cards.back());
+        cards.pop_back();
+        board.removePlayerCard();
+        board.removePlayerCard();
+    }
 	return 0;
 }
 int GameStateManager::discardCard(int card1, int card2) {

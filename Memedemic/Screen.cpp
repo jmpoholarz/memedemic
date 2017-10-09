@@ -14,7 +14,7 @@ void Screen::run() {
 	std::string response;
 	while (1) {
 		// WINDOWS SPECIFIC CLEAR SCREEN
-		system("cls");
+		system("cls||clear");
 		// Display the current board
 		showBoard();
 		// Print response of output to user

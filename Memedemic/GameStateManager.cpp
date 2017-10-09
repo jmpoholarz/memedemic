@@ -19,19 +19,23 @@
 	currentPlayer = 0;
 }*/
 
-GameStateManager::GameStateManager(Board& b, Location& l, int numPlayers) : board(b), locations(l) {
+GameStateManager::GameStateManager(Board& b, Location& l) : board(b), locations(l) {
+	// Initialize variables 
+	outbreakTrack = 8;
+	viralQuotient = 8;
+	currentPlayer = 0;
+    actionsRemaining = 4;
+}
+void GameStateManager::setupPlayers(int numPlayers) {
+	// Handle setup for players in the board
+	board.setupPlayers(numPlayers);
 	// Add players to a vector
 	for (int i = 0; i < numPlayers; i++) {
 		Player* p = new Player("testman", UNASSIGNED, EMAIL);
 		players.push_back(p);
 	}
 	// Add role setup here based on the players roles
-
-	// Initialize variables 
-	outbreakTrack = 8;
-	viralQuotient = 8;
-	currentPlayer = 0;
-    actionsRemaining = 4;
+	/// TODO
 }
 
 GameStateManager::~GameStateManager() {
@@ -178,10 +182,12 @@ int GameStateManager::autoSave() {
 }
 int GameStateManager::nextTurn() {
     actionsRemaining = 4;
+	currentPlayer++;
+	currentPlayer %= players.size();
 
 	// Perhaps print board with each new turn? board->printBoard();
 
-	return 0;
+	return 1;
 }
 int GameStateManager::initialInfection() {
 	return 0;
@@ -207,13 +213,18 @@ int GameStateManager::getViralQuotient() {
 Board& GameStateManager::getBoard() {
 	return board;
 }
+Player& GameStateManager::getPlayer(int index) {
+	return *(players[index]);
+}
 int GameStateManager::getActionsRemaining() {
 	return actionsRemaining;
 }
 
-int GameStateManager::setMemeStatus(int meme, bool filtered) {
-	if (filtered)
+int GameStateManager::setMemeStatus(int meme, int filtered) {
+	if (filtered == 1)
 		board.addCure(meme);
+	else if (filtered == 2)
+		board.setCure(meme, filtered);
 	return 0;
 }
 int GameStateManager::setOutbreakTrack(int value) {

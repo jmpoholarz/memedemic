@@ -42,7 +42,7 @@ Location::Location() {
 	
 	site VINE = {0};
 	VINE.id = 9;
-	VINE.adjacencies = {8,13};
+	VINE.adjacencies = {8,12,13};
 	
 	site SNAPCHAT = {0};
 	SNAPCHAT.id = 10;
@@ -54,7 +54,7 @@ Location::Location() {
 	
 	site PINTEREST = {0};
 	PINTEREST.id = 12;
-	PINTEREST.adjacencies = {11,13,10};
+	PINTEREST.adjacencies = {9,11,13,10};
 	
 	site TWITTER = {0};
 	TWITTER.id = 13;

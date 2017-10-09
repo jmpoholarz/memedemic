@@ -15,6 +15,7 @@ public:
 	// Sets up initial game starting conditions
 	GameStateManager(Board& b, Location& l);
 	void setupPlayers(int numPlayers);
+    void setupDeck();
 	
 	// Frees all objects and readies the game for closing
 	~GameStateManager();
@@ -59,5 +60,5 @@ private:
 	int viralQuotient;
 	int currentPlayer;
 	int actionsRemaining;
-	std::vector<Card*> cards;
+	std::vector<int> cards;
 };

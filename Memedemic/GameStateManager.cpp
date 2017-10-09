@@ -1,5 +1,6 @@
 #include "GameStateManager.h"
 #include <iostream>
+#include <random>
 
 /*GameStateManager::GameStateManager() : board(Board(1)), locations(Location()) {
 
@@ -25,6 +26,11 @@ GameStateManager::GameStateManager(Board& b, Location& l) : board(b), locations(
 	viralQuotient = 8;
 	currentPlayer = 0;
     actionsRemaining = 4;
+    setupDeck();
+    int i;
+    for (i = 0; i < cards.size(); i++) {
+        std::cout << (CardNames) cards[i] << std::endl;
+    }
 }
 void GameStateManager::setupPlayers(int numPlayers) {
 	// Handle setup for players in the board
@@ -36,6 +42,24 @@ void GameStateManager::setupPlayers(int numPlayers) {
 	}
 	// Add role setup here based on the players roles
 	/// TODO
+}
+
+void GameStateManager::setupDeck() {
+    std::vector<int> values(24, 0);
+    std::random_device rd;
+    std::mt19937 eng(rd());
+    std::uniform_int_distribution<> distr(0, 24);
+    int i = 0;
+    while (i < 24) {
+        int randomValue = distr(eng);
+        if (values[randomValue] == 1) {
+            continue;
+        } else {
+            cards.push_back(randomValue);
+            values[randomValue] = 1;
+        }
+        i++;
+    }
 }
 
 GameStateManager::~GameStateManager() {

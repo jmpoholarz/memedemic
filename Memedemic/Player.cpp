@@ -1,5 +1,4 @@
 #include "Player.h"
-#include "Card.h"
 #include "Enums.h"
 #include <string>
 #include <vector>
@@ -36,34 +35,35 @@ PlayerRoles Player::getPlayerRole() {
 }
 
 // Returns player's hand
-std::vector<Card> Player::getPlayerCards() {
+std::vector<int> Player::getPlayerCards() {
     return this -> playerCards;
 }
 
 // Returns player's location
-CardNames Player::getPlayerLocation() {
+int Player::getPlayerLocation() {
     return this -> playerLocation;
 }
 
 // Sets player's location
-bool Player::setPlayerLocation(CardNames location) {
+bool Player::setPlayerLocation(int location) {
     this -> playerLocation = location;
     return true;
 }
 
+// Sets player's role
 bool Player::setPlayerRole(PlayerRoles role) {
     this -> playerRole = role;
 	return true;
 }
 
 // Checks if player holds n instances of the specified card
-bool Player::holdsNCards(Card card, int n) {
+bool Player::holdsNCards(int card, int n) {
     int i;
     int count = 0;
 
     // Count instances of card in player's hand
     for (i = 0; i < this -> playerCards.size(); i++) {
-        if (playerCards[i].equals(card)) {
+        if (playerCards[i] == card) {
             count++;
         }
     }
@@ -78,7 +78,7 @@ bool Player::holdsNCards(Card card, int n) {
 }
 
 // Adds a card to the player's hand
-bool Player::addCard(Card card) {
+bool Player::addCard(int card) {
     try {
         this -> playerCards.push_back(card);
     } catch (std::bad_alloc) { // If push_back fails to allocate memory to expand the vector
@@ -88,11 +88,11 @@ bool Player::addCard(Card card) {
 }
 
 // Removes n instances of the specified card
-bool Player::removeNCards(Card card, int n) {
+bool Player::removeNCards(int card, int n) {
     int i = 0;
     bool success = false;
     while (i < this -> playerCards.size() && n > 0) {
-        if (this -> playerCards[i].equals(card)) {
+        if (this -> playerCards[i] == card) {
             success = true;
             // Remove card using erase so items are relocated
             playerCards.erase(playerCards.begin() + i);

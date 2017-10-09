@@ -1,6 +1,5 @@
 #pragma once
 #include "Enums.h"
-#include "Card.h"
 #include <string>
 #include <vector>
 
@@ -14,16 +13,16 @@ public:
 	bool setPlayerName(std::string name);
 	std::string getPlayerName();
 	PlayerRoles getPlayerRole();
-	std::vector<Card> getPlayerCards();
-	CardNames getPlayerLocation();
-    bool setPlayerLocation(CardNames location);
+	std::vector<int> getPlayerCards();
+	int getPlayerLocation();
+    bool setPlayerLocation(int location);
     bool setPlayerRole(PlayerRoles role);
-    bool holdsNCards(CardNames card, int n);
-    bool addCard(CardNames card);
-    bool removeNCards(CardNames card, int n);
+    bool holdsNCards(int card, int n);
+    bool addCard(int card);
+    bool removeNCards(int card, int n);
 private:
 	std::string playerName;
 	PlayerRoles playerRole;
-	CardNames playerLocation;
-	std::vector<Card> playerCards;
+	int playerLocation;
+	std::vector<int> playerCards;
 };

@@ -57,6 +57,7 @@ public:
 
 
 private:
+    std::string convertIntToCard(int);
 	Board& board;
 	Location& locations;
 	std::vector<Player*> players;
@@ -65,4 +66,5 @@ private:
 	int currentPlayer;
 	int actionsRemaining;
 	std::vector<int> cards;
+    std::vector<int> discardPile;
 };

@@ -194,7 +194,17 @@ std::string GameStateManager::printPlayerLocations() {
 	return "";
 }
 std::string GameStateManager::printPlayerCards(std::string playerName) {
-	return "";
+    std::string output;
+    if (playerName == "") { // If no player is specified, view current player's cards
+        int i;
+        for (i = 0; i < players[currentPlayer] -> getPlayerCards().size(); i++) {
+            output.append("Card " + std::to_string(i + 1) + ": " +
+                    convertIntToCard(players[currentPlayer] -> getPlayerCards()[i]) + '\n');
+        }
+    } else { // View specified player's cards
+    }
+
+	return output;
 }
 std::string GameStateManager::printCMCLocations() {
 	return "";
@@ -304,4 +314,71 @@ int GameStateManager::saveGame() {
 	fs << currentPlayer << "," << actionsRemaining << "," << std::endl;
 	
 	return 0;
+}
+
+std::string GameStateManager::convertIntToCard(int intCard) {
+    switch (intCard) {
+        case 0:
+            return "9GAG";
+        case 1:
+            return "iFunny";
+        case 2:
+            return "Imgur";
+        case 3:
+            return "4chan";
+        case 4:
+            return "Reddit";
+        case 5:
+            return "Discord";
+        case 6:
+            return "Steam";
+        case 7:
+            return "Twitch";
+        case 8:
+            return "YouTube";
+        case 9:
+            return "Vine";
+        case 10:
+            return "Snapchat";
+        case 11:
+            return "Instagram";
+        case 12:
+            return "Pinterest";
+        case 13:
+            return "Twitter";
+        case 14:
+            return "Facebook";
+        case 15:
+            return "Buzzfeed";
+        case 16:
+            return "Tumblr";
+        case 17:
+            return "Myspace";
+        case 18:
+            return "Email";
+        case 19:
+            return "WhatsApp";
+        case 20:
+            return "WeChat";
+        case 21:
+            return "Weibo";
+        case 22:
+            return "QQ";
+        case 23:
+            return "VK";
+        case 24:
+            return "Serious Discussion";
+        case 25:
+            return "Power Outage";
+        case 26:
+            return "Meme Forecast";
+        case 27:
+            return "VPN";
+        case 28:
+            return "Government Grant";
+        case 29:
+            return "Epidemic";
+        default:
+            return "";
+    }
 }

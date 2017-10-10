@@ -1,5 +1,7 @@
 #pragma once
 #include <vector>
+#include <iostream>
+#include <fstream>
 #include "Board.h"
 #include "Location.h"
 #include "Card.h"
@@ -50,6 +52,8 @@ public:
 	int setViralQuotient(int value);
 	int setMemeStatus(int meme, int filtered);
 	int setActionsRemaining(int value);
+
+	int saveGame();
 
 
 private:

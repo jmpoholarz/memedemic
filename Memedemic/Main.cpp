@@ -30,16 +30,14 @@ int main() {
 	}
 	else if (startMenuResponse == "3") {
 		// Quit the game
-		std::cout << "But if not you, then who will stop the memes";
-		std::this_thread::sleep_for(std::chrono::microseconds(500));
+		std::cout << "But if not you, then who will stop the memes.";
+		std::this_thread::sleep_for(std::chrono::milliseconds(750));
 		std::cout << ".";
-		std::this_thread::sleep_for(std::chrono::microseconds(500));
+		std::this_thread::sleep_for(std::chrono::milliseconds(750));
 		std::cout << ".";
-		std::this_thread::sleep_for(std::chrono::microseconds(500));
-		std::cout << ".";
-		std::this_thread::sleep_for(std::chrono::microseconds(500));
+		std::this_thread::sleep_for(std::chrono::milliseconds(750));
 		std::cout << "?" << std::endl;
-		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+		std::this_thread::sleep_for(std::chrono::milliseconds(1500));
 		return 0;
 	}	
 	

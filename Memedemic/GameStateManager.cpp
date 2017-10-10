@@ -1,5 +1,4 @@
 #include "GameStateManager.h"
-#include <iostream>
 
 /*GameStateManager::GameStateManager() : board(Board(1)), locations(Location()) {
 
@@ -178,7 +177,9 @@ int GameStateManager::updateBoard() {
 	return 0;
 }
 int GameStateManager::autoSave() {
-	return 0;
+	if (saveGame() == 0)
+		return 0;
+	else return -1;
 }
 int GameStateManager::nextTurn() {
     actionsRemaining = 4;
@@ -237,5 +238,41 @@ int GameStateManager::setViralQuotient(int value) {
 }
 int GameStateManager::setActionsRemaining(int value) {
 	actionsRemaining = value;
+	return 0;
+}
+
+int GameStateManager::saveGame() {
+	std::string filename = "save.txt";
+	std::fstream fs(filename);
+	// totalPlayers
+	fs << players.size() << std::endl;
+	// Location,memeLevel,memeLevel,memeLevel,memeLevel,hasCMC x24
+	for (int i = 0; i < 24; i++) {
+		fs << i << "," << board.getLocation(i).memes[0] << "," <<
+			board.getLocation(i).memes[1] << "," <<
+			board.getLocation(i).memes[2] << "," <<
+			board.getLocation(i).memes[3] << "," <<
+			board.getLocation(i).cmcServer << std::endl;
+	}
+	// PlayerDeckCardsRemaining,Card,Card,Card,...
+	fs << std::endl;
+	// MemeDeckCardsRemaining,Card,Card,Card,...
+	fs << std::endl;
+	// outbreakTrack
+	fs << outbreakTrack << std::endl;
+	// viralQuotient
+	fs << viralQuotient << std::endl;
+	// memeStatus,memeStatus,memeStatus,memeStatus
+	fs << board.getCure(0) << "," << board.getCure(1) << "," <<
+		board.getCure(2) << "," << board.getCure(3) << std::endl;
+	// playerNumber,name,role,currentLocation,totalCardsHeld,card,... xPlayers
+	for (int i = 0; i < players.size(); i++) {
+		fs << i << "," << players[i]->getPlayerName() << "," <<
+			players[i]->getPlayerRole() << "," << players[i]->getPlayerLocation() <<
+			"," << std::endl;
+	}
+	// currentPlayer,actionsRemaining
+	fs << currentPlayer << "," << actionsRemaining << "," << std::endl;
+	
 	return 0;
 }

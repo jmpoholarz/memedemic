@@ -104,3 +104,10 @@ bool Player::removeNCards(int card, int n) {
 
     return success;
 }
+
+// Removes card from index in player's hand
+int Player::removeCardAtIndex(int index) {
+    int card = playerCards[index];
+    playerCards.erase(playerCards.begin() + index);
+    return card;
+}

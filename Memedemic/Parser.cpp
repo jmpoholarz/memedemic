@@ -376,6 +376,7 @@ std::string Parser::parse(std::string command) {
 			card2 = atoi(tokens[2].c_str());
 		card1 = atoi(tokens[1].c_str());
 		int successful = gsm.discardCard(card1, card2);
+        std::cout << card1 << card2 << std::endl;
 		if (successful == 1) {
 			return "Successfully discarded.";
 		}

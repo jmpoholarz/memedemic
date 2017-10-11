@@ -173,19 +173,30 @@ int GameStateManager::drawCards() {
     } else if (cards.size() == 1) { // Add one card to player's deck
         players[currentPlayer] -> addCard(cards.back());
         cards.pop_back();
-        board.removePlayerCard();
+        board.updatePlayerCardCount(cards.size());
     } else { // Add two cards to player's deck
         players[currentPlayer] -> addCard(cards.back());
         cards.pop_back();
         players[currentPlayer] -> addCard(cards.back());
         cards.pop_back();
-        board.removePlayerCard();
-        board.removePlayerCard();
+        board.updatePlayerCardCount(cards.size());
     }
 	return 0;
 }
 int GameStateManager::discardCard(int card1, int card2) {
-	return 0;
+    int maxSize = players[currentPlayer] -> getPlayerCards().size();
+    if (card1 < 1 || card2 < 1 || card1 > maxSize || card2 > maxSize) {
+        // Out of bounds
+        return -1;
+    }
+    if (card1 > card2) {
+        discardPile.push_back(players[currentPlayer] -> removeCardAtIndex(card1 - 1));
+        discardPile.push_back(players[currentPlayer] -> removeCardAtIndex(card2 - 1));
+    } else {
+        discardPile.push_back(players[currentPlayer] -> removeCardAtIndex(card2 - 1));
+        discardPile.push_back(players[currentPlayer] -> removeCardAtIndex(card1 - 1));
+    }
+	return 1;
 }
 std::string GameStateManager::printPlayerRoles() {
 	return "";
@@ -202,6 +213,7 @@ std::string GameStateManager::printPlayerCards(std::string playerName) {
                     convertIntToCard(players[currentPlayer] -> getPlayerCards()[i]) + '\n');
         }
     } else { // View specified player's cards
+        // TODO
     }
 
 	return output;

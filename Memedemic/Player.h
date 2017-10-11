@@ -20,6 +20,7 @@ public:
     bool holdsNCards(int card, int n);
     bool addCard(int card);
     bool removeNCards(int card, int n);
+    int removeCardAtIndex(int index);
 private:
 	std::string playerName;
 	PlayerRoles playerRole;

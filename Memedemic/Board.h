@@ -26,7 +26,7 @@ public:
 	void increaseViralQuotient();
 	void addCure(int meme);
 	void eradicateMeme(int meme);
-	void removePlayerCard();
+	void updatePlayerCardCount(int playerCardCount);
 
 	BoardLocation getLocation(int loc);
 	int getOutbreakCounter();

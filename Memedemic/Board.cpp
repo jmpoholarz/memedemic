@@ -149,10 +149,10 @@ void Board::eradicateMeme(int meme) {
 }
 
 /**
-	Reduces the player cards counter by one
+	Updates the player cards counter
 */
-void Board::removePlayerCard() {
-	playerCards--;
+void Board::updatePlayerCardCount(int playerCardCount) {
+	playerCards = playerCardCount;
 }
 
 /**

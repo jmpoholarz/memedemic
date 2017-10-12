@@ -67,7 +67,7 @@ GameStateManager::~GameStateManager() {
 
 int GameStateManager::movePlayer(int location) {
 	// Check if location is a valid move for the player
-	if (locations.isAdjacent(players[currentPlayer]->getPlayerLocation(), location)) {
+	if (locations.isAdjacent(players[currentPlayer]->getPlayerLocation(), location)) { // Adjacent location
         // Make sure player has actions left in their turn
         if (actionsRemaining <= 0) {
             return 0;
@@ -78,7 +78,29 @@ int GameStateManager::movePlayer(int location) {
         std::cout << players[currentPlayer] -> getPlayerLocation() << std::endl;
         actionsRemaining--;
 		return 1;
-	}
+	} else if (players[currentPlayer]->holdsNCards(location, 1)) { // Location on card
+        // Make sure player has actions left in their turn
+        if (actionsRemaining <= 0) {
+            return 0;
+        }
+		// Update player location in the Board class
+		board.movePlayer(location, currentPlayer);
+        players[currentPlayer]->setPlayerLocation((CardNames) location);
+        std::cout << players[currentPlayer] -> getPlayerLocation() << std::endl;
+        actionsRemaining--;
+        return 1;
+    } else if (board.getLocation(players[currentPlayer]->getPlayerLocation()).cmcServer && board.getLocation(location).cmcServer) { // CMC server
+        // Make sure player has actions left in their turn
+        if (actionsRemaining <= 0) {
+            return 0;
+        }
+		// Update player location in the Board class
+		board.movePlayer(location, currentPlayer);
+        players[currentPlayer]->setPlayerLocation((CardNames) location);
+        std::cout << players[currentPlayer] -> getPlayerLocation() << std::endl;
+        actionsRemaining--;
+        return 1;
+    }
 
 	else return 0;
 }
@@ -158,7 +180,7 @@ int GameStateManager::buildCMCServer() {
 		board.removeCMC(removeLocation);
 	}
 
-	return 0;
+	return 1;
 }
 int GameStateManager::playCard(int card) {
 	return 0;

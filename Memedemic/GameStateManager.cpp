@@ -1,4 +1,5 @@
 #include "GameStateManager.h"
+#include <cstdlib>
 #include <iostream>
 #include <random>
 
@@ -296,44 +297,14 @@ int GameStateManager::nextTurn() {
 }
 int GameStateManager::initialInfection() {
 	//create each spawning area
-	std::vector<Location> area1;
-	std::vector<Location> area2;
-	std::vector<Location> area3;
-	std::vector<Location> area4;
+	int area1[5] = {TUMBLR, IFUNNY, NINEGAG, IMGUR, FOURCHAN};
+	int area2[6] = {BUZZFEED, YOUTUBE, TWITCH, REDDIT, STEAM, DISCORD};
+	int area3[7] = {MYSPACE, FACEBOOK, VINE, TWITTER, PINTEREST, SNAPCHAT, INSTAGRAM};
+	int area4[6] = {EMAIL, WECHAT, WHATSAPP, WEIBO, QQ, VK};
 
-	//populate the areas
-	area1.push_back(TUMBLR);
-	area1.push_back(IFUNNY);
-	area1.push_back(NINEGAG);
-	area1.push_back(IMGUR);
-	area1.push_back(FOURCHAN);
-
-	//populate area2
-	area2.push_back(BUZZFEED);
-	area2.push_back(YOUTUBE);
-	area2.push_back(TWITCH);
-	area2.push_back(REDDIT);
-	area2.push_back(STEAM);
-	area2.push_back(DISCORD);
-
-	//populate area3
-	area3.push_back(MYSPACE);
-	area3.push_back(FACEBOOK);
-	area3.push_back(VINE);
-	area3.push_back(TWITTER);
-	area3.push_back(PINTEREST);
-	area3.push_back(SNAPCHAT);
-	area3.push_back(INSTAGRAM);
-
-	//populate area4
-	area4.push_back(EMAIL);
-	area4.push_back(WECHAT);
-	area4.push_back(WHATSAPP);
-	area4.push_back(WEIBO);
-	area4.push_back(QQ);
-	area4.push_back(VK);
-
-	
+	//place level 3 meme infections in each area
+	int randomNum = (rand() % 5);
+	//TODO
 }
 int GameStateManager::infect(int location, int meme, int count) {
 

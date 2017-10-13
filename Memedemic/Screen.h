@@ -10,7 +10,7 @@ public:
 	~Screen();
 	void showBoard();
 	std::string sendCommand(std::string command);
-	void run(bool gameEnd);
+	void run();
 private:
 	GameStateManager gsm;
 	Parser parser;

@@ -217,17 +217,19 @@ int GameStateManager::shareCard(int card, std::string playerName) {
 int GameStateManager::drawCards() {
     if (cards.size() <= 0) {
         std::cout << "Error: no cards remaining" << std::endl;
-        return 1;
+        return -1;
     } else if (cards.size() == 1) { // Add one card to player's deck
         players[currentPlayer] -> addCard(cards.back());
         cards.pop_back();
         board.updatePlayerCardCount(cards.size());
+		return 2;
     } else { // Add two cards to player's deck
         players[currentPlayer] -> addCard(cards.back());
         cards.pop_back();
         players[currentPlayer] -> addCard(cards.back());
         cards.pop_back();
         board.updatePlayerCardCount(cards.size());
+		return 1;
     }
 	return 0;
 }

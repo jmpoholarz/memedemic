@@ -47,10 +47,18 @@ void GameStateManager::setupPlayers(int numPlayers) {
             p -> addCard(cards.back());
             cards.pop_back();
         }
-        board.updatePlayerCardCount(cards.size());
 
 		players.push_back(p);
 	}
+
+    // Insert Epidemic cards
+    std::random_device rd;
+    std::mt19937 eng(rd());
+    std::uniform_int_distribution<> distr(0, cards.size());
+    for (int i = 0; i < 6; i++) {
+        cards.insert(cards.begin() + distr(eng), 29);
+    }
+    board.updatePlayerCardCount(cards.size());
 }
 
 void GameStateManager::setupDeck() {
@@ -59,13 +67,13 @@ void GameStateManager::setupDeck() {
     std::mt19937 eng(rd());
     std::uniform_int_distribution<> distr(0, 23);
     int i = 0;
-    while (i < 24) {
+    while (i < 48) {
         int randomValue = distr(eng);
-        if (values[randomValue] == 1) {
+        if (values[randomValue] == 2) {
             continue;
         } else {
             cards.push_back(randomValue);
-            values[randomValue] = 1;
+            values[randomValue] += 1;
         }
         i++;
     }

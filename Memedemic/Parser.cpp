@@ -164,11 +164,16 @@ std::string Parser::parse(std::string command) {
 		int successful = gsm.movePlayer(location);
 		if (successful == 1)
 			return "Moved to " + tokens[1];
+		else if (successful == 0) {
+			return "You have no actions remaining.  Please end your turn.";
+		}
 		else if (successful == -1) {
 			// Location non-adjacent and no held card
 			return "You cannot move to " + tokens[1] + 
-				" unless you:\n1. Hold its card\n2. Are adjacent\n" +
-				"3.It is the location of a CMC server, and" +
+				" unless you:\n1. Hold its card\n"
+				"2. Hold the current location's card\n "
+				"3. Are adjacent to it\n" +
+				"4.It is the location of a CMC server, and" +
 				" you are at a CMC server";
 		}
 		else return "Unable to move to " + tokens[1];
@@ -182,6 +187,9 @@ std::string Parser::parse(std::string command) {
 		int successful = gsm.buildCMCServer();
 		if (successful == 1)
 			return "Built CMC Server.";
+		else if (successful == 0) {
+			return "You have no actions remaining.  Please end your turn.";
+		}
 		else if (successful == -1) {
 			// CMC Server Present
 			return "There is already a CMC Server at this location.";
@@ -203,9 +211,14 @@ std::string Parser::parse(std::string command) {
 		}
 		// Attempt to ban disease
 		int whichMeme = atoi(tokens[1].c_str());
+		if (whichMeme < 1 || whichMeme > 4)
+			return "Please choose a valid meme: (1-4).  You chose " + whichMeme;
 		int successful = gsm.banMeme(whichMeme);
 		if (successful == 1)
 			return "Banned meme " + tokens[1] + " from current location.";
+		else if (successful == 0) {
+			return "You have no actions remaining.  Please end your turn.";
+		}
 		else if (successful == -1) {
 			// Meme already filtered - doesn't exist on map anymore
 			return "Meme " + tokens[1] + " has already been filtered.";
@@ -253,6 +266,9 @@ std::string Parser::parse(std::string command) {
 			
 		if (successful == 1) {
 			return "Successfully developed a meme filter!";
+		}
+		else if (successful == 0) {
+			return "You have no actions remaining.  Please end your turn.";
 		}
 		else if (successful == -1) {
 			// Cards don't all match

@@ -66,21 +66,44 @@ GameStateManager::~GameStateManager() {
 }
 
 int GameStateManager::movePlayer(int location) {
-	// Check if location is a valid move for the player
+	// Make sure player has actions left in their turn
+	if (actionsRemaining <= 0) {
+		return 0;
+	}
+	// Check if adjacent location
 	if (locations.isAdjacent(players[currentPlayer]->getPlayerLocation(), location)) {
-        // Make sure player has actions left in their turn
-        if (actionsRemaining <= 0) {
-            return 0;
-        }
 		// Update player location in the Board class
 		board.movePlayer(location, currentPlayer);
-        players[currentPlayer]->setPlayerLocation((CardNames) location);
-        std::cout << players[currentPlayer] -> getPlayerLocation() << std::endl;
-        actionsRemaining--;
+		players[currentPlayer]->setPlayerLocation((CardNames)location);
+		std::cout << players[currentPlayer]->getPlayerLocation() << std::endl;
+		actionsRemaining--;
 		return 1;
 	}
-
-	else return 0;
+	// Or if player holding the card for the destination
+	else if (players[currentPlayer]->holdsNCards(location, 1)) {
+		players[currentPlayer]->removeNCards(location, 1);
+		players[currentPlayer]->setPlayerLocation(location);
+		board.movePlayer(location, currentPlayer);
+		actionsRemaining--;
+		return 1;
+	}
+	// Or if the player is holding the current location
+	else if (players[currentPlayer]->holdsNCards(players[currentPlayer]->getPlayerLocation(), 1)) {
+		players[currentPlayer]->removeNCards(players[currentPlayer]->getPlayerLocation(), 1);
+		players[currentPlayer]->setPlayerLocation(location);
+		board.movePlayer(location, currentPlayer);
+		actionsRemaining--;
+		return 1;
+	}
+	// Or if at a CMC server and moving to a CMC server
+	else if (board.getLocation(location).cmcServer == true &&
+		board.getLocation(players[currentPlayer]->getPlayerLocation()).cmcServer == true) {
+		board.movePlayer(location, currentPlayer);
+		players[currentPlayer]->setPlayerLocation(location);
+		actionsRemaining--;
+		return 1;
+	}
+	else return -1;
 }
 
 int GameStateManager::banMeme(int memeNumber) {
@@ -146,9 +169,33 @@ int GameStateManager::developMemeFilter(int card1, int card2, int card3,
 	return 0;
 }
 int GameStateManager::buildCMCServer() {
+	// Check if player has actions remaining
+	if (actionsRemaining <= 0)
+		return 0;
+	// Check if CMC exists at the location
+	if (board.getLocation(players[currentPlayer]->getPlayerLocation()).cmcServer == true) {
+		return -1;
+	}
+	// Check if max CMCs already exist
+	int CMCCount = 0;
+	for (int i = 0; i < 24; i++) {
+		if (board.getLocation(i).cmcServer == true)
+			CMCCount++;
+	}
+	if (CMCCount >= 6)
+		return -2;
+	// Check if player holding the current location card
+	if (!(players[currentPlayer]->holdsNCards(players[currentPlayer]->getPlayerLocation(), 1))) {
+		return -3;
+	}
+	// Otherwise player can build a CMC!
+	board.addCMC(players[currentPlayer]->getPlayerLocation());
+	players[currentPlayer]->removeNCards(players[currentPlayer]->getPlayerLocation(), 1);
+	actionsRemaining--;
+	return 1;
+		
 
-
-
+	/*
 	// if six CMC stations already exist, set remove = true and removeLocation = location of CMC to remove
 	bool removeCMC = false;
 	int removeLocation = NULL;
@@ -159,6 +206,7 @@ int GameStateManager::buildCMCServer() {
 	}
 
 	return 0;
+	*/
 }
 int GameStateManager::playCard(int card) {
 	return 0;

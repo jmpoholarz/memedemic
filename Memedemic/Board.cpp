@@ -229,7 +229,7 @@ void Board::printBoard() {
 	*/
 
 	// First row of locations
-	std::cout << "+-----------+  +-----------+  +-----------+  +-----------+  +-----------+\n";
+	std::cout << "&-----------&  &-----------&  &-----------&  &-----------&  &-----------&\n";
 	std::cout << "|  Tumblr   |  |  iFunny   |  |   9GAG    |  |   Imgur   |  |   4chan   |\n";
 	std::cout << "|           |  |           |  |           |  |           |  |           |\n";
 	std::cout << "|";
@@ -238,13 +238,13 @@ void Board::printBoard() {
 	std::cout << "|  |";
 	printCounters(1);
 	printCMC(1);
-	std::cout << "+--+";
+	std::cout << "&--&";
 	printCounters(0);
 	printCMC(0);
-	std::cout << "+--+";
+	std::cout << "&--&";
 	printCounters(2);
 	printCMC(2);
-	std::cout << "+--+";
+	std::cout << "&--&";
 	printCounters(3);
 	printCMC(3);
 	std::cout << "|\n";
@@ -263,11 +263,11 @@ void Board::printBoard() {
 	printPlayers(3);
 	std::cout << "|\n";
 
-	std::cout << "+-----+-----+\\ +-----+-----+ /+-----------+  +-----------+\\ +-----+-----+\n";
+	std::cout << "&-----&-----&\\ &-----&-----& /&-----------&  &-----------&\\ &-----&-----&\n";
 	std::cout << "      |      \\\\      |      //                            \\\\      |      \n";
 	
 	// Second row of locations
-	std::cout << "+-----+-----+ \\+-----+-----+/ +-----------+  +-----------+ \\+-----+-----+\n";
+	std::cout << "#=====#=====# \\$- - -$- - -$/ $- - - - - -$  $- - - - - -$ \\$- - -$- - -$\n";
 	std::cout << "|  Myspace  |  | BuzzFeed  |  |  YouTube  |  |  Twitch   |  |  Reddit   |\n";
 	std::cout << "|           |  |           |  |           |  |           |  |           |\n";
 
@@ -277,13 +277,13 @@ void Board::printBoard() {
 	std::cout << "|  |";
 	printCounters(15);
 	printCMC(15);
-	std::cout << "+--+";
+	std::cout << "$--$";
 	printCounters(8);
 	printCMC(8);
-	std::cout << "+--+";
+	std::cout << "$--$";
 	printCounters(7);
 	printCMC(7);
-	std::cout << "+--+";
+	std::cout << "$--$";
 	printCounters(4);
 	printCMC(4);
 	std::cout << "|\n";
@@ -302,18 +302,18 @@ void Board::printBoard() {
 	printPlayers(4);
 	std::cout << "|\n";
 
-	std::cout << "+-----------+\\ +-----+-----+  +-----+-----+  +-----+-----+\\ +-----------+\n";
+	std::cout << "#===========#\\ $- - -$- - -$  $- - -$- - -$  $- - -$- - -$\\ $- - - - - -$\n";
 	std::cout << "             \\\\      |              |              |      \\\\             \n";
 	
 	// Third row of locations
-	std::cout << "+-----------+ \\+-----+-----+  +-----+-----+  +-----+-----+ \\+-----------+\n";
+	std::cout << "@-----------@ \\#=====#=====#  #=====#=====#  $- - -$- - -$ \\$- - - - - -$\n";
 	std::cout << "|   Email   |  | Facebook  |  |   Vine    |  |   Steam   |  |  Discord  |\n";
 	std::cout << "|           |  |           |  |           |  |           |  |           |\n";
 
 	std::cout << "|";
 	printCounters(18);
 	printCMC(18);
-	std::cout << "+--+";
+	std::cout << "@--#";
 	printCounters(14);
 	printCMC(14);
 	std::cout << "|  |";
@@ -322,7 +322,7 @@ void Board::printBoard() {
 	std::cout << "|  |";
 	printCounters(6);
 	printCMC(6);
-	std::cout << "+--+";
+	std::cout << "$--$";
 	printCounters(5);
 	printCMC(5);
 	std::cout << "|\n";
@@ -341,27 +341,27 @@ void Board::printBoard() {
 	printPlayers(5);
 	std::cout << "|\n";
 
-	std::cout << "+-----------+\\ +-----+-----+\\ +-----+-----+\\ +-----------+  +-----------+\n";
+	std::cout << "@-----------@\\ #=====#=====#\\ #=====#=====#\\ $- - - - - -$  $- - - - - -$\n";
 	std::cout << "             \\\\      |      \\\\      |      \\\\                            \n";
 	
 	// Fourth row of locations
-	std::cout << "+-----------+ \\+-----+-----+ \\+-----+-----+ \\+-----------+  +-----------+\n";
+	std::cout << "@-----------@ \\@-----@-----@ \\#=====#=====# \\#===========#  #===========#\n";
 	std::cout << "|  WeChat   |  | WhatsApp  |  |  Twitter  |  | Pinterest |  | Snapchat  |\n";
 	std::cout << "|           |  |           |  |           |  |           |  |           |\n";
 
 	std::cout << "|";
 	printCounters(20);
 	printCMC(20);
-	std::cout << "+--+";
+	std::cout << "@--@";
 	printCounters(19);
 	printCMC(19);
 	std::cout << "|  |";
 	printCounters(13);
 	printCMC(13);
-	std::cout << "+--+";
+	std::cout << "#--#";
 	printCounters(12);
 	printCMC(12);
-	std::cout << "+--+";
+	std::cout << "#--#";
 	printCounters(10);
 	printCMC(10);
 	std::cout << "|\n";
@@ -380,11 +380,11 @@ void Board::printBoard() {
 	printPlayers(10);
 	std::cout << "|\n";
 
-	std::cout << "+-----+-----+\\ +-----+-----+\\ +-----------+  +-----+-----+ /+-----------+\n";
+	std::cout << "@-----@-----@\\ @-----@-----@\\ #===========#  #=====#=====# /#===========#\n";
 	std::cout << "      |      \\\\      |      \\\\                     |      //             \n";
 	
 	// Fifth row of locations
-	std::cout << "+-----+-----+ \\+-----+-----+ \\+-----------+  +-----------+/              \n";
+	std::cout << "@-----@-----@ \\@-----@-----@ \\@-----------@  #===========#/              \n";
 	std::cout << "|   Weibo   |  |    QQ     |  |    VK     |  | Instagram |                 \n";
 
 	std::cout << "|           |  |           |  |           |  |           | ";
@@ -394,10 +394,10 @@ void Board::printBoard() {
 	std::cout << "|";
 	printCounters(21);
 	printCMC(21);
-	std::cout << "+--+";
+	std::cout << "@--@";
 	printCounters(22);
 	printCMC(22);
-	std::cout << "+--+";
+	std::cout << "@--@";
 	printCounters(23);
 	printCMC(23);
 	std::cout << "|  |";
@@ -423,7 +423,7 @@ void Board::printBoard() {
 	printPlayerCards();
 	std::cout << "\n";
 	
-	std::cout << "+-----------+  +-----------+  +-----------+  +-----------+               \n\n";
+	std::cout << "@-----------@  @-----------@  @-----------@  #===========#               \n\n";
 }
 
 /**

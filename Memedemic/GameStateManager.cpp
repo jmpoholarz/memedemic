@@ -318,8 +318,55 @@ int GameStateManager::nextTurn() {
 
 	// Perhaps print board with each new turn? board->printBoard();
 
+	//spread memes number of viral quotient
+	//create the random device engine and stuff
+	std::random_device rd;
+	std::mt19937 eng(rd());
+	std::uniform_int_distribution<> distr(0,23);
+	for(int x = 0; x < viralQuotient; x++)
+	{
+		//choose the location
+		int loca = distr(eng);
+		incrementInfect(loca, loca, loca);
+	}
 	return 1;
 }
+void incrementInfect(int location, int origin, int prev)
+{
+	switch(location){
+		case TUMBLR:
+		case IFUNNY:
+		case NINEGAG:
+		case IMGUR:
+		case FOURCHAN:
+			break;
+		case BUZZFEED:
+		case YOUTUBE:
+		case TWITCH:
+		case REDDIT:
+		case STEAM:
+		case DISCORD;
+			break;
+		case MYSPACE:
+		case FACEBOOK:
+		case VINE:
+		case TWITTER:
+		case PINTEREST:
+		case SNAPCHAT:
+		case INSTAGRAM:
+			break;
+		case EMAIL:
+		case WECHAT:
+		case WHATSAPP:
+		case WEIBO:
+		case QQ:
+		case VK:
+			break;
+		default:
+			break
+	}
+}
+
 int GameStateManager::initialInfection() {
 	//create each spawning area
 	int area1[5] = {TUMBLR, IFUNNY, NINEGAG, IMGUR, FOURCHAN};

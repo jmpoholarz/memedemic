@@ -256,7 +256,6 @@ int GameStateManager::drawCards() {
         cards.pop_back();
         board.updatePlayerCardCount(cards.size());
         return 1;
-		return 1;
     }
 	return 0;
 }

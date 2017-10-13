@@ -314,7 +314,7 @@ int GameStateManager::initialInfection() {
 	//remove value, ignore final 2
 	area1[randomNum] = area1[3];
 	
-	//place leve 1 meme
+	//place level 1 meme
 	randomNum = (rand() % 3);
 	infect(area1[randomNum], 0, 1);
 	
@@ -353,7 +353,7 @@ int GameStateManager::initialInfection() {
 	//move on to infection of area4
 	randomNum = (rand() % 6);
 	infect(area4[randomNum], 3, 3);
-	//remove va,lue, ignore final value
+	//remove value, ignore final value
 	area4[randomNum] = area4[5];
 
 	//place level 2 meme

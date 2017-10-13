@@ -10,7 +10,7 @@ Location::Location() {
 
 	site IFUNNY = {0};
 	IFUNNY.id = 1;
-	IFUNNY.adjacencies = {0, 15};
+	IFUNNY.adjacencies = {0, 15, 16};
 
 	site IMGUR = {0};
 	IMGUR.id = 2;
@@ -70,7 +70,7 @@ Location::Location() {
 	
 	site TUMBLR = {0};
 	TUMBLR.id = 16;
-	TUMBLR.adjacencies = {17,15};
+	TUMBLR.adjacencies = {1,17,15};
 	
 	site MYSPACE = {0};
 	MYSPACE.id = 17;

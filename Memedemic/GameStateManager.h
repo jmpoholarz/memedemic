@@ -69,6 +69,7 @@ private:
 
 	//TODO tracks how many cubes of each meme is left, losing condition if any is < 0
 	int cubesLeft[4];
+    int playerHasDrawn;
 	std::vector<int> cards;
     std::vector<int> discardPile;
 };

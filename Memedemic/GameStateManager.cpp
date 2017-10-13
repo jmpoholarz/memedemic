@@ -236,10 +236,15 @@ int GameStateManager::shareCard(int card, std::string playerName) {
 	return 0;
 }
 int GameStateManager::drawCards() {
-    if (cards.size() <= 0) {
+    int playerHandSize = players[currentPlayer] -> getPlayerCards().size();
+    if (playerHandSize == 7) {
+        return -1;
+    } else if (playerHandSize >= 8) {
+        return -2;
+    } else if (cards.size() <= 0) {
         std::cout << "Error: no cards remaining" << std::endl;
         return -1;
-    } else if (cards.size() == 1) { // Add one card to player's deck
+    } else if (cards.size() == 1 || playerHandSize == 6) { // Add one card to player's deck
         players[currentPlayer] -> addCard(cards.back());
         cards.pop_back();
         board.updatePlayerCardCount(cards.size());

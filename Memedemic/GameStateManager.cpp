@@ -37,14 +37,30 @@ void GameStateManager::setupPlayers(int numPlayers) {
 	for (int i = 0; i < numPlayers; i++) {
 		Player* p = new Player("testman", UNASSIGNED, EMAIL);
         // Draw starting 2 cards
-        p -> addCard(cards.back());
-        cards.pop_back();
-        p -> addCard(cards.back());
-        cards.pop_back();
-        board.updatePlayerCardCount(cards.size());
+        int numCardsToDraw = 0;
+        if (numPlayers <= 2) {
+            numCardsToDraw = 4;
+        } else if (numPlayers == 3) {
+            numCardsToDraw = 3;
+        } else if (numPlayers == 4) {
+            numCardsToDraw = 2;
+        }
+        for (int j = 0; j < numCardsToDraw; j++) {
+            p -> addCard(cards.back());
+            cards.pop_back();
+        }
 
 		players.push_back(p);
 	}
+
+    // Insert Epidemic cards
+    std::random_device rd;
+    std::mt19937 eng(rd());
+    std::uniform_int_distribution<> distr(0, cards.size());
+    for (int i = 0; i < 6; i++) {
+        cards.insert(cards.begin() + distr(eng), 29);
+    }
+    board.updatePlayerCardCount(cards.size());
 }
 
 void GameStateManager::setupDeck() {
@@ -53,13 +69,13 @@ void GameStateManager::setupDeck() {
     std::mt19937 eng(rd());
     std::uniform_int_distribution<> distr(0, 23);
     int i = 0;
-    while (i < 24) {
+    while (i < 48) {
         int randomValue = distr(eng);
-        if (values[randomValue] == 1) {
+        if (values[randomValue] == 2) {
             continue;
         } else {
             cards.push_back(randomValue);
-            values[randomValue] = 1;
+            values[randomValue] += 1;
         }
         i++;
     }
@@ -222,29 +238,38 @@ int GameStateManager::shareCard(int card, std::string playerName) {
 	return 0;
 }
 int GameStateManager::drawCards() {
-    if (cards.size() <= 0) {
+    int playerHandSize = players[currentPlayer] -> getPlayerCards().size();
+    if (playerHandSize == 7) {
+        return -1;
+    } else if (playerHandSize >= 8) {
+        return -2;
+    } else if (cards.size() <= 0) {
         std::cout << "Error: no cards remaining" << std::endl;
-        return 1;
-    } else if (cards.size() == 1) { // Add one card to player's deck
+        return -1;
+    } else if (cards.size() == 1 || playerHandSize == 6) { // Add one card to player's deck
         players[currentPlayer] -> addCard(cards.back());
         cards.pop_back();
         board.updatePlayerCardCount(cards.size());
+		return 2;
     } else { // Add two cards to player's deck
         players[currentPlayer] -> addCard(cards.back());
         cards.pop_back();
         players[currentPlayer] -> addCard(cards.back());
         cards.pop_back();
         board.updatePlayerCardCount(cards.size());
+        return 1;
     }
 	return 0;
 }
 int GameStateManager::discardCard(int card1, int card2) {
     int maxSize = players[currentPlayer] -> getPlayerCards().size();
-    if (card1 < 1 || card2 < 1 || card1 > maxSize || card2 > maxSize) {
+    if (card1 < 1 || (card2 != -1 && card2 < 1) || card1 > maxSize || card2 > maxSize) {
         // Out of bounds
         return -1;
     }
-    if (card1 > card2) {
+    if (card2 == -1) { // Only 1 card to discard
+        discardPile.push_back(players[currentPlayer] -> removeCardAtIndex(card1 - 1));
+    } else if (card1 > card2) { // Discard card with greater index first
         discardPile.push_back(players[currentPlayer] -> removeCardAtIndex(card1 - 1));
         discardPile.push_back(players[currentPlayer] -> removeCardAtIndex(card2 - 1));
     } else {

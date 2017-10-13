@@ -380,6 +380,7 @@ std::string Parser::parse(std::string command) {
 			// 2 too many cards in hand
 			return "Holding too many cards.  Please discard two.";
 		}
+		else return "Unable to draw cards.";
 	}
 	else if (tokens[0] == "discard") {
 		// Check for wrong number of arguments

@@ -257,11 +257,13 @@ int GameStateManager::drawCards() {
 }
 int GameStateManager::discardCard(int card1, int card2) {
     int maxSize = players[currentPlayer] -> getPlayerCards().size();
-    if (card1 < 1 || card2 < 1 || card1 > maxSize || card2 > maxSize) {
+    if (card1 < 1 || (card2 != -1 && card2 < 1) || card1 > maxSize || card2 > maxSize) {
         // Out of bounds
         return -1;
     }
-    if (card1 > card2) {
+    if (card2 == -1) { // Only 1 card to discard
+        discardPile.push_back(players[currentPlayer] -> removeCardAtIndex(card1 - 1));
+    } else if (card1 > card2) { // Discard card with greater index first
         discardPile.push_back(players[currentPlayer] -> removeCardAtIndex(card1 - 1));
         discardPile.push_back(players[currentPlayer] -> removeCardAtIndex(card2 - 1));
     } else {

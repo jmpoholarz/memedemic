@@ -28,6 +28,7 @@ GameStateManager::GameStateManager(Board& b, Location& l) : board(b), locations(
 	currentPlayer = 0;
     actionsRemaining = 4;
     setupDeck();
+	initialInfection();
 }
 void GameStateManager::setupPlayers(int numPlayers) {
 	// Handle setup for players in the board

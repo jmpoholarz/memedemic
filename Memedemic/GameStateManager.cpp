@@ -26,6 +26,8 @@ GameStateManager::GameStateManager(Board& b, Location& l) : board(b), locations(
 	viralQuotient = 2;
 	currentPlayer = 0;
     actionsRemaining = 4;
+    playerHasDrawn = 0;
+	initialInfection();
     setupDeck();
 }
 void GameStateManager::setupPlayers(int numPlayers) {
@@ -47,10 +49,18 @@ void GameStateManager::setupPlayers(int numPlayers) {
             p -> addCard(cards.back());
             cards.pop_back();
         }
-        board.updatePlayerCardCount(cards.size());
 
 		players.push_back(p);
 	}
+
+    // Insert Epidemic cards
+    std::random_device rd;
+    std::mt19937 eng(rd());
+    std::uniform_int_distribution<> distr(0, cards.size());
+    for (int i = 0; i < 6; i++) {
+        cards.insert(cards.begin() + distr(eng), 29);
+    }
+    board.updatePlayerCardCount(cards.size());
 }
 
 void GameStateManager::setupDeck() {
@@ -59,13 +69,13 @@ void GameStateManager::setupDeck() {
     std::mt19937 eng(rd());
     std::uniform_int_distribution<> distr(0, 23);
     int i = 0;
-    while (i < 24) {
+    while (i < 48) {
         int randomValue = distr(eng);
-        if (values[randomValue] == 1) {
+        if (values[randomValue] == 2) {
             continue;
         } else {
             cards.push_back(randomValue);
-            values[randomValue] = 1;
+            values[randomValue] += 1;
         }
         i++;
     }
@@ -231,32 +241,42 @@ int GameStateManager::shareCard(int card, std::string playerName) {
 	return 0;
 }
 int GameStateManager::drawCards() {
-    if (cards.size() <= 0) {
+    int playerHandSize = players[currentPlayer] -> getPlayerCards().size();
+    if (playerHasDrawn) {
+        return -3;
+    } else if (playerHandSize == 7) {
+        return -1;
+    } else if (playerHandSize >= 8) {
+        return -2;
+    } else if (cards.size() <= 0) {
         std::cout << "Error: no cards remaining" << std::endl;
         return -1;
-    } else if (cards.size() == 1) { // Add one card to player's deck
+    } else if (cards.size() == 1 || playerHandSize == 6) { // Add one card to player's deck
+        playerHasDrawn = 1;
         players[currentPlayer] -> addCard(cards.back());
         cards.pop_back();
         board.updatePlayerCardCount(cards.size());
 		return 2;
     } else { // Add two cards to player's deck
+        playerHasDrawn = 1;
         players[currentPlayer] -> addCard(cards.back());
         cards.pop_back();
         players[currentPlayer] -> addCard(cards.back());
         cards.pop_back();
         board.updatePlayerCardCount(cards.size());
         return 1;
-		return 1;
     }
 	return 0;
 }
 int GameStateManager::discardCard(int card1, int card2) {
     int maxSize = players[currentPlayer] -> getPlayerCards().size();
-    if (card1 < 1 || card2 < 1 || card1 > maxSize || card2 > maxSize) {
+    if (card1 < 1 || (card2 != -1 && card2 < 1) || card1 > maxSize || card2 > maxSize) {
         // Out of bounds
         return -1;
     }
-    if (card1 > card2) {
+    if (card2 == -1) { // Only 1 card to discard
+        discardPile.push_back(players[currentPlayer] -> removeCardAtIndex(card1 - 1));
+    } else if (card1 > card2) { // Discard card with greater index first
         discardPile.push_back(players[currentPlayer] -> removeCardAtIndex(card1 - 1));
         discardPile.push_back(players[currentPlayer] -> removeCardAtIndex(card2 - 1));
     } else {
@@ -300,6 +320,7 @@ int GameStateManager::autoSave() {
 	else return -1;
 }
 int GameStateManager::nextTurn() {
+    playerHasDrawn = 0;
     actionsRemaining = 4;
 	currentPlayer++;
 	currentPlayer %= players.size();
@@ -309,7 +330,79 @@ int GameStateManager::nextTurn() {
 	return 1;
 }
 int GameStateManager::initialInfection() {
-	return 0;
+	//create each spawning area
+	int area1[5] = {TUMBLR, IFUNNY, NINEGAG, IMGUR, FOURCHAN};
+	int area2[6] = {BUZZFEED, YOUTUBE, TWITCH, REDDIT, STEAM, DISCORD};
+	int area3[7] = {MYSPACE, FACEBOOK, VINE, TWITTER, PINTEREST, SNAPCHAT, INSTAGRAM};
+	int area4[6] = {EMAIL, WECHAT, WHATSAPP, WEIBO, QQ, VK};
+
+	//setup randomization
+	std::random_device rd;
+	std::mt19937 eng(rd());
+	std::uniform_int_distribution<> distr(0, 1000000);
+	//place level 3 meme infections in each area
+	int randomNum = (distr(eng) % 5);
+	infect(area1[randomNum], 0, 3);
+	//remove chosen value, ignore final value;
+	area1[randomNum] = area1[4];
+
+	//place level 2 meme
+	randomNum = (distr(eng) % 4);
+	infect(area1[randomNum], 0, 2);
+	//remove value, ignore final 2
+	area1[randomNum] = area1[3];
+	
+	//place level 1 meme
+	randomNum = (distr(eng) % 3);
+	infect(area1[randomNum], 0, 1);
+	
+	//move on to infecting area 2
+	randomNum = (distr(eng) % 6);
+	infect(area2[randomNum], 1, 3);
+	//remove value, ignore final value
+	area2[randomNum] = area2[5];
+
+	//place level 2 meme
+	randomNum = (distr(eng) % 5);
+	infect(area2[randomNum], 1, 2);
+	//remove value, ignore final 2 values
+	area2[randomNum] = area2[4];
+
+	//place level 1 meme
+	randomNum = (distr(eng) % 4);
+	infect(area2[randomNum], 1, 1);
+
+	//move on to infecting area3
+	randomNum = (distr(eng) % 7);
+	infect(area3[randomNum], 2, 3);
+	//remove value, ignore final value
+	area3[randomNum] = area3[6];
+
+	//place level 2 meme
+	randomNum = (distr(eng) % 6);
+	infect(area3[randomNum], 2, 2);
+	//remove value, ignore final 2 values
+	area3[randomNum] = area3[5];
+
+	//place level 1 meme
+	randomNum = (distr(eng) % 5);
+	infect(area3[randomNum], 2, 1);
+	
+	//move on to infection of area4
+	randomNum = (distr(eng) % 6);
+	infect(area4[randomNum], 3, 3);
+	//remove value, ignore final value
+	area4[randomNum] = area4[5];
+
+	//place level 2 meme
+	randomNum = (distr(eng) % 5);
+	infect(area4[randomNum], 3, 2);
+	//remove value, ignore final 2 values
+	area4[randomNum] = area4[4];
+	
+	//place level 1 meme
+	randomNum = (distr(eng) % 5);
+	infect(area4[randomNum], 3, 1);
 }
 int GameStateManager::infect(int location, int meme, int count) {
 

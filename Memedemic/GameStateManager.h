@@ -64,6 +64,7 @@ private:
 	int viralQuotient;
 	int currentPlayer;
 	int actionsRemaining;
+    int playerHasDrawn;
 	std::vector<int> cards;
     std::vector<int> discardPile;
 };

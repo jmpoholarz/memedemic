@@ -26,6 +26,7 @@ GameStateManager::GameStateManager(Board& b, Location& l) : board(b), locations(
 	viralQuotient = 8;
 	currentPlayer = 0;
     actionsRemaining = 4;
+    playerHasDrawn = 0;
     setupDeck();
 }
 void GameStateManager::setupPlayers(int numPlayers) {
@@ -237,7 +238,9 @@ int GameStateManager::shareCard(int card, std::string playerName) {
 }
 int GameStateManager::drawCards() {
     int playerHandSize = players[currentPlayer] -> getPlayerCards().size();
-    if (playerHandSize == 7) {
+    if (playerHasDrawn) {
+        return -3;
+    } else if (playerHandSize == 7) {
         return -1;
     } else if (playerHandSize >= 8) {
         return -2;
@@ -245,11 +248,13 @@ int GameStateManager::drawCards() {
         std::cout << "Error: no cards remaining" << std::endl;
         return -1;
     } else if (cards.size() == 1 || playerHandSize == 6) { // Add one card to player's deck
+        playerHasDrawn = 1;
         players[currentPlayer] -> addCard(cards.back());
         cards.pop_back();
         board.updatePlayerCardCount(cards.size());
 		return 2;
     } else { // Add two cards to player's deck
+        playerHasDrawn = 1;
         players[currentPlayer] -> addCard(cards.back());
         cards.pop_back();
         players[currentPlayer] -> addCard(cards.back());
@@ -311,6 +316,7 @@ int GameStateManager::autoSave() {
 	else return -1;
 }
 int GameStateManager::nextTurn() {
+    playerHasDrawn = 0;
     actionsRemaining = 4;
 	currentPlayer++;
 	currentPlayer %= players.size();

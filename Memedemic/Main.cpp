@@ -82,7 +82,7 @@ int setupNewGame(GameStateManager& gsm) {
 	// Prompt player roles
 	std::cout << "\nNow select a role from the following (1-6):" << std::endl;
 	std::cout << "\t1. The Professor\n";
-	std::cout << "\t\t> May build a research station at any time.\n";
+	std::cout << "\t\t> May build a CMC server at any time.\n";
 	std::cout << "\t\t> May discard a card to move to any city.\n";
 	std::cout << "\t2. The H4cker\n";
 	std::cout << "\t\t> Needs only 4 cards to develop a meme filter.\n";

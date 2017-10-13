@@ -1,4 +1,5 @@
 #include "GameStateManager.h"
+#include "Enums.h"
 #include <iostream>
 #include <random>
 
@@ -126,6 +127,42 @@ int GameStateManager::movePlayer(int location) {
 		actionsRemaining--;
 		return 1;
 	}
+    // If player has Professor role
+    else if (players[currentPlayer]->getPlayerRole() == MEMESTUDIESPROFESSOR) {
+        bool shouldMove = false;
+        std::cout << "Since you are a Meme Studies Professor, you may discard a card to move to your descired location.\n\n";
+        for (int i = 0; i < players[currentPlayer] -> getPlayerCards().size(); i++) {
+            std::cout << "Card " + std::to_string(i + 1) + ": " +
+                    convertIntToCard(players[currentPlayer] -> getPlayerCards()[i]) + '\n';
+        }
+        std::cout << "Enter the number of the card you would like to discard. Enter 'CANCEL' to cancel: ";
+        std::string cardToDiscardString;
+        int cardToDiscard = -1;
+        int playerHandSize = players[currentPlayer]->getPlayerCards().size();
+        do {
+            std::getline(std::cin, cardToDiscardString);
+            if (cardToDiscardString == "CANCEL") {
+                shouldMove = false;
+                break;
+            }
+            if (cardToDiscardString.size() == 1 && std::isdigit(cardToDiscardString[0]))
+                cardToDiscard = atoi(cardToDiscardString.c_str());
+        } while (cardToDiscard < 1 || cardToDiscard > playerHandSize);
+
+        if (cardToDiscard > 0 && cardToDiscard <= playerHandSize) {
+            this -> discardCard(cardToDiscard, -1);
+            shouldMove = true;
+        }
+
+        if (shouldMove) {
+            board.movePlayer(location, currentPlayer);
+            players[currentPlayer]->setPlayerLocation(location);
+            actionsRemaining--;
+            return 1;
+        } else {
+            return -1;
+        }
+    }
 	else return -1;
 }
 

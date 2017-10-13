@@ -43,8 +43,6 @@ void GameStateManager::setupPlayers(int numPlayers) {
 
 		players.push_back(p);
 	}
-	// Add role setup here based on the players roles
-	/// TODO
 }
 
 void GameStateManager::setupDeck() {

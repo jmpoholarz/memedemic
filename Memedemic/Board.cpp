@@ -26,6 +26,9 @@ Board::~Board() {
 
 }
 
+/**
+	TODO: Initialize player roles
+*/
 void Board::setupPlayers(int players) {
 	switch (players) {
 	case 1:

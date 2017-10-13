@@ -35,10 +35,18 @@ void GameStateManager::setupPlayers(int numPlayers) {
 	for (int i = 0; i < numPlayers; i++) {
 		Player* p = new Player("testman", UNASSIGNED, EMAIL);
         // Draw starting 2 cards
-        p -> addCard(cards.back());
-        cards.pop_back();
-        p -> addCard(cards.back());
-        cards.pop_back();
+        int numCardsToDraw = 0;
+        if (numPlayers <= 2) {
+            numCardsToDraw = 4;
+        } else if (numPlayers == 3) {
+            numCardsToDraw = 3;
+        } else if (numPlayers == 4) {
+            numCardsToDraw = 2;
+        }
+        for (int j = 0; j < numCardsToDraw; j++) {
+            p -> addCard(cards.back());
+            cards.pop_back();
+        }
         board.updatePlayerCardCount(cards.size());
 
 		players.push_back(p);
@@ -234,6 +242,7 @@ int GameStateManager::drawCards() {
         players[currentPlayer] -> addCard(cards.back());
         cards.pop_back();
         board.updatePlayerCardCount(cards.size());
+        return 1;
 		return 1;
     }
 	return 0;

@@ -4,7 +4,6 @@
 #include <fstream>
 #include "Board.h"
 #include "Location.h"
-#include "Card.h"
 #include "Player.h"
 
 

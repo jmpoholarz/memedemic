@@ -27,6 +27,7 @@ GameStateManager::GameStateManager(Board& b, Location& l) : board(b), locations(
 	currentPlayer = 0;
     actionsRemaining = 4;
     playerHasDrawn = 0;
+	initialInfection();
     setupDeck();
 }
 void GameStateManager::setupPlayers(int numPlayers) {
@@ -326,7 +327,79 @@ int GameStateManager::nextTurn() {
 	return 1;
 }
 int GameStateManager::initialInfection() {
-	return 0;
+	//create each spawning area
+	int area1[5] = {TUMBLR, IFUNNY, NINEGAG, IMGUR, FOURCHAN};
+	int area2[6] = {BUZZFEED, YOUTUBE, TWITCH, REDDIT, STEAM, DISCORD};
+	int area3[7] = {MYSPACE, FACEBOOK, VINE, TWITTER, PINTEREST, SNAPCHAT, INSTAGRAM};
+	int area4[6] = {EMAIL, WECHAT, WHATSAPP, WEIBO, QQ, VK};
+
+	//setup randomization
+	std::random_device rd;
+	std::mt19937 eng(rd());
+	std::uniform_int_distribution<> distr(0, 1000000);
+	//place level 3 meme infections in each area
+	int randomNum = (distr(eng) % 5);
+	infect(area1[randomNum], 0, 3);
+	//remove chosen value, ignore final value;
+	area1[randomNum] = area1[4];
+
+	//place level 2 meme
+	randomNum = (distr(eng) % 4);
+	infect(area1[randomNum], 0, 2);
+	//remove value, ignore final 2
+	area1[randomNum] = area1[3];
+	
+	//place level 1 meme
+	randomNum = (distr(eng) % 3);
+	infect(area1[randomNum], 0, 1);
+	
+	//move on to infecting area 2
+	randomNum = (distr(eng) % 6);
+	infect(area2[randomNum], 1, 3);
+	//remove value, ignore final value
+	area2[randomNum] = area2[5];
+
+	//place level 2 meme
+	randomNum = (distr(eng) % 5);
+	infect(area2[randomNum], 1, 2);
+	//remove value, ignore final 2 values
+	area2[randomNum] = area2[4];
+
+	//place level 1 meme
+	randomNum = (distr(eng) % 4);
+	infect(area2[randomNum], 1, 1);
+
+	//move on to infecting area3
+	randomNum = (distr(eng) % 7);
+	infect(area3[randomNum], 2, 3);
+	//remove value, ignore final value
+	area3[randomNum] = area3[6];
+
+	//place level 2 meme
+	randomNum = (distr(eng) % 6);
+	infect(area3[randomNum], 2, 2);
+	//remove value, ignore final 2 values
+	area3[randomNum] = area3[5];
+
+	//place level 1 meme
+	randomNum = (distr(eng) % 5);
+	infect(area3[randomNum], 2, 1);
+	
+	//move on to infection of area4
+	randomNum = (distr(eng) % 6);
+	infect(area4[randomNum], 3, 3);
+	//remove value, ignore final value
+	area4[randomNum] = area4[5];
+
+	//place level 2 meme
+	randomNum = (distr(eng) % 5);
+	infect(area4[randomNum], 3, 2);
+	//remove value, ignore final 2 values
+	area4[randomNum] = area4[4];
+	
+	//place level 1 meme
+	randomNum = (distr(eng) % 5);
+	infect(area4[randomNum], 3, 1);
 }
 int GameStateManager::infect(int location, int meme, int count) {
 

@@ -6,8 +6,9 @@
 	One Player Constructor
 */
 Board::Board() {
+	actionsCounter = 4;
 	outbreakCounter = 0;
-	viralQuotientCounter = 0;
+	viralQuotientCounter = 2;
 	cures[0] = 0;
 	cures[1] = 0;
 	cures[2] = 0;
@@ -426,7 +427,8 @@ void Board::printBoard() {
 	printPlayerCards();
 	std::cout << "\n";
 	
-	std::cout << "@-----------@  @-----------@  @-----------@  #===========#               \n\n";
+	std::cout << "@-----------@  @-----------@  @-----------@  #===========#               \n";
+	std::cout << "                                             Actions left: " << actionsCounter << "\n";
 }
 
 /**
@@ -521,4 +523,13 @@ void Board::setMemes(int location, int values[]) {
 }
 void Board::setPlayers(int location, int playerNumber, bool present) {
 	locations[location].players[playerNumber] = present;
+}
+void Board::setActionsRemaining(int value) {
+	actionsCounter = value;
+}
+void Board::setViralQuotient(int value) {
+	viralQuotientCounter = value;
+}
+void Board::setOutbreakTrack(int value) {
+	outbreakCounter = value;
 }

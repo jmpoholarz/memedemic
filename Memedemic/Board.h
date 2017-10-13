@@ -38,6 +38,9 @@ public:
 	void setMemes(int location, int values[]);
 	void setPlayers(int location, int playerNumber, bool present);
 	void setCMCServer(int location, bool exists);
+	void setOutbreakTrack(int value);
+	void setViralQuotient(int value);
+	void setActionsRemaining(int value);
 
 private:
 	std::vector<BoardLocation> locations;
@@ -46,6 +49,7 @@ private:
 
 	int outbreakCounter;
 	int viralQuotientCounter;
+	int actionsCounter;
 	int cures[4]; // 0 = not cured, 1 = cured, 2 = eradicated
 	int playerCards;
 

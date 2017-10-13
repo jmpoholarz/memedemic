@@ -23,7 +23,7 @@
 GameStateManager::GameStateManager(Board& b, Location& l) : board(b), locations(l) {
 	// Initialize variables 
 	outbreakTrack = 8;
-	viralQuotient = 8;
+	viralQuotient = 2;
 	currentPlayer = 0;
     actionsRemaining = 4;
     setupDeck();
@@ -83,13 +83,16 @@ int GameStateManager::movePlayer(int location) {
 	if (actionsRemaining <= 0) {
 		return 0;
 	}
+	// Check if accessing the same location as current location
+	if (players[currentPlayer]->getPlayerLocation() == location)
+		return -2;
 	// Check if adjacent location
 	if (locations.isAdjacent(players[currentPlayer]->getPlayerLocation(), location)) {
 		// Update player location in the Board class
 		board.movePlayer(location, currentPlayer);
 		players[currentPlayer]->setPlayerLocation((CardNames)location);
 		std::cout << players[currentPlayer]->getPlayerLocation() << std::endl;
-		actionsRemaining--;
+		setActionsRemaining(--actionsRemaining);
 		return 1;
 	}
 	// Or if player holding the card for the destination
@@ -97,7 +100,7 @@ int GameStateManager::movePlayer(int location) {
 		players[currentPlayer]->removeNCards(location, 1);
 		players[currentPlayer]->setPlayerLocation(location);
 		board.movePlayer(location, currentPlayer);
-		actionsRemaining--;
+		setActionsRemaining(--actionsRemaining);
 		return 1;
 	}
 	// Or if the player is holding the current location
@@ -105,7 +108,7 @@ int GameStateManager::movePlayer(int location) {
 		players[currentPlayer]->removeNCards(players[currentPlayer]->getPlayerLocation(), 1);
 		players[currentPlayer]->setPlayerLocation(location);
 		board.movePlayer(location, currentPlayer);
-		actionsRemaining--;
+		setActionsRemaining(--actionsRemaining);
 		return 1;
 	}
 	// Or if at a CMC server and moving to a CMC server
@@ -113,7 +116,7 @@ int GameStateManager::movePlayer(int location) {
 		board.getLocation(players[currentPlayer]->getPlayerLocation()).cmcServer == true) {
 		board.movePlayer(location, currentPlayer);
 		players[currentPlayer]->setPlayerLocation(location);
-		actionsRemaining--;
+		setActionsRemaining(--actionsRemaining);
 		return 1;
 	}
 	else return -1;
@@ -204,7 +207,7 @@ int GameStateManager::buildCMCServer() {
 	// Otherwise player can build a CMC!
 	board.addCMC(players[currentPlayer]->getPlayerLocation());
 	players[currentPlayer]->removeNCards(players[currentPlayer]->getPlayerLocation(), 1);
-	actionsRemaining--;
+	setActionsRemaining(--actionsRemaining);
 	return 1;
 		
 
@@ -345,14 +348,17 @@ int GameStateManager::setMemeStatus(int meme, int filtered) {
 }
 int GameStateManager::setOutbreakTrack(int value) {
 	outbreakTrack = value;
+	board.setOutbreakTrack(value);
 	return 0;
 }
 int GameStateManager::setViralQuotient(int value) {
 	viralQuotient = value;
+	board.setViralQuotient(value);
 	return 0;
 }
 int GameStateManager::setActionsRemaining(int value) {
 	actionsRemaining = value;
+	board.setActionsRemaining(value);
 	return 0;
 }
 

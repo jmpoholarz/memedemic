@@ -176,6 +176,9 @@ std::string Parser::parse(std::string command) {
 				"4.It is the location of a CMC server, and" +
 				" you are at a CMC server";
 		}
+		else if (successful == -2) {
+			return "Current location has not changed.";
+		}
 		else return "Unable to move to " + tokens[1];
 	}
 	else if (tokens[0] == "build") {

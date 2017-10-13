@@ -1,4 +1,5 @@
 #include "GameStateManager.h"
+#include "Main.h"
 #include <iostream>
 #include <random>
 
@@ -22,11 +23,17 @@
 
 GameStateManager::GameStateManager(Board& b, Location& l) : board(b), locations(l) {
 	// Initialize variables 
-	outbreakTrack = 8;
-	viralQuotient = 8;
+	outbreakTrack = 0;
+	viralQuotient = 2;
 	currentPlayer = 0;
-    actionsRemaining = 4;
-    setupDeck();
+	actionsRemaining = 4;
+	gameEnd = false;
+	// Each meme is allocated 12 cubes
+	cubesLeft[0] = 12;
+	cubesLeft[1] = 12;
+	cubesLeft[2] = 12;
+	cubesLeft[3] = 12;
+	setupDeck();
 }
 void GameStateManager::setupPlayers(int numPlayers) {
 	// Handle setup for players in the board
@@ -34,41 +41,41 @@ void GameStateManager::setupPlayers(int numPlayers) {
 	// Add players to a vector
 	for (int i = 0; i < numPlayers; i++) {
 		Player* p = new Player("testman", UNASSIGNED, EMAIL);
-        // Draw starting 2 cards
-        int numCardsToDraw = 0;
-        if (numPlayers <= 2) {
-            numCardsToDraw = 4;
-        } else if (numPlayers == 3) {
-            numCardsToDraw = 3;
-        } else if (numPlayers == 4) {
-            numCardsToDraw = 2;
-        }
-        for (int j = 0; j < numCardsToDraw; j++) {
-            p -> addCard(cards.back());
-            cards.pop_back();
-        }
-        board.updatePlayerCardCount(cards.size());
+		// Draw starting 2 cards
+		int numCardsToDraw = 0;
+		if (numPlayers <= 2) {
+			numCardsToDraw = 4;
+		} else if (numPlayers == 3) {
+			numCardsToDraw = 3;
+		} else if (numPlayers == 4) {
+			numCardsToDraw = 2;
+		}
+		for (int j = 0; j < numCardsToDraw; j++) {
+			p -> addCard(cards.back());
+			cards.pop_back();
+		}
+		board.updatePlayerCardCount(cards.size());
 
 		players.push_back(p);
 	}
 }
 
 void GameStateManager::setupDeck() {
-    std::vector<int> values(24, 0);
-    std::random_device rd;
-    std::mt19937 eng(rd());
-    std::uniform_int_distribution<> distr(0, 23);
-    int i = 0;
-    while (i < 24) {
-        int randomValue = distr(eng);
-        if (values[randomValue] == 1) {
-            continue;
-        } else {
-            cards.push_back(randomValue);
-            values[randomValue] = 1;
-        }
-        i++;
-    }
+	std::vector<int> values(24, 0);
+	std::random_device rd;
+	std::mt19937 eng(rd());
+	std::uniform_int_distribution<> distr(0, 23);
+	int i = 0;
+	while (i < 24) {
+		int randomValue = distr(eng);
+		if (values[randomValue] == 1) {
+			continue;
+		} else {
+			cards.push_back(randomValue);
+			values[randomValue] = 1;
+		}
+		i++;
+	}
 }
 
 GameStateManager::~GameStateManager() {
@@ -228,38 +235,40 @@ int GameStateManager::shareCard(int card, std::string playerName) {
 	return 0;
 }
 int GameStateManager::drawCards() {
-    if (cards.size() <= 0) {
-        std::cout << "Error: no cards remaining" << std::endl;
-        return -1;
-    } else if (cards.size() == 1) { // Add one card to player's deck
-        players[currentPlayer] -> addCard(cards.back());
-        cards.pop_back();
-        board.updatePlayerCardCount(cards.size());
+	if (cards.size() <= 0) {
+		std::cout << "Error: no cards remaining" << std::endl;
+		return -1;
+	} else if (cards.size() < 2) {
+		// Not enough cards to draw, game is over
+		endGame();
+	} else if (cards.size() > 1) { // Add one card to player's deck
+		players[currentPlayer] -> addCard(cards.back());
+		cards.pop_back();
+		board.updatePlayerCardCount(cards.size());
 		return 2;
-    } else { // Add two cards to player's deck
-        players[currentPlayer] -> addCard(cards.back());
-        cards.pop_back();
-        players[currentPlayer] -> addCard(cards.back());
-        cards.pop_back();
-        board.updatePlayerCardCount(cards.size());
-        return 1;
+	} else { // Add two cards to player's deck
+		players[currentPlayer] -> addCard(cards.back());
+		cards.pop_back();
+		players[currentPlayer] -> addCard(cards.back());
+		cards.pop_back();
+		board.updatePlayerCardCount(cards.size());
 		return 1;
-    }
+	}
 	return 0;
 }
 int GameStateManager::discardCard(int card1, int card2) {
-    int maxSize = players[currentPlayer] -> getPlayerCards().size();
-    if (card1 < 1 || card2 < 1 || card1 > maxSize || card2 > maxSize) {
-        // Out of bounds
-        return -1;
-    }
-    if (card1 > card2) {
-        discardPile.push_back(players[currentPlayer] -> removeCardAtIndex(card1 - 1));
-        discardPile.push_back(players[currentPlayer] -> removeCardAtIndex(card2 - 1));
-    } else {
-        discardPile.push_back(players[currentPlayer] -> removeCardAtIndex(card2 - 1));
-        discardPile.push_back(players[currentPlayer] -> removeCardAtIndex(card1 - 1));
-    }
+	int maxSize = players[currentPlayer] -> getPlayerCards().size();
+	if (card1 < 1 || card2 < 1 || card1 > maxSize || card2 > maxSize) {
+		// Out of bounds
+		return -1;
+	}
+	if (card1 > card2) {
+		discardPile.push_back(players[currentPlayer] -> removeCardAtIndex(card1 - 1));
+		discardPile.push_back(players[currentPlayer] -> removeCardAtIndex(card2 - 1));
+	} else {
+		discardPile.push_back(players[currentPlayer] -> removeCardAtIndex(card2 - 1));
+		discardPile.push_back(players[currentPlayer] -> removeCardAtIndex(card1 - 1));
+	}
 	return 1;
 }
 std::string GameStateManager::printPlayerRoles() {
@@ -269,16 +278,16 @@ std::string GameStateManager::printPlayerLocations() {
 	return "";
 }
 std::string GameStateManager::printPlayerCards(std::string playerName) {
-    std::string output;
-    if (playerName == "") { // If no player is specified, view current player's cards
-        int i;
-        for (i = 0; i < players[currentPlayer] -> getPlayerCards().size(); i++) {
-            output.append("Card " + std::to_string(i + 1) + ": " +
-                    convertIntToCard(players[currentPlayer] -> getPlayerCards()[i]) + '\n');
-        }
-    } else { // View specified player's cards
-        // TODO
-    }
+	std::string output;
+	if (playerName == "") { // If no player is specified, view current player's cards
+		int i;
+		for (i = 0; i < players[currentPlayer] -> getPlayerCards().size(); i++) {
+			output.append("Card " + std::to_string(i + 1) + ": " +
+					convertIntToCard(players[currentPlayer] -> getPlayerCards()[i]) + '\n');
+		}
+	} else { // View specified player's cards
+		// TODO
+	}
 
 	return output;
 }
@@ -297,7 +306,7 @@ int GameStateManager::autoSave() {
 	else return -1;
 }
 int GameStateManager::nextTurn() {
-    actionsRemaining = 4;
+	actionsRemaining = 4;
 	currentPlayer++;
 	currentPlayer %= players.size();
 
@@ -310,7 +319,12 @@ int GameStateManager::initialInfection() {
 }
 int GameStateManager::infect(int location, int meme, int count) {
 
-
+	// Decrements number of cubes available for that meme
+	// If it's less than 0 than game lost
+	cubesLeft[meme]--;
+	if (cubesLeft[meme] < 0) {
+		endGame();
+	}
 	// Add count number of meme cubes of the given meme to the given location in the Board class
 	board.addMemeCubes(location, meme, count);
 	// If outbreak occurs, use < board->addOutbreak(); >
@@ -345,6 +359,7 @@ int GameStateManager::setMemeStatus(int meme, int filtered) {
 }
 int GameStateManager::setOutbreakTrack(int value) {
 	outbreakTrack = value;
+	endGame();
 	return 0;
 }
 int GameStateManager::setViralQuotient(int value) {
@@ -392,69 +407,108 @@ int GameStateManager::saveGame() {
 	return 0;
 }
 
+int GameStateManager::endGame() {
+	bool won = false;
+	for (int i = 0; i < 4; i++) {
+		if (board.getCure(i) == 0) {
+			won = false;
+			break;
+		}
+		won = true;
+	}
+	if (won) {
+		std::cout << "You Won" << std::endl;
+		gameEnd = true;
+	}
+
+	if (outbreakTrack == 8 || cards.size() < 2) {
+		std::cout << "You Lost" << std::endl;
+		std::cout << "Game Over" << std::endl;
+		gameEnd = true;
+	} else {
+		//checks cubesLeft array to see if there are any cubes left for a meme
+		//if not then the game is lost
+		for (int i = 0; i < 4; i++) {
+			if (cubesLeft[i] < 0) {
+				std::cout << "Game Over" << std::endl;
+                gameEnd = true;
+                break;
+			}
+		}
+	}
+
+	if (gameEnd) {
+		//TODO go back to mainMenu();
+		// This is broken right now, if you try to quit after the main menu shows it goes back to old game board
+		//mainMenu();
+	}
+
+	return 0;
+}
+
 std::string GameStateManager::convertIntToCard(int intCard) {
-    switch (intCard) {
-        case 0:
-            return "9GAG";
-        case 1:
-            return "iFunny";
-        case 2:
-            return "Imgur";
-        case 3:
-            return "4chan";
-        case 4:
-            return "Reddit";
-        case 5:
-            return "Discord";
-        case 6:
-            return "Steam";
-        case 7:
-            return "Twitch";
-        case 8:
-            return "YouTube";
-        case 9:
-            return "Vine";
-        case 10:
-            return "Snapchat";
-        case 11:
-            return "Instagram";
-        case 12:
-            return "Pinterest";
-        case 13:
-            return "Twitter";
-        case 14:
-            return "Facebook";
-        case 15:
-            return "Buzzfeed";
-        case 16:
-            return "Tumblr";
-        case 17:
-            return "Myspace";
-        case 18:
-            return "Email";
-        case 19:
-            return "WhatsApp";
-        case 20:
-            return "WeChat";
-        case 21:
-            return "Weibo";
-        case 22:
-            return "QQ";
-        case 23:
-            return "VK";
-        case 24:
-            return "Serious Discussion";
-        case 25:
-            return "Power Outage";
-        case 26:
-            return "Meme Forecast";
-        case 27:
-            return "VPN";
-        case 28:
-            return "Government Grant";
-        case 29:
-            return "Epidemic";
-        default:
-            return "";
-    }
+	switch (intCard) {
+		case 0:
+			return "9GAG";
+		case 1:
+			return "iFunny";
+		case 2:
+			return "Imgur";
+		case 3:
+			return "4chan";
+		case 4:
+			return "Reddit";
+		case 5:
+			return "Discord";
+		case 6:
+			return "Steam";
+		case 7:
+			return "Twitch";
+		case 8:
+			return "YouTube";
+		case 9:
+			return "Vine";
+		case 10:
+			return "Snapchat";
+		case 11:
+			return "Instagram";
+		case 12:
+			return "Pinterest";
+		case 13:
+			return "Twitter";
+		case 14:
+			return "Facebook";
+		case 15:
+			return "Buzzfeed";
+		case 16:
+			return "Tumblr";
+		case 17:
+			return "Myspace";
+		case 18:
+			return "Email";
+		case 19:
+			return "WhatsApp";
+		case 20:
+			return "WeChat";
+		case 21:
+			return "Weibo";
+		case 22:
+			return "QQ";
+		case 23:
+			return "VK";
+		case 24:
+			return "Serious Discussion";
+		case 25:
+			return "Power Outage";
+		case 26:
+			return "Meme Forecast";
+		case 27:
+			return "VPN";
+		case 28:
+			return "Government Grant";
+		case 29:
+			return "Epidemic";
+		default:
+			return "";
+	}
 }

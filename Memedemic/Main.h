@@ -6,6 +6,6 @@
 #include "Screen.h"
 #include "Location.h"
 
-
+int mainMenu();
 int setupNewGame(GameStateManager& gsm);
 int loadGame(GameStateManager& gsm);

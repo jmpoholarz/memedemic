@@ -428,7 +428,7 @@ void Board::printBoard() {
 	std::cout << "\n";
 	
 	std::cout << "@-----------@  @-----------@  @-----------@  #===========#               \n";
-	std::cout << "                                             Actions left: " << actionsCounter << "\n";
+	std::cout << "                                                           Actions left: " << actionsCounter << "\n";
 }
 
 /**

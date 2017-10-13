@@ -403,6 +403,7 @@ int GameStateManager::initialInfection() {
 	//place level 1 meme
 	randomNum = (distr(eng) % 5);
 	infect(area4[randomNum], 3, 1);
+	return 0;
 }
 int GameStateManager::infect(int location, int meme, int count) {
 

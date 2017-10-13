@@ -34,6 +34,13 @@ void GameStateManager::setupPlayers(int numPlayers) {
 	// Add players to a vector
 	for (int i = 0; i < numPlayers; i++) {
 		Player* p = new Player("testman", UNASSIGNED, EMAIL);
+        // Draw starting 2 cards
+        p -> addCard(cards.back());
+        cards.pop_back();
+        p -> addCard(cards.back());
+        cards.pop_back();
+        board.updatePlayerCardCount(cards.size());
+
 		players.push_back(p);
 	}
 	// Add role setup here based on the players roles

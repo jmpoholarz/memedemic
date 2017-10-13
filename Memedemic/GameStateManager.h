@@ -4,7 +4,6 @@
 #include <fstream>
 #include "Board.h"
 #include "Location.h"
-#include "Card.h"
 #include "Player.h"
 
 
@@ -65,6 +64,7 @@ private:
 	int viralQuotient;
 	int currentPlayer;
 	int actionsRemaining;
+    int playerHasDrawn;
 	std::vector<int> cards;
     std::vector<int> discardPile;
 };

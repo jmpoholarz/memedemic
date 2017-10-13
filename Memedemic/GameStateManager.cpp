@@ -1,4 +1,5 @@
 #include "GameStateManager.h"
+#include "Enums.h"
 #include <iostream>
 #include <random>
 
@@ -26,6 +27,8 @@ GameStateManager::GameStateManager(Board& b, Location& l) : board(b), locations(
 	viralQuotient = 8;
 	currentPlayer = 0;
     actionsRemaining = 4;
+    playerHasDrawn = 0;
+	initialInfection();
     setupDeck();
 }
 void GameStateManager::setupPlayers(int numPlayers) {
@@ -34,10 +37,31 @@ void GameStateManager::setupPlayers(int numPlayers) {
 	// Add players to a vector
 	for (int i = 0; i < numPlayers; i++) {
 		Player* p = new Player("testman", UNASSIGNED, EMAIL);
+        // Draw starting 2 cards
+        int numCardsToDraw = 0;
+        if (numPlayers <= 2) {
+            numCardsToDraw = 4;
+        } else if (numPlayers == 3) {
+            numCardsToDraw = 3;
+        } else if (numPlayers == 4) {
+            numCardsToDraw = 2;
+        }
+        for (int j = 0; j < numCardsToDraw; j++) {
+            p -> addCard(cards.back());
+            cards.pop_back();
+        }
+
 		players.push_back(p);
 	}
-	// Add role setup here based on the players roles
-	/// TODO
+
+    // Insert Epidemic cards
+    std::random_device rd;
+    std::mt19937 eng(rd());
+    std::uniform_int_distribution<> distr(0, cards.size());
+    for (int i = 0; i < 6; i++) {
+        cards.insert(cards.begin() + distr(eng), 29);
+    }
+    board.updatePlayerCardCount(cards.size());
 }
 
 void GameStateManager::setupDeck() {
@@ -46,13 +70,13 @@ void GameStateManager::setupDeck() {
     std::mt19937 eng(rd());
     std::uniform_int_distribution<> distr(0, 23);
     int i = 0;
-    while (i < 24) {
+    while (i < 48) {
         int randomValue = distr(eng);
-        if (values[randomValue] == 1) {
+        if (values[randomValue] == 2) {
             continue;
         } else {
             cards.push_back(randomValue);
-            values[randomValue] = 1;
+            values[randomValue] += 1;
         }
         i++;
     }
@@ -66,43 +90,80 @@ GameStateManager::~GameStateManager() {
 }
 
 int GameStateManager::movePlayer(int location) {
-	// Check if location is a valid move for the player
-	if (locations.isAdjacent(players[currentPlayer]->getPlayerLocation(), location)) { // Adjacent location
-        // Make sure player has actions left in their turn
-        if (actionsRemaining <= 0) {
-            return 0;
-        }
+	// Make sure player has actions left in their turn
+	if (actionsRemaining <= 0) {
+		return 0;
+	}
+	// Check if adjacent location
+	if (locations.isAdjacent(players[currentPlayer]->getPlayerLocation(), location)) {
 		// Update player location in the Board class
 		board.movePlayer(location, currentPlayer);
-        players[currentPlayer]->setPlayerLocation((CardNames) location);
-        std::cout << players[currentPlayer] -> getPlayerLocation() << std::endl;
-        actionsRemaining--;
+		players[currentPlayer]->setPlayerLocation((CardNames)location);
+		std::cout << players[currentPlayer]->getPlayerLocation() << std::endl;
+		actionsRemaining--;
 		return 1;
-	} else if (players[currentPlayer]->holdsNCards(location, 1)) { // Location on card
-        // Make sure player has actions left in their turn
-        if (actionsRemaining <= 0) {
-            return 0;
-        }
-		// Update player location in the Board class
+	}
+	// Or if player holding the card for the destination
+	else if (players[currentPlayer]->holdsNCards(location, 1)) {
+		players[currentPlayer]->removeNCards(location, 1);
+		players[currentPlayer]->setPlayerLocation(location);
 		board.movePlayer(location, currentPlayer);
-        players[currentPlayer]->setPlayerLocation((CardNames) location);
-        std::cout << players[currentPlayer] -> getPlayerLocation() << std::endl;
-        actionsRemaining--;
-        return 1;
-    } else if (board.getLocation(players[currentPlayer]->getPlayerLocation()).cmcServer && board.getLocation(location).cmcServer) { // CMC server
-        // Make sure player has actions left in their turn
-        if (actionsRemaining <= 0) {
-            return 0;
-        }
-		// Update player location in the Board class
+		actionsRemaining--;
+		return 1;
+	}
+	// Or if the player is holding the current location
+	else if (players[currentPlayer]->holdsNCards(players[currentPlayer]->getPlayerLocation(), 1)) {
+		players[currentPlayer]->removeNCards(players[currentPlayer]->getPlayerLocation(), 1);
+		players[currentPlayer]->setPlayerLocation(location);
 		board.movePlayer(location, currentPlayer);
-        players[currentPlayer]->setPlayerLocation((CardNames) location);
-        std::cout << players[currentPlayer] -> getPlayerLocation() << std::endl;
-        actionsRemaining--;
-        return 1;
-    }
+		actionsRemaining--;
+		return 1;
+	}
+	// Or if at a CMC server and moving to a CMC server
+	else if (board.getLocation(location).cmcServer == true &&
+		board.getLocation(players[currentPlayer]->getPlayerLocation()).cmcServer == true) {
+		board.movePlayer(location, currentPlayer);
+		players[currentPlayer]->setPlayerLocation(location);
+		actionsRemaining--;
+		return 1;
+	}
+    // If player has Professor role
+    else if (players[currentPlayer]->getPlayerRole() == MEMESTUDIESPROFESSOR) {
+        bool shouldMove = false;
+        std::cout << "Since you are a Meme Studies Professor, you may discard a card to move to your descired location.\n\n";
+        for (int i = 0; i < players[currentPlayer] -> getPlayerCards().size(); i++) {
+            std::cout << "Card " + std::to_string(i + 1) + ": " +
+                    convertIntToCard(players[currentPlayer] -> getPlayerCards()[i]) + '\n';
+        }
+        std::cout << "Enter the number of the card you would like to discard. Enter 'CANCEL' to cancel: ";
+        std::string cardToDiscardString;
+        int cardToDiscard = -1;
+        int playerHandSize = players[currentPlayer]->getPlayerCards().size();
+        do {
+            std::getline(std::cin, cardToDiscardString);
+            if (cardToDiscardString == "CANCEL") {
+                shouldMove = false;
+                break;
+            }
+            if (cardToDiscardString.size() == 1 && std::isdigit(cardToDiscardString[0]))
+                cardToDiscard = atoi(cardToDiscardString.c_str());
+        } while (cardToDiscard < 1 || cardToDiscard > playerHandSize);
 
-	else return 0;
+        if (cardToDiscard > 0 && cardToDiscard <= playerHandSize) {
+            this -> discardCard(cardToDiscard, -1);
+            shouldMove = true;
+        }
+
+        if (shouldMove) {
+            board.movePlayer(location, currentPlayer);
+            players[currentPlayer]->setPlayerLocation(location);
+            actionsRemaining--;
+            return 1;
+        } else {
+            return -1;
+        }
+    }
+	else return -1;
 }
 
 int GameStateManager::banMeme(int memeNumber) {
@@ -168,9 +229,33 @@ int GameStateManager::developMemeFilter(int card1, int card2, int card3,
 	return 0;
 }
 int GameStateManager::buildCMCServer() {
+	// Check if player has actions remaining
+	if (actionsRemaining <= 0)
+		return 0;
+	// Check if CMC exists at the location
+	if (board.getLocation(players[currentPlayer]->getPlayerLocation()).cmcServer == true) {
+		return -1;
+	}
+	// Check if max CMCs already exist
+	int CMCCount = 0;
+	for (int i = 0; i < 24; i++) {
+		if (board.getLocation(i).cmcServer == true)
+			CMCCount++;
+	}
+	if (CMCCount >= 6)
+		return -2;
+	// Check if player holding the current location card
+	if (!(players[currentPlayer]->holdsNCards(players[currentPlayer]->getPlayerLocation(), 1))) {
+		return -3;
+	}
+	// Otherwise player can build a CMC!
+	board.addCMC(players[currentPlayer]->getPlayerLocation());
+	players[currentPlayer]->removeNCards(players[currentPlayer]->getPlayerLocation(), 1);
+	actionsRemaining--;
+	return 1;
+		
 
-
-
+	/*
 	// if six CMC stations already exist, set remove = true and removeLocation = location of CMC to remove
 	bool removeCMC = false;
 	int removeLocation = NULL;
@@ -180,7 +265,8 @@ int GameStateManager::buildCMCServer() {
 		board.removeCMC(removeLocation);
 	}
 
-	return 1;
+	return 0;
+	*/
 }
 int GameStateManager::playCard(int card) {
 	return 0;
@@ -189,29 +275,42 @@ int GameStateManager::shareCard(int card, std::string playerName) {
 	return 0;
 }
 int GameStateManager::drawCards() {
-    if (cards.size() <= 0) {
+    int playerHandSize = players[currentPlayer] -> getPlayerCards().size();
+    if (playerHasDrawn) {
+        return -3;
+    } else if (playerHandSize == 7) {
+        return -1;
+    } else if (playerHandSize >= 8) {
+        return -2;
+    } else if (cards.size() <= 0) {
         std::cout << "Error: no cards remaining" << std::endl;
-        return 1;
-    } else if (cards.size() == 1) { // Add one card to player's deck
+        return -1;
+    } else if (cards.size() == 1 || playerHandSize == 6) { // Add one card to player's deck
+        playerHasDrawn = 1;
         players[currentPlayer] -> addCard(cards.back());
         cards.pop_back();
         board.updatePlayerCardCount(cards.size());
+		return 2;
     } else { // Add two cards to player's deck
+        playerHasDrawn = 1;
         players[currentPlayer] -> addCard(cards.back());
         cards.pop_back();
         players[currentPlayer] -> addCard(cards.back());
         cards.pop_back();
         board.updatePlayerCardCount(cards.size());
+        return 1;
     }
 	return 0;
 }
 int GameStateManager::discardCard(int card1, int card2) {
     int maxSize = players[currentPlayer] -> getPlayerCards().size();
-    if (card1 < 1 || card2 < 1 || card1 > maxSize || card2 > maxSize) {
+    if (card1 < 1 || (card2 != -1 && card2 < 1) || card1 > maxSize || card2 > maxSize) {
         // Out of bounds
         return -1;
     }
-    if (card1 > card2) {
+    if (card2 == -1) { // Only 1 card to discard
+        discardPile.push_back(players[currentPlayer] -> removeCardAtIndex(card1 - 1));
+    } else if (card1 > card2) { // Discard card with greater index first
         discardPile.push_back(players[currentPlayer] -> removeCardAtIndex(card1 - 1));
         discardPile.push_back(players[currentPlayer] -> removeCardAtIndex(card2 - 1));
     } else {
@@ -255,6 +354,7 @@ int GameStateManager::autoSave() {
 	else return -1;
 }
 int GameStateManager::nextTurn() {
+    playerHasDrawn = 0;
     actionsRemaining = 4;
 	currentPlayer++;
 	currentPlayer %= players.size();
@@ -264,7 +364,79 @@ int GameStateManager::nextTurn() {
 	return 1;
 }
 int GameStateManager::initialInfection() {
-	return 0;
+	//create each spawning area
+	int area1[5] = {TUMBLR, IFUNNY, NINEGAG, IMGUR, FOURCHAN};
+	int area2[6] = {BUZZFEED, YOUTUBE, TWITCH, REDDIT, STEAM, DISCORD};
+	int area3[7] = {MYSPACE, FACEBOOK, VINE, TWITTER, PINTEREST, SNAPCHAT, INSTAGRAM};
+	int area4[6] = {EMAIL, WECHAT, WHATSAPP, WEIBO, QQ, VK};
+
+	//setup randomization
+	std::random_device rd;
+	std::mt19937 eng(rd());
+	std::uniform_int_distribution<> distr(0, 1000000);
+	//place level 3 meme infections in each area
+	int randomNum = (distr(eng) % 5);
+	infect(area1[randomNum], 0, 3);
+	//remove chosen value, ignore final value;
+	area1[randomNum] = area1[4];
+
+	//place level 2 meme
+	randomNum = (distr(eng) % 4);
+	infect(area1[randomNum], 0, 2);
+	//remove value, ignore final 2
+	area1[randomNum] = area1[3];
+	
+	//place level 1 meme
+	randomNum = (distr(eng) % 3);
+	infect(area1[randomNum], 0, 1);
+	
+	//move on to infecting area 2
+	randomNum = (distr(eng) % 6);
+	infect(area2[randomNum], 1, 3);
+	//remove value, ignore final value
+	area2[randomNum] = area2[5];
+
+	//place level 2 meme
+	randomNum = (distr(eng) % 5);
+	infect(area2[randomNum], 1, 2);
+	//remove value, ignore final 2 values
+	area2[randomNum] = area2[4];
+
+	//place level 1 meme
+	randomNum = (distr(eng) % 4);
+	infect(area2[randomNum], 1, 1);
+
+	//move on to infecting area3
+	randomNum = (distr(eng) % 7);
+	infect(area3[randomNum], 2, 3);
+	//remove value, ignore final value
+	area3[randomNum] = area3[6];
+
+	//place level 2 meme
+	randomNum = (distr(eng) % 6);
+	infect(area3[randomNum], 2, 2);
+	//remove value, ignore final 2 values
+	area3[randomNum] = area3[5];
+
+	//place level 1 meme
+	randomNum = (distr(eng) % 5);
+	infect(area3[randomNum], 2, 1);
+	
+	//move on to infection of area4
+	randomNum = (distr(eng) % 6);
+	infect(area4[randomNum], 3, 3);
+	//remove value, ignore final value
+	area4[randomNum] = area4[5];
+
+	//place level 2 meme
+	randomNum = (distr(eng) % 5);
+	infect(area4[randomNum], 3, 2);
+	//remove value, ignore final 2 values
+	area4[randomNum] = area4[4];
+	
+	//place level 1 meme
+	randomNum = (distr(eng) % 5);
+	infect(area4[randomNum], 3, 1);
 }
 int GameStateManager::infect(int location, int meme, int count) {
 

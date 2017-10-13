@@ -433,7 +433,7 @@ void Board::printBoard() {
 
 /**
 	Prints the meme counters for the given location to the command line.  If the meme counter
-	is zero for the given meme, prints an empty space
+	is zero for the given meme, prints an underscore
 */
 void Board::printCounters(int loc) {
 	for (int i = 0; i < 4; i++) {
@@ -441,7 +441,7 @@ void Board::printCounters(int loc) {
 			std::cout << locations[loc].memes[i];
 		}
 		else {
-			std::cout << " ";
+			std::cout << "_";
 		}
 		std::cout << " ";
 	}

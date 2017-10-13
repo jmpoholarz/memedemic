@@ -235,7 +235,7 @@ void Board::printBoard() {
 	std::cout << "|";
 	printCounters(16);
 	printCMC(16);
-	std::cout << "|  |";
+	std::cout << "&--&";
 	printCounters(1);
 	printCMC(1);
 	std::cout << "&--&";

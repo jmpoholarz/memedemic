@@ -1,4 +1,5 @@
 #include "GameStateManager.h"
+#include "Main.h"
 #include <iostream>
 #include <random>
 
@@ -21,12 +22,18 @@
 }*/
 
 GameStateManager::GameStateManager(Board& b, Location& l) : board(b), locations(l) {
-	// Initialize variables 
+	// Initialize variables
 	outbreakTrack = 8;
 	viralQuotient = 2;
 	currentPlayer = 0;
     actionsRemaining = 4;
     playerHasDrawn = 0;
+    gameEnd = false;
+    // Each meme is allocated 12 cubes
+    cubesLeft[0] = 12;
+    cubesLeft[1] = 12;
+    cubesLeft[2] = 12;
+    cubesLeft[3] = 12;
 	initialInfection();
     setupDeck();
 }
@@ -85,7 +92,7 @@ GameStateManager::~GameStateManager() {
 	delete &board;
 	while (players.size() > 0)
 		delete players[0];
-	
+
 }
 
 int GameStateManager::movePlayer(int location) {
@@ -176,7 +183,7 @@ int GameStateManager::banMeme(int memeNumber) {
 		}
 	}
 }
-int GameStateManager::developMemeFilter(int card1, int card2, int card3, 
+int GameStateManager::developMemeFilter(int card1, int card2, int card3,
 	int card4, int card5) {
 	// Note: card5 might be empty
 	//check if the current player is allowed to make a filter without a 5th card
@@ -224,7 +231,7 @@ int GameStateManager::buildCMCServer() {
 	players[currentPlayer]->removeNCards(players[currentPlayer]->getPlayerLocation(), 1);
 	setActionsRemaining(--actionsRemaining);
 	return 1;
-		
+
 
 	/*
 	// if six CMC stations already exist, set remove = true and removeLocation = location of CMC to remove
@@ -247,12 +254,15 @@ int GameStateManager::shareCard(int card, std::string playerName) {
 }
 int GameStateManager::drawCards() {
     int playerHandSize = players[currentPlayer] -> getPlayerCards().size();
+
     if (playerHasDrawn) {
         return -3;
     } else if (playerHandSize == 7) {
         return -1;
     } else if (playerHandSize >= 8) {
         return -2;
+    } else if (cards.size() < 2) {
+        endGame();
     } else if (cards.size() <= 0) {
         std::cout << "Error: no cards remaining" << std::endl;
         return -1;
@@ -297,16 +307,16 @@ std::string GameStateManager::printPlayerLocations() {
 	return "";
 }
 std::string GameStateManager::printPlayerCards(std::string playerName) {
-    std::string output;
-    if (playerName == "") { // If no player is specified, view current player's cards
-        int i;
-        for (i = 0; i < players[currentPlayer] -> getPlayerCards().size(); i++) {
-            output.append("Card " + std::to_string(i + 1) + ": " +
-                    convertIntToCard(players[currentPlayer] -> getPlayerCards()[i]) + '\n');
-        }
-    } else { // View specified player's cards
-        // TODO
-    }
+	std::string output;
+	if (playerName == "") { // If no player is specified, view current player's cards
+		int i;
+		for (i = 0; i < players[currentPlayer] -> getPlayerCards().size(); i++) {
+			output.append("Card " + std::to_string(i + 1) + ": " +
+					convertIntToCard(players[currentPlayer] -> getPlayerCards()[i]) + '\n');
+		}
+	} else { // View specified player's cards
+		// TODO
+	}
 
 	return output;
 }
@@ -356,11 +366,11 @@ int GameStateManager::initialInfection() {
 	infect(area1[randomNum], 0, 2);
 	//remove value, ignore final 2
 	area1[randomNum] = area1[3];
-	
+
 	//place level 1 meme
 	randomNum = (distr(eng) % 3);
 	infect(area1[randomNum], 0, 1);
-	
+
 	//move on to infecting area 2
 	randomNum = (distr(eng) % 6);
 	infect(area2[randomNum], 1, 3);
@@ -392,7 +402,7 @@ int GameStateManager::initialInfection() {
 	//place level 1 meme
 	randomNum = (distr(eng) % 5);
 	infect(area3[randomNum], 2, 1);
-	
+
 	//move on to infection of area4
 	randomNum = (distr(eng) % 6);
 	infect(area4[randomNum], 3, 3);
@@ -404,7 +414,7 @@ int GameStateManager::initialInfection() {
 	infect(area4[randomNum], 3, 2);
 	//remove value, ignore final 2 values
 	area4[randomNum] = area4[4];
-	
+
 	//place level 1 meme
 	randomNum = (distr(eng) % 5);
 	infect(area4[randomNum], 3, 1);
@@ -412,7 +422,12 @@ int GameStateManager::initialInfection() {
 }
 int GameStateManager::infect(int location, int meme, int count) {
 
-
+	// Decrements number of cubes available for that meme
+	// If it's less than 0 than game lost
+	cubesLeft[meme]--;
+	if (cubesLeft[meme] < 0) {
+		endGame();
+	}
 	// Add count number of meme cubes of the given meme to the given location in the Board class
 	board.addMemeCubes(location, meme, count);
 	// If outbreak occurs, use < board->addOutbreak(); >
@@ -448,6 +463,7 @@ int GameStateManager::setMemeStatus(int meme, int filtered) {
 int GameStateManager::setOutbreakTrack(int value) {
 	outbreakTrack = value;
 	board.setOutbreakTrack(value);
+	endGame();
 	return 0;
 }
 int GameStateManager::setViralQuotient(int value) {
@@ -497,69 +513,108 @@ int GameStateManager::saveGame() {
 	return 0;
 }
 
+int GameStateManager::endGame() {
+	bool won = false;
+	for (int i = 0; i < 4; i++) {
+		if (board.getCure(i) == 0) {
+			won = false;
+			break;
+		}
+		won = true;
+	}
+	if (won) {
+		std::cout << "You Won" << std::endl;
+		gameEnd = true;
+	}
+
+	if (outbreakTrack == 8 || cards.size() < 2) {
+		std::cout << "You Lost" << std::endl;
+		std::cout << "Game Over" << std::endl;
+		gameEnd = true;
+	} else {
+		//checks cubesLeft array to see if there are any cubes left for a meme
+		//if not then the game is lost
+		for (int i = 0; i < 4; i++) {
+			if (cubesLeft[i] < 0) {
+				std::cout << "Game Over" << std::endl;
+                gameEnd = true;
+                break;
+			}
+		}
+	}
+
+	if (gameEnd) {
+		//TODO go back to mainMenu();
+		// This is broken right now, if you try to quit after the main menu shows it goes back to old game board
+		//mainMenu();
+	}
+
+	return 0;
+}
+
 std::string GameStateManager::convertIntToCard(int intCard) {
-    switch (intCard) {
-        case 0:
-            return "9GAG";
-        case 1:
-            return "iFunny";
-        case 2:
-            return "Imgur";
-        case 3:
-            return "4chan";
-        case 4:
-            return "Reddit";
-        case 5:
-            return "Discord";
-        case 6:
-            return "Steam";
-        case 7:
-            return "Twitch";
-        case 8:
-            return "YouTube";
-        case 9:
-            return "Vine";
-        case 10:
-            return "Snapchat";
-        case 11:
-            return "Instagram";
-        case 12:
-            return "Pinterest";
-        case 13:
-            return "Twitter";
-        case 14:
-            return "Facebook";
-        case 15:
-            return "Buzzfeed";
-        case 16:
-            return "Tumblr";
-        case 17:
-            return "Myspace";
-        case 18:
-            return "Email";
-        case 19:
-            return "WhatsApp";
-        case 20:
-            return "WeChat";
-        case 21:
-            return "Weibo";
-        case 22:
-            return "QQ";
-        case 23:
-            return "VK";
-        case 24:
-            return "Serious Discussion";
-        case 25:
-            return "Power Outage";
-        case 26:
-            return "Meme Forecast";
-        case 27:
-            return "VPN";
-        case 28:
-            return "Government Grant";
-        case 29:
-            return "Epidemic";
-        default:
-            return "";
-    }
+	switch (intCard) {
+		case 0:
+			return "9GAG";
+		case 1:
+			return "iFunny";
+		case 2:
+			return "Imgur";
+		case 3:
+			return "4chan";
+		case 4:
+			return "Reddit";
+		case 5:
+			return "Discord";
+		case 6:
+			return "Steam";
+		case 7:
+			return "Twitch";
+		case 8:
+			return "YouTube";
+		case 9:
+			return "Vine";
+		case 10:
+			return "Snapchat";
+		case 11:
+			return "Instagram";
+		case 12:
+			return "Pinterest";
+		case 13:
+			return "Twitter";
+		case 14:
+			return "Facebook";
+		case 15:
+			return "Buzzfeed";
+		case 16:
+			return "Tumblr";
+		case 17:
+			return "Myspace";
+		case 18:
+			return "Email";
+		case 19:
+			return "WhatsApp";
+		case 20:
+			return "WeChat";
+		case 21:
+			return "Weibo";
+		case 22:
+			return "QQ";
+		case 23:
+			return "VK";
+		case 24:
+			return "Serious Discussion";
+		case 25:
+			return "Power Outage";
+		case 26:
+			return "Meme Forecast";
+		case 27:
+			return "VPN";
+		case 28:
+			return "Government Grant";
+		case 29:
+			return "Epidemic";
+		default:
+			return "";
+	}
 }

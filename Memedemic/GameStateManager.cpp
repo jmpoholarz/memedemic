@@ -133,13 +133,16 @@ int GameStateManager::movePlayer(int location) {
 }
 
 int GameStateManager::banMeme(int memeNumber) {
+	// Meme already eradicated
 	if (board.getCure(memeNumber == 2)) {
-		return 0;
+		return -1;
 	}
+	// If meme is cured but not eradicated
 	else if (board.getCure(memeNumber) == 1) {
 		int numberOfRemainingCubes = board.getLocation(players[currentPlayer]->getPlayerLocation()).memes[memeNumber];
+		// No meme present
 		if (numberOfRemainingCubes == 0) {
-			return 0;
+			return -2;
 		}
 		else {
 			for (int i = 0; i < numberOfRemainingCubes; i++) {
@@ -155,18 +158,20 @@ int GameStateManager::banMeme(int memeNumber) {
 					board.eradicateMeme(memeNumber);
 				}
 			}
-
+			setActionsRemaining(--actionsRemaining);
 			return 1;
 		}
 	}
 	else {
 		int numberOfRemainingCubes = board.getLocation(players[currentPlayer]->getPlayerLocation()).memes[memeNumber];
+		// No meme present
 		if (numberOfRemainingCubes == 0) {
-			return 0;
+			return -2;
 		}
 		else {
 			board.removeMemeCube(players[currentPlayer]->getPlayerLocation(), memeNumber);
 			locations.setMemeStatus(players[currentPlayer]->getPlayerLocation(), memeNumber, locations.getMemeStatus(players[currentPlayer]->getPlayerLocation())[memeNumber] - 1);
+			setActionsRemaining(--actionsRemaining);
 			return 1;
 		}
 	}

@@ -280,7 +280,7 @@ std::string Parser::parse(std::string command) {
 		}
 		else if (successful == -2) {
 			// Only provided 5 cards when not the role that allows that
-			return "Not enough cards provided.";
+			return "Incorrect number of cards provided.";
 		}
 		else if (successful == -3) {
 			// Trying to filter a meme that has already been filtered

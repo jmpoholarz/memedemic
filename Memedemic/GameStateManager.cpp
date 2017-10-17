@@ -139,7 +139,7 @@ int GameStateManager::movePlayer(int location) {
 	// If player has Professor role
     else if (players[currentPlayer]->getPlayerRole() == MEMESTUDIESPROFESSOR) {
         bool shouldMove = false;
-        std::cout << "Since you are a Meme Studies Professor, you may discard a card to move to your descired location.\n\n";
+        std::cout << "Since you are a Meme Studies Professor, you may discard a card to move to your desired location.\n\n";
         for (int i = 0; i < players[currentPlayer] -> getPlayerCards().size(); i++) {
             std::cout << "Card " + std::to_string(i + 1) + ": " +
                     convertIntToCard(players[currentPlayer] -> getPlayerCards()[i]) + '\n';
@@ -166,7 +166,7 @@ int GameStateManager::movePlayer(int location) {
         if (shouldMove) {
             board.movePlayer(location, currentPlayer);
             players[currentPlayer]->setPlayerLocation(location);
-            actionsRemaining--;
+            setActionsRemaining(--actionsRemaining);
             return 1;
         } else {
             return -1;

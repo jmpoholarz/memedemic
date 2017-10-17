@@ -150,7 +150,6 @@ std::string Parser::parse(std::string command) {
 		else return getUsage("usage");
 	}
 	else if (tokens[0] == "access") {
-        std::cout << "ACTIONS REMAINING: " << gsm.getActionsRemaining() << std::endl;
 		// Check for wrong number of arguments
 		if (tokens.size() != 2)
 			return "Incorrect usage of access: " + getUsage("access");
@@ -172,9 +171,9 @@ std::string Parser::parse(std::string command) {
 			// Location non-adjacent and no held card
 			return "You cannot move to " + tokens[1] + 
 				" unless you:\n1. Hold its card\n"
-				"2. Hold the current location's card\n "
+				"2. Hold the current location's card\n"
 				"3. Are adjacent to it\n" +
-				"4.It is the location of a CMC server, and" +
+				"4. It is the location of a CMC server, and" +
 				" you are at a CMC server";
 		}
 		else if (successful == -2) {

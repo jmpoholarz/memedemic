@@ -390,11 +390,13 @@ int GameStateManager::nextTurn() {
 	{
 		//choose the location
 		int loca = distr(eng);
-		incrementInfect(loca, loca, loca);
+		std::vector<int> locas;
+		locas.push_back(loca);
+		incrementInfect(loca, locas, loca);
 	}
 	return 1;
 }
-void incrementInfect(int location, int origin, int prev)
+void incrementInfect(int location, vector<int>  track, int meme)
 {
 	switch(location){
 		case TUMBLR:
@@ -408,7 +410,7 @@ void incrementInfect(int location, int origin, int prev)
 		case TWITCH:
 		case REDDIT:
 		case STEAM:
-		case DISCORD;
+		case DISCORD:
 			break;
 		case MYSPACE:
 		case FACEBOOK:
@@ -426,7 +428,7 @@ void incrementInfect(int location, int origin, int prev)
 		case VK:
 			break;
 		default:
-			break
+			break;
 	}
 }
 

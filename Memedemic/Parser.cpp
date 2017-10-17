@@ -171,10 +171,13 @@ std::string Parser::parse(std::string command) {
 			// Location non-adjacent and no held card
 			return "You cannot move to " + tokens[1] + 
 				" unless you:\n1. Hold its card\n"
-				"2. Hold the current location's card\n "
+				"2. Hold the current location's card\n"
 				"3. Are adjacent to it\n" +
-				"4.It is the location of a CMC server, and" +
+				"4. It is the location of a CMC server, and" +
 				" you are at a CMC server";
+		}
+		else if (successful == -2) {
+			return "Current location has not changed.";
 		}
 		else return "Unable to move to " + tokens[1];
 	}
@@ -200,7 +203,7 @@ std::string Parser::parse(std::string command) {
 		}
 		else if (successful == -3) {
 			// Not holding location card
-			return "You must hold this location's card to build a CMC Server.";
+			return "You must hold this location's card to build a CMC Server, or have the role of Meme Studies Professor.";
 		}
 		else return "Unable to build CMC Server.";
 	}
@@ -276,7 +279,7 @@ std::string Parser::parse(std::string command) {
 		}
 		else if (successful == -2) {
 			// Only provided 5 cards when not the role that allows that
-			return "Not enough cards provided.";
+			return "Incorrect number of cards provided.";
 		}
 		else if (successful == -3) {
 			// Trying to filter a meme that has already been filtered
@@ -380,6 +383,10 @@ std::string Parser::parse(std::string command) {
 			// 2 too many cards in hand
 			return "Holding too many cards.  Please discard two.";
 		}
+        else if (successful == -3) {
+            // Player has already drawn this turn
+            return "You have already drawn this turn.";
+        }
 		else return "Unable to draw cards.";
 	}
 	else if (tokens[0] == "discard") {

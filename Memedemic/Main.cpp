@@ -1,48 +1,52 @@
 #include "Main.h"
 
 int main() {
-	std::string startMenuResponse = "";
-	int response = 0;
-	// Get start menu response
-	do {
-		// Output start menu
-		std::cout << "Memedemic: Please enter 1-3:" << std::endl;
-		std::cout << "1. New" << std::endl;
-		std::cout << "2. Load" << std::endl;
-		std::cout << "3. Quit" << std::endl;
-		std::getline(std::cin, startMenuResponse);
-	} while (!(startMenuResponse == "1" || startMenuResponse == "2" ||
-		startMenuResponse == "3"));
-	
-	// Perform uniform start-up process
-	Board* board = new Board();
-	Location* locations = new Location();
-	GameStateManager* gsm = new GameStateManager(*board, *locations);
-	Parser* parser = new Parser(*gsm);
-	Screen* screen = new Screen(*gsm, *parser);
+	mainMenu();
+}
 
-	// Process start menu response
-	if (startMenuResponse == "1") {
-		setupNewGame(*gsm);
-	}
-	else if (startMenuResponse == "2") {
-		loadGame(*gsm);
-	}
-	else if (startMenuResponse == "3") {
-		// Quit the game
-		std::cout << "But if not you, then who will stop the memes.";
-		std::this_thread::sleep_for(std::chrono::milliseconds(750));
-		std::cout << ".";
-		std::this_thread::sleep_for(std::chrono::milliseconds(750));
-		std::cout << ".";
-		std::this_thread::sleep_for(std::chrono::milliseconds(750));
-		std::cout << "?" << std::endl;
-		std::this_thread::sleep_for(std::chrono::milliseconds(1500));
-		return 0;
-	}	
-	
-	// Now that setup has finished, run the game
-	screen->run();
+int mainMenu() {
+	std::string startMenuResponse = "";
+    	int response = 0;
+    	// Get start menu response
+    	do {
+    		// Output start menu
+    		std::cout << "Memedemic: Please enter 1-3:" << std::endl;
+    		std::cout << "1. New" << std::endl;
+    		std::cout << "2. Load" << std::endl;
+    		std::cout << "3. Quit" << std::endl;
+    		std::getline(std::cin, startMenuResponse);
+    	} while (!(startMenuResponse == "1" || startMenuResponse == "2" ||
+    		startMenuResponse == "3"));
+
+    	// Perform uniform start-up process
+    	Board* board = new Board();
+    	Location* locations = new Location();
+    	GameStateManager* gsm = new GameStateManager(*board, *locations);
+    	Parser* parser = new Parser(*gsm);
+    	Screen* screen = new Screen(*gsm, *parser);
+
+    	// Process start menu response
+    	if (startMenuResponse == "1") {
+    		setupNewGame(*gsm);
+    	}
+    	else if (startMenuResponse == "2") {
+    		loadGame(*gsm);
+    	}
+    	else if (startMenuResponse == "3") {
+    		// Quit the game
+    		std::cout << "But if not you, then who will stop the memes.";
+    		std::this_thread::sleep_for(std::chrono::milliseconds(750));
+    		std::cout << ".";
+    		std::this_thread::sleep_for(std::chrono::milliseconds(750));
+    		std::cout << ".";
+    		std::this_thread::sleep_for(std::chrono::milliseconds(750));
+    		std::cout << "?" << std::endl;
+    		std::this_thread::sleep_for(std::chrono::milliseconds(1500));
+    		return 0;
+    	}
+
+    	// Now that setup has finished, run the game
+    	screen->run();
 }
 
 int setupNewGame(GameStateManager& gsm) {

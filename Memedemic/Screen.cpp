@@ -22,7 +22,7 @@ void Screen::run() {
 		// Obtain the next user command
 		std::getline(std::cin, command);
 		response = sendCommand(command);
-		
+
 	}
 }
 

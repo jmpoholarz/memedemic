@@ -203,7 +203,7 @@ std::string Parser::parse(std::string command) {
 		}
 		else if (successful == -3) {
 			// Not holding location card
-			return "You must hold this location's card to build a CMC Server.";
+			return "You must hold this location's card to build a CMC Server, or have the role of Meme Studies Professor.";
 		}
 		else return "Unable to build CMC Server.";
 	}

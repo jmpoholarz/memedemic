@@ -259,12 +259,15 @@ int GameStateManager::buildCMCServer() {
 	if (CMCCount >= 6)
 		return -2;
 	// Check if player holding the current location card
-	if (!(players[currentPlayer]->holdsNCards(players[currentPlayer]->getPlayerLocation(), 1))) {
+	if (!(players[currentPlayer]->holdsNCards(players[currentPlayer]->getPlayerLocation(), 1))
+            && players[currentPlayer]->getPlayerRole() != MEMESTUDIESPROFESSOR) {
 		return -3;
 	}
 	// Otherwise player can build a CMC!
 	board.addCMC(players[currentPlayer]->getPlayerLocation());
-	players[currentPlayer]->removeNCards(players[currentPlayer]->getPlayerLocation(), 1);
+    if (players[currentPlayer]->getPlayerRole() != MEMESTUDIESPROFESSOR) {
+        players[currentPlayer]->removeNCards(players[currentPlayer]->getPlayerLocation(), 1);
+    }
 	setActionsRemaining(--actionsRemaining);
 	return 1;
 

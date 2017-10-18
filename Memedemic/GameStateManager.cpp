@@ -373,6 +373,68 @@ int GameStateManager::autoSave() {
 		return 0;
 	else return -1;
 }
+int GameStateManager::incrementInfect(int loca, std::vector<int> track, int meme) {
+	//check if the location has already been infected this cycle
+	for(int i = 0; i < track.size()-2; i++)
+	{
+		if(loca == track[i])
+			return 1;
+	}
+	//determine which meme to use based on the origin of this infection cycle
+	switch(track[0]){
+		case TUMBLR:
+		case IFUNNY:
+		case NINEGAG:
+		case IMGUR:
+		case FOURCHAN:
+			meme = 0;
+			break;
+		case BUZZFEED:
+		case YOUTUBE:
+		case TWITCH:
+		case REDDIT:
+		case STEAM:
+		case DISCORD:
+			meme = 1;
+			break;
+		case MYSPACE:
+		case FACEBOOK:
+		case VINE:
+		case TWITTER:
+		case PINTEREST:
+		case SNAPCHAT:
+		case INSTAGRAM:
+			meme = 2;
+			break;
+		case EMAIL:
+		case WECHAT:
+		case WHATSAPP:
+		case WEIBO:
+		case QQ:
+		case VK:
+			meme = 3;
+			break;
+		default:
+			break;	
+	}
+	//if the current location's meme count is below 3, add 1 to the location's counter
+	if(board.getLocation(loca).memes[meme] < 3)
+	{
+		infect(loca, meme, 1);
+	}
+	else
+	{
+		//if the location is at 3, then recursively call this function on the adjacent locations
+		std::vector<int> adja = locations.getAdjacentLocations(loca);
+		for(int i = 0; i < adja.size(); i++)
+		{
+			track.push_back(adja[i]);
+			incrementInfect(adja[i], track, meme);
+			track.pop_back();
+		}
+	}
+	return 1;
+}
 int GameStateManager::nextTurn() {
     playerHasDrawn = 0;
     actionsRemaining = 4;
@@ -392,46 +454,11 @@ int GameStateManager::nextTurn() {
 		int loca = distr(eng);
 		std::vector<int> locas;
 		locas.push_back(loca);
-		incrementInfect(loca, locas, loca);
+		int meme = 0;
+		incrementInfect(loca, locas, meme);
 	}
 	return 1;
 }
-void incrementInfect(int location, vector<int>  track, int meme)
-{
-	switch(location){
-		case TUMBLR:
-		case IFUNNY:
-		case NINEGAG:
-		case IMGUR:
-		case FOURCHAN:
-			break;
-		case BUZZFEED:
-		case YOUTUBE:
-		case TWITCH:
-		case REDDIT:
-		case STEAM:
-		case DISCORD:
-			break;
-		case MYSPACE:
-		case FACEBOOK:
-		case VINE:
-		case TWITTER:
-		case PINTEREST:
-		case SNAPCHAT:
-		case INSTAGRAM:
-			break;
-		case EMAIL:
-		case WECHAT:
-		case WHATSAPP:
-		case WEIBO:
-		case QQ:
-		case VK:
-			break;
-		default:
-			break;
-	}
-}
-
 int GameStateManager::initialInfection() {
 	//create each spawning area
 	int area1[5] = {TUMBLR, IFUNNY, NINEGAG, IMGUR, FOURCHAN};

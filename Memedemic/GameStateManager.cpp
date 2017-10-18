@@ -375,9 +375,9 @@ int GameStateManager::autoSave() {
 }
 int GameStateManager::incrementInfect(int loca, std::vector<int> track, int meme) {
 	//check if the location has already been infected this cycle
-	for(int i = 0; i < track.size()-2; i++)
+	for(int i = 0; i < track.size()-1; i++)
 	{
-		if(loca == track[i])
+		if(loca == track[i] && track.size() != 1)
 			return 1;
 	}
 	//determine which meme to use based on the origin of this infection cycle

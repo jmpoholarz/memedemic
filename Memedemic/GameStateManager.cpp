@@ -175,6 +175,65 @@ int GameStateManager::movePlayer(int location) {
 	else return -1;
 }
 
+int GameStateManager::moveOtherPlayer(int playerToMove, int location) {
+    // Make sure player has role of Router
+    if (players[currentPlayer] -> getPlayerRole() != ROUTER) {
+        return -4;
+    }
+    // Make sure playerToMove is not current player
+    if (currentPlayer == playerToMove) {
+        return -3;
+    }
+	// Make sure player has actions left in their turn
+	if (actionsRemaining <= 0) {
+		return 0;
+	}
+	// Check if accessing the same location as current location
+	if (players[playerToMove]->getPlayerLocation() == location)
+		return -2;
+	// Check if adjacent location
+	if (locations.isAdjacent(players[playerToMove]->getPlayerLocation(), location)) {
+		// Update player location in the Board class
+		board.movePlayer(location, playerToMove);
+		players[playerToMove]->setPlayerLocation((CardNames)location);
+		std::cout << players[playerToMove]->getPlayerLocation() << std::endl;
+		setActionsRemaining(--actionsRemaining);
+		return 1;
+	}
+	// Or if player holding the card for the destination
+	else if (players[currentPlayer]->holdsNCards(location, 1)) {
+		players[currentPlayer]->removeNCards(location, 1);
+		players[playerToMove]->setPlayerLocation(location);
+		board.movePlayer(location, playerToMove);
+		setActionsRemaining(--actionsRemaining);
+		return 1;
+	}
+	// Or if the player is holding the current location
+	else if (players[currentPlayer]->holdsNCards(players[playerToMove]->getPlayerLocation(), 1)) {
+		players[currentPlayer]->removeNCards(players[playerToMove]->getPlayerLocation(), 1);
+		players[playerToMove]->setPlayerLocation(location);
+		board.movePlayer(location, playerToMove);
+		setActionsRemaining(--actionsRemaining);
+		return 1;
+	}
+	// Or if at a CMC server and moving to a CMC server
+	else if (board.getLocation(location).cmcServer == true &&
+		board.getLocation(players[playerToMove]->getPlayerLocation()).cmcServer == true) {
+		board.movePlayer(location, playerToMove);
+		players[playerToMove]->setPlayerLocation(location);
+		setActionsRemaining(--actionsRemaining);
+		return 1;
+	}
+	// Or if another player is at the desired location 
+	else if (locationHasPlayer(location)) {
+		board.movePlayer(location, playerToMove);
+		players[playerToMove]->setPlayerLocation(location);
+		setActionsRemaining(--actionsRemaining);
+		return 1;
+	}
+	else return -1;
+}
+
 int GameStateManager::banMeme(int memeNumber) {
 	// Meme already eradicated
 	if (board.getCure(memeNumber == 2)) {
@@ -606,6 +665,9 @@ Board& GameStateManager::getBoard() {
 Player& GameStateManager::getPlayer(int index) {
 	return *(players[index]);
 }
+std::vector<Player*> GameStateManager::getPlayers() {
+    return players;
+}
 int GameStateManager::getActionsRemaining() {
 	return actionsRemaining;
 }
@@ -788,4 +850,13 @@ std::string GameStateManager::convertIntToCard(int intCard) {
 		default:
 			return "";
 	}
+}
+
+bool GameStateManager::locationHasPlayer(int loc) {
+    for (int i = 0; i < players.size(); i++) {
+        if (players[i] -> getPlayerLocation() == loc) {
+            return true;
+        }
+    }
+    return false;
 }

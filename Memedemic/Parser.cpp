@@ -1,4 +1,5 @@
 #include "Parser.h"
+#include <iostream>
 
 Parser::Parser(GameStateManager& g) : gsm(g) {
 }
@@ -35,7 +36,7 @@ std::string Parser::parse(std::string command) {
 			return "Help on the following topics is available:\n"
 				"   <insert list of help topics here>\n"
 				"Help for the following commands is available:\n"
-				"   usage, access, build, ban, give, take, filter, event, "
+				"   usage, access, move, build, ban, give, take, filter, event, "
 				"outbreak, viral, \n   meme, players, roles, cmc, servers, draw, "
 				"discard, cards, end, new";
 		}
@@ -51,6 +52,15 @@ std::string Parser::parse(std::string command) {
 					"\t- Any location if holding the current location's card\n"
 					"\t- A location of a CMC Server if you are at a CMC Server\n"
 					"\t- (Professor) Any location by playing any location\n";
+			}
+			else if (tokens[1] == "move") {
+				return "Use this to move a player to another location.\n"
+					"You may move the specified player to: \n"
+					"\t- An adjacent location\n"
+					"\t- A location you hold the card of\n"
+					"\t- Any location if holding the current location's card\n"
+					"\t- A location of a CMC Server if you are at a CMC Server\n"
+					"\t- Any location occupied by another player\n";
 			}
 			else if (tokens[1] == "build") {
 				return "Use this to construct a CMC Server\n"
@@ -181,6 +191,50 @@ std::string Parser::parse(std::string command) {
 		}
 		else return "Unable to move to " + tokens[1];
 	}
+    else if (tokens[0] == "move") {
+        // Check for wrong number of arguments, that game has more than 1 player, and that user specified player number
+        if (tokens.size() != 3 || gsm.getPlayers().size() < 2 || tokens[1].size() != 1 ||
+                !std::isdigit(tokens[1][0])) {
+            return "Incorrect usage of move: " + getUsage("move");
+        }
+        // Check that specified player number to move is valie
+        int playerToMove = atoi(tokens[1].c_str()) - 1;
+        if (playerToMove < 0 || playerToMove > gsm.getPlayers().size() - 1) {
+            return "Invalid player number: " + getUsage("move");
+        }
+		// Get location number from enum
+		int location = convertCard(tokens[2]);
+		// Check if valid location
+		if (!(location >= 0 && location <= 23)) {
+			return "Invalid location: " + getUsage("move");
+		}
+
+        int successful = gsm.moveOtherPlayer(playerToMove, location);
+		if (successful == 1)
+			return "Moved player " + std::to_string(playerToMove) + " to " + tokens[2];
+		else if (successful == 0) {
+			return "You have no actions remaining.  Please end your turn.";
+		}
+		else if (successful == -1) {
+			// Location non-adjacent and no held card
+			return "You cannot move to " + tokens[1] + 
+				" unless you:\n1. Hold its card\n"
+				"2. Hold the current location's card\n"
+				"3. Are adjacent to it\n" +
+				"4. It is the location of a CMC server, and" +
+				" you are at a CMC server";
+		}
+		else if (successful == -2) {
+			return "Current location has not changed.";
+		}
+        else if (successful == -3) {
+            return "Cannot use move on current player; use access instead.";
+        }
+        else if (successful == -4) {
+            return "Only a player with the role of router can use the move command.";
+        }
+		else return "Unable to move to " + tokens[1];
+    }
 	else if (tokens[0] == "build") {
 		// Check for wrong number of arguments
 		if (tokens.size() != 1) {
@@ -203,7 +257,7 @@ std::string Parser::parse(std::string command) {
 		}
 		else if (successful == -3) {
 			// Not holding location card
-			return "You must hold this location's card to build a CMC Server, or have the role of Meme Studies Professor.";
+			return "You must hold this location's card, or have the role of Meme Studies Professor to build a CMC Server.";
 		}
 		else return "Unable to build CMC Server.";
 	}
@@ -614,6 +668,9 @@ std::string Parser::getUsage(std::string command) {
 	}
 	else if (command == "access") {
 		return "access <location>";
+	}
+	else if (command == "move") {
+		return "access <player #> <location>";
 	}
 	else if (command == "build") {
 		return "build";

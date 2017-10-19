@@ -5,48 +5,56 @@ int main() {
 }
 
 int mainMenu() {
-	std::string startMenuResponse = "";
-    	int response = 0;
-    	// Get start menu response
-    	do {
-    		// Output start menu
-    		std::cout << "Memedemic: Please enter 1-3:" << std::endl;
-    		std::cout << "1. New" << std::endl;
-    		std::cout << "2. Load" << std::endl;
-    		std::cout << "3. Quit" << std::endl;
-    		std::getline(std::cin, startMenuResponse);
-    	} while (!(startMenuResponse == "1" || startMenuResponse == "2" ||
-    		startMenuResponse == "3"));
 
-    	// Perform uniform start-up process
-    	Board board = Board();
-    	Location locations = Location();
-    	GameStateManager gsm = GameStateManager(board, locations);
-    	Parser parser = Parser(gsm);
-    	Screen screen = Screen(gsm, parser);
+	bool startMenu = 1;
+	while (startMenu) {
+		std::string startMenuResponse = "";
+		int response = 0;
+		// Get start menu response
+		do {
+			// Output start menu
+			std::cout << "Memedemic: Please enter 1-3:" << std::endl;
+			std::cout << "1. New" << std::endl;
+			std::cout << "2. Load" << std::endl;
+			std::cout << "3. Quit" << std::endl;
+			std::getline(std::cin, startMenuResponse);
+		} while (!(startMenuResponse == "1" || startMenuResponse == "2" ||
+			startMenuResponse == "3"));
 
-    	// Process start menu response
-    	if (startMenuResponse == "1") {
-    		setupNewGame(gsm);
-    	}
-    	else if (startMenuResponse == "2") {
-    		loadGame(gsm);
-    	}
-    	else if (startMenuResponse == "3") {
-    		// Quit the game
-    		std::cout << "But if not you, then who will stop the memes.";
-    		std::this_thread::sleep_for(std::chrono::milliseconds(750));
-    		std::cout << ".";
-    		std::this_thread::sleep_for(std::chrono::milliseconds(750));
-    		std::cout << ".";
-    		std::this_thread::sleep_for(std::chrono::milliseconds(750));
-    		std::cout << "?" << std::endl;
-    		std::this_thread::sleep_for(std::chrono::milliseconds(1500));
-    		return 0;
-    	}
+		// Perform uniform start-up process
+		Board board = Board();
+		Location locations = Location();
+		GameStateManager gsm = GameStateManager(board, locations);
+		Parser parser = Parser(gsm);
+		Screen screen = Screen(gsm, parser);
 
-    	// Now that setup has finished, run the game
-    	screen.run();
+		// Process start menu response
+		if (startMenuResponse == "1") {
+			int result = setupNewGame(gsm);
+			// Now that setup has finished, run the game
+			if (result == 1)
+				screen.run();
+		}
+		else if (startMenuResponse == "2") {
+			int result = loadGame(gsm);
+			// Now that setup has finished, run the game
+			if (result == 1)
+				screen.run();
+		}
+		else if (startMenuResponse == "3") {
+			// Quit the game
+			std::cout << "But if not you, then who will stop the memes.";
+			std::this_thread::sleep_for(std::chrono::milliseconds(750));
+			std::cout << ".";
+			std::this_thread::sleep_for(std::chrono::milliseconds(750));
+			std::cout << ".";
+			std::this_thread::sleep_for(std::chrono::milliseconds(750));
+			std::cout << "?" << std::endl;
+			std::this_thread::sleep_for(std::chrono::milliseconds(1500));
+			return 0;
+		}
+	}
+
 }
 
 int setupNewGame(GameStateManager& gsm) {
@@ -69,7 +77,7 @@ int setupNewGame(GameStateManager& gsm) {
 		std::string playerName = "";
 		while (!isValidName) {
 			do {
-				std::cout << "Enter name of player " << i+1 << ":" << std::endl;
+				std::cout << "Enter name of player " << i + 1 << ":" << std::endl;
 				std::getline(std::cin, playerName);
 			} while (playerName.length() == 0);
 			// Iterate through characters to check if alphanumeric+space
@@ -82,7 +90,7 @@ int setupNewGame(GameStateManager& gsm) {
 				std::cout << "Name contained invalid characters." << std::endl;
 		}
 		gsm.getPlayer(i).setPlayerName(playerName);
-		
+
 	}
 	// Prompt player roles
 	std::cout << "\nNow select a role from the following (1-6):" << std::endl;
@@ -106,7 +114,7 @@ int setupNewGame(GameStateManager& gsm) {
 		int roleChoice = 0;
 		std::string strRole = "";
 		do {
-			std::cout << "Player " << i+1 << " - Enter role choice (1-6): ";
+			std::cout << "Player " << i + 1 << " - Enter role choice (1-6): ";
 			std::getline(std::cin, strRole);
 			if (strRole.length() == 1 && std::isdigit(strRole[0]))
 				roleChoice = atoi(strRole.c_str());
@@ -116,7 +124,7 @@ int setupNewGame(GameStateManager& gsm) {
 
 	gsm.initialInfection();
 
-	return 0; // success
+	return 1; // success
 }
 
 int loadGame(GameStateManager& gsm) {
@@ -127,16 +135,21 @@ int loadGame(GameStateManager& gsm) {
 		std::getline(std::cin, filename);
 		FILE* file;
 		if (filename == "") {
-			std::string filename = "autosave.txt";
-			validFile = true;
+			filename = "autosave.txt";
+			if (!(fopen(filename.c_str(), "r"))) {
+				fclose(file);
+				validFile = true;
+			}
+			else std::cout << "No autosave found.\n";
 		}
-		else if (!(fopen_s(&file, filename.c_str(), "r"))) {
+		else if (!(fopen(filename.c_str(), "r"))) {
 			fclose(file);
 			validFile = true;
 		}
+		if (!validFile) std::cout << "Invalid file." << std::endl;
 
 	}
-	
+
 	std::fstream fs(filename, std::fstream::in);
 	std::string line; // current line in save file
 	std::string elem; // current comma separated item
@@ -151,7 +164,7 @@ int loadGame(GameStateManager& gsm) {
 	if (numberOfPlayers < 1 || numberOfPlayers > 4)
 		return -1;
 
-	gsm.setupPlayers(numberOfPlayers);
+	gsm.setupPlayers(numberOfPlayers, true);
 
 	// Next 24 lines are each location
 	for (int i = 0; i < 24; i++) {
@@ -228,7 +241,7 @@ int loadGame(GameStateManager& gsm) {
 		}
 		Player& p = gsm.getPlayer(atoi(tokens[0].c_str()));
 		p.setPlayerName(tokens[1]);
-		p.setPlayerRole((PlayerRoles) atoi(tokens[2].c_str()));
+		p.setPlayerRole((PlayerRoles)atoi(tokens[2].c_str()));
 		p.setPlayerLocation(atoi(tokens[3].c_str()));
 		for (int j = 0; j < atoi(tokens[4].c_str()); j++) {
 			p.addCard(atoi(tokens[5 + j].c_str()));
@@ -239,7 +252,7 @@ int loadGame(GameStateManager& gsm) {
 
 
 	fs.close();
-	return 0;
+	return 1;
 
 
 	/*

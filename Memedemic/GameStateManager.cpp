@@ -37,7 +37,7 @@ GameStateManager::GameStateManager(Board& b, Location& l) : board(b), locations(
 	//initialInfection(); // called in Main's game setup to not break loading
     //setupDeck(); // called in Main's game setup to not break loading
 }
-void GameStateManager::setupPlayers(int numPlayers) {
+void GameStateManager::setupPlayers(int numPlayers, bool loadingGame) {
 	// Handle setup for players in the board
 	board.setupPlayers(numPlayers);
 	// Add players to a vector
@@ -52,10 +52,12 @@ void GameStateManager::setupPlayers(int numPlayers) {
         } else if (numPlayers == 4) {
             numCardsToDraw = 2;
         }
-        for (int j = 0; j < numCardsToDraw; j++) {
-            p -> addCard(cards.back());
-            cards.pop_back();
-        }
+		if (loadingGame == false) {
+			for (int j = 0; j < numCardsToDraw; j++) {
+				p->addCard(cards.back());
+				cards.pop_back();
+			}
+		}
 
 		players.push_back(p);
 	}

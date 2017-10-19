@@ -288,8 +288,47 @@ int GameStateManager::buildCMCServer() {
 int GameStateManager::playCard(int card) {
 	return 0;
 }
-int GameStateManager::shareCard(int card, std::string playerName) {
-	return 0;
+int GameStateManager::shareCard(int direction, int card, std::string playerName) {
+	// Check for actions
+	if (actionsRemaining <= 0) return 0;
+	int otherPlayer = -1;
+	for (int i = 0; i < players.size(); i++) {
+		if (players[i]->getPlayerName == playerName)
+			otherPlayer = i;
+	}
+	// If could not find player referenced in trade request
+	if (otherPlayer == -1)
+		return -1;
+	// If location differs
+	if (players[currentPlayer]->getPlayerLocation() !=
+		players[otherPlayer]->getPlayerLocation()) {
+		return -3;
+	}
+
+	// Giving
+	if (direction == 1) {
+		// Check for valid card
+		if (card < 0 || card >= players[currentPlayer]->getPlayerCards().size()) {
+			return -2;
+		}
+		// Transfer card ownership to otherPlayer
+		players[otherPlayer]->addCard(players[currentPlayer]->getPlayerCards()[card]);
+		players[currentPlayer]->removeCardAtIndex(card);
+		return 1;
+	}
+	// Taking
+	else if (direction == -1) {
+		// Check for valid card
+		if (card < 0 || card >= players[currentPlayer]->getPlayerCards().size()) {
+			return -2;
+		}
+		// Transfer card ownership to currentPlayer
+		players[currentPlayer]->addCard(players[otherPlayer]->getPlayerCards()[card]);
+		players[otherPlayer]->removeCardAtIndex(card);
+		return 1;
+	}
+
+	return -100;
 }
 int GameStateManager::drawCards() {
     int playerHandSize = players[currentPlayer] -> getPlayerCards().size();

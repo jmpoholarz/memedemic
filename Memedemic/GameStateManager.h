@@ -27,7 +27,7 @@ public:
 	int buildCMCServer();
 	int playCard(int card);
 	int discardCard(int card1, int card2);
-	int shareCard(int card, std::string playerName);
+	int shareCard(int direction, int card, std::string playerName);
 	int drawCards();
 	std::string printPlayerRoles();
 	std::string printPlayerLocations();

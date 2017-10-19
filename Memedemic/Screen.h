@@ -12,6 +12,6 @@ public:
 	std::string sendCommand(std::string command);
 	void run();
 private:
-	GameStateManager gsm;
-	Parser parser;
+	GameStateManager& gsm;
+	Parser& parser;
 };

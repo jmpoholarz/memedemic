@@ -19,18 +19,18 @@ int mainMenu() {
     		startMenuResponse == "3"));
 
     	// Perform uniform start-up process
-    	Board* board = new Board();
-    	Location* locations = new Location();
-    	GameStateManager* gsm = new GameStateManager(*board, *locations);
-    	Parser* parser = new Parser(*gsm);
-    	Screen* screen = new Screen(*gsm, *parser);
+    	Board board = Board();
+    	Location locations = Location();
+    	GameStateManager gsm = GameStateManager(board, locations);
+    	Parser parser = Parser(gsm);
+    	Screen screen = Screen(gsm, parser);
 
     	// Process start menu response
     	if (startMenuResponse == "1") {
-    		setupNewGame(*gsm);
+    		setupNewGame(gsm);
     	}
     	else if (startMenuResponse == "2") {
-    		loadGame(*gsm);
+    		loadGame(gsm);
     	}
     	else if (startMenuResponse == "3") {
     		// Quit the game
@@ -46,7 +46,7 @@ int mainMenu() {
     	}
 
     	// Now that setup has finished, run the game
-    	screen->run();
+    	screen.run();
 }
 
 int setupNewGame(GameStateManager& gsm) {
@@ -113,12 +113,15 @@ int setupNewGame(GameStateManager& gsm) {
 		gsm.getPlayer(i).setPlayerRole(PlayerRoles(roleChoice - 1));
 	}
 
+	gsm.setupDeck();
+	gsm.initialInfection();
+
 	return 0; // success
 }
 
 int loadGame(GameStateManager& gsm) {
 	std::string filename = "save.txt";
-	std::fstream fs(filename);
+	std::fstream fs(filename, std::fstream::in);
 	std::string line; // current line in save file
 	std::string elem; // current comma separated item
 	std::vector<std::string> tokens;
@@ -155,9 +158,17 @@ int loadGame(GameStateManager& gsm) {
 		tokens.clear();
 	}
 	// Next line is player deck
+	gsm.d
 	std::getline(fs, line);
-	// Next line is meme deck
-	std::getline(fs, line);
+	std::stringstream ss(line);
+	while (getline(ss, elem, ',')) {
+		tokens.push_back(elem);
+	}
+	for (int i = 1; i < atoi(tokens[0].c_str()) + 1; i++) {
+		gsm.queueCardInDeck(atoi(tokens[i].c_str()));
+	}
+	tokens.clear();
+
 	// Next two lines are outbreak track and viral quotient
 	std::getline(fs, line);
 	if (line.length() != 1)
@@ -180,9 +191,9 @@ int loadGame(GameStateManager& gsm) {
 
 	// Next line is the 4 meme statuses
 	std::getline(fs, line);
-	std::stringstream ss(line);
+	std::stringstream ss2(line);
 	// Split line by commas
-	while (getline(ss, elem, ',')) {
+	while (getline(ss2, elem, ',')) {
 		tokens.push_back(elem);
 	}
 	if (tokens.size() != 4)
@@ -190,8 +201,28 @@ int loadGame(GameStateManager& gsm) {
 	for (int i = 0; i < 4; i++) {
 		gsm.setMemeStatus(i, atoi(tokens[i].c_str()));
 	}
+	tokens.clear();
 	// Last player# of lines details things about the players
+	for (int i = 0; i < numberOfPlayers; i++) {
+		std::getline(fs, line);
+		std::stringstream ss3(line);
+		// Split line by commas
+		while (getline(ss3, elem, ',')) {
+			tokens.push_back(elem);
+		}
+		Player& p = gsm.getPlayer(atoi(tokens[0].c_str()));
+		p.setPlayerName(tokens[1]);
+		p.setPlayerRole((PlayerRoles) atoi(tokens[2].c_str()));
+		p.setPlayerLocation(atoi(tokens[3].c_str()));
+		for (int j = 0; j < atoi(tokens[4].c_str()); j++) {
+			p.addCard(atoi(tokens[5 + j].c_str()));
+		}
+		tokens.clear();
+	}
 
+
+
+	fs.close();
 	return 0;
 
 

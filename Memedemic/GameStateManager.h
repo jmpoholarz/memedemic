@@ -22,6 +22,7 @@ public:
 	~GameStateManager();
 
 	int movePlayer(int location);
+	int moveOtherPlayer(int playerToMove, int location);
 	int banMeme(int memeNumber);
 	int developMemeFilter(int card1, int card2, int card3, int card4, int card5);
 	int buildCMCServer();
@@ -46,6 +47,7 @@ public:
 	int getActionsRemaining();
 	Board& getBoard();
 	Player& getPlayer(int index);
+    std::vector<Player*> getPlayers();
 	//std::vector<Card*> getCards();
 	
 	int setOutbreakTrack(int value);
@@ -60,6 +62,7 @@ public:
 
 private:
     std::string convertIntToCard(int);
+    bool locationHasPlayer(int);
 	Board& board;
 	Location& locations;
 	std::vector<Player*> players;

@@ -60,6 +60,7 @@ int setupNewGame(GameStateManager& gsm) {
 		if (strPlayers.size() == 1 && std::isdigit(strPlayers[0]))
 			playerCount = atoi(strPlayers.c_str());
 	} while (!(playerCount > 0 && playerCount < 5));
+	gsm.setupDeck();
 	// Set players at start positions, etc.
 	gsm.setupPlayers(playerCount);
 	// Prompt player names
@@ -113,7 +114,6 @@ int setupNewGame(GameStateManager& gsm) {
 		gsm.getPlayer(i).setPlayerRole(PlayerRoles(roleChoice - 1));
 	}
 
-	gsm.setupDeck();
 	gsm.initialInfection();
 
 	return 0; // success
@@ -158,7 +158,7 @@ int loadGame(GameStateManager& gsm) {
 		tokens.clear();
 	}
 	// Next line is player deck
-	gsm.d
+	//gsm.d
 	std::getline(fs, line);
 	std::stringstream ss(line);
 	while (getline(ss, elem, ',')) {

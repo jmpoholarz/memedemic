@@ -692,10 +692,12 @@ int GameStateManager::saveGame() {
 		fs << i << "," << players[i]->getPlayerName() << "," <<
 			players[i]->getPlayerRole() << "," << players[i]->getPlayerLocation() <<
 			"," << players[i]->getPlayerCards().size() << ",";
-		for (int j = 0; j < players[i]->getPlayerCards().size() - 1; j++) {
+		for (int j = 0; players[i]->getPlayerCards().size() != 0 && j < players[i]->getPlayerCards().size() - 1; j++) {
 			fs << players[i]->getPlayerCards()[j] << ",";
 		}
-		fs << players[i]->getPlayerCards()[players[i]->getPlayerCards().size() - 1];
+        if (players[i]->getPlayerCards().size() != 0) {
+            fs << players[i]->getPlayerCards()[players[i]->getPlayerCards().size() - 1];
+        }
 		fs << std::endl;
 	}
 	// currentPlayer,actionsRemaining

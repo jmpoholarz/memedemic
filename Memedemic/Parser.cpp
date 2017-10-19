@@ -211,7 +211,7 @@ std::string Parser::parse(std::string command) {
 
         int successful = gsm.moveOtherPlayer(playerToMove, location);
 		if (successful == 1)
-			return "Moved player " + std::to_string(playerToMove) + " to " + tokens[2];
+			return "Moved player " + std::to_string(playerToMove + 1) + " to " + tokens[2];
 		else if (successful == 0) {
 			return "You have no actions remaining.  Please end your turn.";
 		}

@@ -373,6 +373,7 @@ int GameStateManager::autoSave() {
 		return 0;
 	else return -1;
 }
+
 int GameStateManager::incrementInfect(int loca, std::vector<int> track, int meme) {
 	//check if the location has already been infected this cycle
 	for(int i = 0; i < track.size()-1; i++)
@@ -428,7 +429,7 @@ int GameStateManager::incrementInfect(int loca, std::vector<int> track, int meme
 		std::vector<int> adja = locations.getAdjacentLocations(loca);
 		for(int i = 0; i < adja.size(); i++)
 		{
-			setOutbreakTrack(getOubreakTrack()+1);
+			setOutbreakTrack(getOutbreakTrack()+1);
 			track.push_back(adja[i]);
 			incrementInfect(adja[i], track, meme);
 			track.pop_back();

@@ -86,7 +86,7 @@ Location::Location() {
 	
 	site WECHAT = {0};
 	WECHAT.id = 20;
-	WECHAT.adjacencies = {19,21};
+	WECHAT.adjacencies = {19,21,22};
 	
 	site WEIBO = {0};
 	WEIBO.id = 21;

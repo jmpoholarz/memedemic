@@ -136,6 +136,42 @@ int GameStateManager::movePlayer(int location) {
 		setActionsRemaining(--actionsRemaining);
 		return 1;
 	}
+	// If player has Professor role
+    else if (players[currentPlayer]->getPlayerRole() == MEMESTUDIESPROFESSOR) {
+        bool shouldMove = false;
+        std::cout << "Since you are a Meme Studies Professor, you may discard a card to move to your desired location.\n\n";
+        for (int i = 0; i < players[currentPlayer] -> getPlayerCards().size(); i++) {
+            std::cout << "Card " + std::to_string(i + 1) + ": " +
+                    convertIntToCard(players[currentPlayer] -> getPlayerCards()[i]) + '\n';
+        }
+        std::cout << "Enter the number of the card you would like to discard. Enter 'CANCEL' to cancel: ";
+        std::string cardToDiscardString;
+        int cardToDiscard = -1;
+        int playerHandSize = players[currentPlayer]->getPlayerCards().size();
+        do {
+            std::getline(std::cin, cardToDiscardString);
+            if (cardToDiscardString == "CANCEL") {
+                shouldMove = false;
+                break;
+            }
+            if (cardToDiscardString.size() == 1 && std::isdigit(cardToDiscardString[0]))
+                cardToDiscard = atoi(cardToDiscardString.c_str());
+        } while (cardToDiscard < 1 || cardToDiscard > playerHandSize);
+
+        if (cardToDiscard > 0 && cardToDiscard <= playerHandSize) {
+            this -> discardCard(cardToDiscard, -1);
+            shouldMove = true;
+        }
+
+        if (shouldMove) {
+            board.movePlayer(location, currentPlayer);
+            players[currentPlayer]->setPlayerLocation(location);
+            setActionsRemaining(--actionsRemaining);
+            return 1;
+        } else {
+            return -1;
+        }
+    }
 	else return -1;
 }
 
@@ -223,12 +259,15 @@ int GameStateManager::buildCMCServer() {
 	if (CMCCount >= 6)
 		return -2;
 	// Check if player holding the current location card
-	if (!(players[currentPlayer]->holdsNCards(players[currentPlayer]->getPlayerLocation(), 1))) {
+	if (!(players[currentPlayer]->holdsNCards(players[currentPlayer]->getPlayerLocation(), 1))
+            && players[currentPlayer]->getPlayerRole() != MEMESTUDIESPROFESSOR) {
 		return -3;
 	}
 	// Otherwise player can build a CMC!
 	board.addCMC(players[currentPlayer]->getPlayerLocation());
-	players[currentPlayer]->removeNCards(players[currentPlayer]->getPlayerLocation(), 1);
+    if (players[currentPlayer]->getPlayerRole() != MEMESTUDIESPROFESSOR) {
+        players[currentPlayer]->removeNCards(players[currentPlayer]->getPlayerLocation(), 1);
+    }
 	setActionsRemaining(--actionsRemaining);
 	return 1;
 
@@ -334,6 +373,69 @@ int GameStateManager::autoSave() {
 		return 0;
 	else return -1;
 }
+int GameStateManager::incrementInfect(int loca, std::vector<int> track, int meme) {
+	//check if the location has already been infected this cycle
+	for(int i = 0; i < track.size()-1; i++)
+	{
+		if(loca == track[i] && track.size() != 1)
+			return 1;
+	}
+	//determine which meme to use based on the origin of this infection cycle
+	switch(track[0]){
+		case TUMBLR:
+		case IFUNNY:
+		case NINEGAG:
+		case IMGUR:
+		case FOURCHAN:
+			meme = 0;
+			break;
+		case BUZZFEED:
+		case YOUTUBE:
+		case TWITCH:
+		case REDDIT:
+		case STEAM:
+		case DISCORD:
+			meme = 1;
+			break;
+		case MYSPACE:
+		case FACEBOOK:
+		case VINE:
+		case TWITTER:
+		case PINTEREST:
+		case SNAPCHAT:
+		case INSTAGRAM:
+			meme = 2;
+			break;
+		case EMAIL:
+		case WECHAT:
+		case WHATSAPP:
+		case WEIBO:
+		case QQ:
+		case VK:
+			meme = 3;
+			break;
+		default:
+			break;	
+	}
+	//if the current location's meme count is below 3, add 1 to the location's counter
+	if(board.getLocation(loca).memes[meme] < 3)
+	{
+		infect(loca, meme, 1);
+	}
+	else
+	{
+		//if the location is at 3, then recursively call this function on the adjacent locations
+		std::vector<int> adja = locations.getAdjacentLocations(loca);
+		for(int i = 0; i < adja.size(); i++)
+		{
+			setOutbreakTrack(getOubreakTrack()+1);
+			track.push_back(adja[i]);
+			incrementInfect(adja[i], track, meme);
+			track.pop_back();
+		}
+	}
+	return 1;
+}
 int GameStateManager::nextTurn() {
     playerHasDrawn = 0;
     actionsRemaining = 4;
@@ -342,6 +444,20 @@ int GameStateManager::nextTurn() {
 
 	// Perhaps print board with each new turn? board->printBoard();
 
+	//spread memes number of viral quotient
+	//create the random device engine and stuff
+	std::random_device rd;
+	std::mt19937 eng(rd());
+	std::uniform_int_distribution<> distr(0,23);
+	for(int x = 0; x < viralQuotient; x++)
+	{
+		//choose the location
+		int loca = distr(eng);
+		std::vector<int> locas;
+		locas.push_back(loca);
+		int meme = 0;
+		incrementInfect(loca, locas, meme);
+	}
 	return 1;
 }
 int GameStateManager::initialInfection() {

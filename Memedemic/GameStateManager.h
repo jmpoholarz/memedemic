@@ -35,6 +35,7 @@ public:
 	std::string printCMCLocations();
 	int updateBoard();
 	int autoSave();
+	int incrementInfect(int loca, std::vector<int> track, int meme);
 	int nextTurn();
 	int initialInfection();
 	int infect(int location, int meme, int count);

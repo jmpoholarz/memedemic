@@ -15,7 +15,7 @@ public:
 
 	// Sets up initial game starting conditions
 	GameStateManager(Board& b, Location& l);
-	void setupPlayers(int numPlayers);
+	void setupPlayers(int numPlayers, bool loadingGame = false);
     void setupDeck();
 	
 	// Frees all objects and readies the game for closing

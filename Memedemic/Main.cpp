@@ -60,7 +60,6 @@ int setupNewGame(GameStateManager& gsm) {
 		if (strPlayers.size() == 1 && std::isdigit(strPlayers[0]))
 			playerCount = atoi(strPlayers.c_str());
 	} while (!(playerCount > 0 && playerCount < 5));
-	gsm.setupDeck();
 	// Set players at start positions, etc.
 	gsm.setupDeck();
 	gsm.setupPlayers(playerCount);

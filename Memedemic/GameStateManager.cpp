@@ -27,15 +27,15 @@ GameStateManager::GameStateManager(Board& b, Location& l) : board(b), locations(
 	viralQuotient = 2;
 	currentPlayer = 0;
     actionsRemaining = 4;
-    playerHasDrawn = 0;
+    playerHasDrawn = 0; // may need to be stored in save file
     gameEnd = false;
     // Each meme is allocated 12 cubes
     cubesLeft[0] = 12;
     cubesLeft[1] = 12;
     cubesLeft[2] = 12;
     cubesLeft[3] = 12;
-	initialInfection();
-    setupDeck();
+	//initialInfection(); // called in Main's game setup to not break loading
+    //setupDeck(); // called in Main's game setup to not break loading
 }
 void GameStateManager::setupPlayers(int numPlayers) {
 	// Handle setup for players in the board
@@ -432,6 +432,7 @@ int GameStateManager::autoSave() {
 		return 0;
 	else return -1;
 }
+
 int GameStateManager::incrementInfect(int loca, std::vector<int> track, int meme) {
 	//check if the location has already been infected this cycle
 	for(int i = 0; i < track.size()-1; i++)
@@ -655,9 +656,13 @@ int GameStateManager::setActionsRemaining(int value) {
 	return 0;
 }
 
+void GameStateManager::queueCardInDeck(int value) {
+	cards.push_back(value);
+}
+
 int GameStateManager::saveGame() {
 	std::string filename = "save.txt";
-	std::fstream fs(filename);
+	std::fstream fs(filename, std::fstream::out);
 	// totalPlayers
 	fs << players.size() << std::endl;
 	// Location,memeLevel,memeLevel,memeLevel,memeLevel,hasCMC x24
@@ -669,9 +674,12 @@ int GameStateManager::saveGame() {
 			board.getLocation(i).cmcServer << std::endl;
 	}
 	// PlayerDeckCardsRemaining,Card,Card,Card,...
-	fs << std::endl;
-	// MemeDeckCardsRemaining,Card,Card,Card,...
-	fs << std::endl;
+	fs << cards.size() << ",";
+	for (int i = 0; i < cards.size()-1; i++) {
+		fs << cards[i] << ",";
+	}
+	fs << cards[cards.size() - 1] << std::endl;
+
 	// outbreakTrack
 	fs << outbreakTrack << std::endl;
 	// viralQuotient
@@ -683,11 +691,19 @@ int GameStateManager::saveGame() {
 	for (int i = 0; i < players.size(); i++) {
 		fs << i << "," << players[i]->getPlayerName() << "," <<
 			players[i]->getPlayerRole() << "," << players[i]->getPlayerLocation() <<
-			"," << std::endl;
+			"," << players[i]->getPlayerCards().size() << ",";
+		for (int j = 0; j < players[i]->getPlayerCards().size() - 1; j++) {
+			fs << players[i]->getPlayerCards()[j] << ",";
+		}
+		fs << players[i]->getPlayerCards()[players[i]->getPlayerCards().size() - 1];
+		fs << std::endl;
 	}
 	// currentPlayer,actionsRemaining
-	fs << currentPlayer << "," << actionsRemaining << "," << std::endl;
+	fs << currentPlayer << "," << actionsRemaining << std::endl;
 	
+	fs.flush();
+	fs.close();
+	std::cout << "Game saved.\n";
 	return 0;
 }
 

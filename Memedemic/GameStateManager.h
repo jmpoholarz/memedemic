@@ -54,6 +54,7 @@ public:
 	int setViralQuotient(int value);
 	int setMemeStatus(int meme, int filtered);
 	int setActionsRemaining(int value);
+	void queueCardInDeck(int value);
 
 	int saveGame();
 

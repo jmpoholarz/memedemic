@@ -272,7 +272,8 @@ int GameStateManager::banMeme(int memeNumber) {
 		}
 		else {
 			board.removeMemeCube(players[currentPlayer]->getPlayerLocation(), memeNumber);
-			locations.setMemeStatus(players[currentPlayer]->getPlayerLocation(), memeNumber, locations.getMemeStatus(players[currentPlayer]->getPlayerLocation())[memeNumber] - 1);
+			//locations.setMemeStatus(memeNumber, numberOfRemainingCubes - 1,
+			//	players[currentPlayer]->getPlayerLocation());
 			setActionsRemaining(--actionsRemaining);
 			return 1;
 		}
@@ -347,8 +348,47 @@ int GameStateManager::buildCMCServer() {
 int GameStateManager::playCard(int card) {
 	return 0;
 }
-int GameStateManager::shareCard(int card, std::string playerName) {
-	return 0;
+int GameStateManager::shareCard(int direction, int card, std::string playerName) {
+	// Check for actions
+	if (actionsRemaining <= 0) return 0;
+	int otherPlayer = -1;
+	for (int i = 0; i < players.size(); i++) {
+		if (players[i]->getPlayerName() == playerName)
+			otherPlayer = i;
+	}
+	// If could not find player referenced in trade request
+	if (otherPlayer == -1)
+		return -1;
+	// If location differs
+	if (players[currentPlayer]->getPlayerLocation() !=
+		players[otherPlayer]->getPlayerLocation()) {
+		return -3;
+	}
+
+	// Giving
+	if (direction == 1) {
+		// Check for valid card
+		if (card < 0 || card >= players[currentPlayer]->getPlayerCards().size()) {
+			return -2;
+		}
+		// Transfer card ownership to otherPlayer
+		players[otherPlayer]->addCard(players[currentPlayer]->getPlayerCards()[card]);
+		players[currentPlayer]->removeCardAtIndex(card);
+		return 1;
+	}
+	// Taking
+	else if (direction == -1) {
+		// Check for valid card
+		if (card < 0 || card >= players[currentPlayer]->getPlayerCards().size()) {
+			return -2;
+		}
+		// Transfer card ownership to currentPlayer
+		players[currentPlayer]->addCard(players[otherPlayer]->getPlayerCards()[card]);
+		players[otherPlayer]->removeCardAtIndex(card);
+		return 1;
+	}
+
+	return -100;
 }
 int GameStateManager::drawCards() {
     int playerHandSize = players[currentPlayer] -> getPlayerCards().size();
@@ -427,8 +467,8 @@ int GameStateManager::updateBoard() {
 
 	return 0;
 }
-int GameStateManager::autoSave() {
-	if (saveGame() == 0)
+int GameStateManager::autoSave(std::string filename = "autosave.txt") {
+	if (saveGame(filename) == 0)
 		return 0;
 	else return -1;
 }
@@ -660,8 +700,7 @@ void GameStateManager::queueCardInDeck(int value) {
 	cards.push_back(value);
 }
 
-int GameStateManager::saveGame() {
-	std::string filename = "save.txt";
+int GameStateManager::saveGame(std::string filename) {
 	std::fstream fs(filename, std::fstream::out);
 	// totalPlayers
 	fs << players.size() << std::endl;
@@ -706,7 +745,7 @@ int GameStateManager::saveGame() {
 	fs.flush();
 	fs.close();
 	std::cout << "Game saved.\n";
-	return 0;
+	return 1;
 }
 
 int GameStateManager::endGame() {

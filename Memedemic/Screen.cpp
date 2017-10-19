@@ -19,7 +19,7 @@ void Screen::run() {
 		showBoard();
 		// Print response of output to user
 		std::cout << response << std::endl;
-		gsm.saveGame();
+		gsm.saveGame("autosave.txt");
 		// Obtain the next user command
 		std::getline(std::cin, command);
 		response = sendCommand(command);

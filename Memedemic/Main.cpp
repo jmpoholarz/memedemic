@@ -61,6 +61,7 @@ int setupNewGame(GameStateManager& gsm) {
 			playerCount = atoi(strPlayers.c_str());
 	} while (!(playerCount > 0 && playerCount < 5));
 	// Set players at start positions, etc.
+	gsm.setupDeck();
 	gsm.setupPlayers(playerCount);
 	// Prompt player names
 	for (int i = 0; i < playerCount; i++) {
@@ -113,14 +114,29 @@ int setupNewGame(GameStateManager& gsm) {
 		gsm.getPlayer(i).setPlayerRole(PlayerRoles(roleChoice - 1));
 	}
 
-	gsm.setupDeck();
 	gsm.initialInfection();
 
 	return 0; // success
 }
 
 int loadGame(GameStateManager& gsm) {
-	std::string filename = "save.txt";
+	bool validFile = false;
+	std::string filename;
+	while (!validFile) {
+		std::cout << "Filename (leave blank for autosave): ";
+		std::getline(std::cin, filename);
+		FILE* file;
+		if (filename == "") {
+			std::string filename = "autosave.txt";
+			validFile = true;
+		}
+		else if (!(fopen_s(&file, filename.c_str(), "r"))) {
+			fclose(file);
+			validFile = true;
+		}
+
+	}
+	
 	std::fstream fs(filename, std::fstream::in);
 	std::string line; // current line in save file
 	std::string elem; // current comma separated item
@@ -158,7 +174,7 @@ int loadGame(GameStateManager& gsm) {
 		tokens.clear();
 	}
 	// Next line is player deck
-	gsm.d
+	//gsm.d
 	std::getline(fs, line);
 	std::stringstream ss(line);
 	while (getline(ss, elem, ',')) {

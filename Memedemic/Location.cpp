@@ -144,7 +144,7 @@ std::vector<int> Location::getMemeStatus(int name) {
 void Location::setMemeStatus(int meme, int level, int name) {
 	std::list<site>::iterator it;
 	for (it = this->sites.begin(); it != this->sites.end(); ++it) {
-    		if (it->id == name) {
+    	if (it->id == name) {
 			it->memeStatus[meme] = level;
 		}
 	}

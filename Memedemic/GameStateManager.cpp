@@ -213,7 +213,8 @@ int GameStateManager::banMeme(int memeNumber) {
 		}
 		else {
 			board.removeMemeCube(players[currentPlayer]->getPlayerLocation(), memeNumber);
-			locations.setMemeStatus(players[currentPlayer]->getPlayerLocation(), memeNumber, locations.getMemeStatus(players[currentPlayer]->getPlayerLocation())[memeNumber] - 1);
+			//locations.setMemeStatus(memeNumber, numberOfRemainingCubes - 1,
+			//	players[currentPlayer]->getPlayerLocation());
 			setActionsRemaining(--actionsRemaining);
 			return 1;
 		}
@@ -293,7 +294,7 @@ int GameStateManager::shareCard(int direction, int card, std::string playerName)
 	if (actionsRemaining <= 0) return 0;
 	int otherPlayer = -1;
 	for (int i = 0; i < players.size(); i++) {
-		if (players[i]->getPlayerName == playerName)
+		if (players[i]->getPlayerName() == playerName)
 			otherPlayer = i;
 	}
 	// If could not find player referenced in trade request
@@ -407,8 +408,8 @@ int GameStateManager::updateBoard() {
 
 	return 0;
 }
-int GameStateManager::autoSave() {
-	if (saveGame() == 0)
+int GameStateManager::autoSave(std::string filename = "autosave.txt") {
+	if (saveGame(filename) == 0)
 		return 0;
 	else return -1;
 }
@@ -637,8 +638,7 @@ void GameStateManager::queueCardInDeck(int value) {
 	cards.push_back(value);
 }
 
-int GameStateManager::saveGame() {
-	std::string filename = "save.txt";
+int GameStateManager::saveGame(std::string filename) {
 	std::fstream fs(filename, std::fstream::out);
 	// totalPlayers
 	fs << players.size() << std::endl;
@@ -681,7 +681,7 @@ int GameStateManager::saveGame() {
 	fs.flush();
 	fs.close();
 	std::cout << "Game saved.\n";
-	return 0;
+	return 1;
 }
 
 int GameStateManager::endGame() {

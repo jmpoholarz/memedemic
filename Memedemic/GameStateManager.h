@@ -34,7 +34,7 @@ public:
 	std::string printPlayerCards(std::string playerName);
 	std::string printCMCLocations();
 	int updateBoard();
-	int autoSave();
+	int autoSave(std::string filename);
 	int incrementInfect(int loca, std::vector<int> track, int meme);
 	int nextTurn();
 	int initialInfection();
@@ -54,7 +54,7 @@ public:
 	int setActionsRemaining(int value);
 	void queueCardInDeck(int value);
 
-	int saveGame();
+	int saveGame(std::string filename = "autosave.txt");
 
 	int endGame();
 	bool gameEnd;

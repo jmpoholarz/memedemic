@@ -216,7 +216,7 @@ std::string Parser::parse(std::string command) {
 		int whichMeme = atoi(tokens[1].c_str());
 		if (whichMeme < 1 || whichMeme > 4)
 			return "Please choose a valid meme: (1-4).  You chose " + whichMeme;
-		int successful = gsm.banMeme(whichMeme);
+		int successful = gsm.banMeme(whichMeme - 1);
 		if (successful == 1)
 			return "Banned meme " + tokens[1] + " from current location.";
 		else if (successful == 0) {
@@ -392,7 +392,7 @@ std::string Parser::parse(std::string command) {
 	else if (tokens[0] == "cmc") {
 		// Check for wrong number of arguments
 		if (tokens.size() != 2 && tokens.size() != 3) {
-			return "Incorrect usage of cmc: " + getUsage("cmc");
+return "Incorrect usage of cmc: " + getUsage("cmc");
 		}
 
 		/// TODO
@@ -426,10 +426,10 @@ std::string Parser::parse(std::string command) {
 			// 2 too many cards in hand
 			return "Holding too many cards.  Please discard two.";
 		}
-        else if (successful == -3) {
-            // Player has already drawn this turn
-            return "You have already drawn this turn.";
-        }
+		else if (successful == -3) {
+			// Player has already drawn this turn
+			return "You have already drawn this turn.";
+		}
 		else return "Unable to draw cards.";
 	}
 	else if (tokens[0] == "discard") {
@@ -443,7 +443,7 @@ std::string Parser::parse(std::string command) {
 			card2 = atoi(tokens[2].c_str());
 		card1 = atoi(tokens[1].c_str());
 		int successful = gsm.discardCard(card1, card2);
-        std::cout << card1 << card2 << std::endl;
+		std::cout << card1 << card2 << std::endl;
 		if (successful == 1) {
 			return "Successfully discarded.";
 		}
@@ -486,6 +486,20 @@ std::string Parser::parse(std::string command) {
 		}
 		// Attempt to start new game
 		return "Starting a new game!";
+	}
+	else if (tokens[0] == "save") {
+		// Check for wrong number of arguments
+		if (tokens.size() != 1 && tokens.size() != 2)
+			return "Incorrect usage of save: " + getUsage("save");
+		// Attempt to save
+		int successful = 0;
+		if (tokens.size() == 2) {
+			successful = gsm.saveGame(tokens[1]);
+		}
+		else successful = gsm.saveGame();
+
+		if (successful == 1)
+			return "Saved game!";
 	}
 	else {
 		return "Unable to parse command!";
@@ -591,6 +605,9 @@ int Parser::convertCard(std::string name) {
 std::string Parser::getUsage(std::string command) {
 	if (command == "help") {
 		return "help\nhelp <topic>\nhelp <command>";
+	}
+	else if (command == "save") {
+		return "save\nsave <filename>";
 	}
 	else if (command == "usage") {
 		return "usage <command>";

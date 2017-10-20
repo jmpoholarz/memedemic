@@ -145,7 +145,8 @@ int GameStateManager::movePlayer(int location) {
         std::cout << "Since you are a Meme Studies Professor, you may discard a card to move to your desired location.\n\n";
         for (int i = 0; i < players[currentPlayer] -> getPlayerCards().size(); i++) {
             std::cout << "Card " + std::to_string(i + 1) + ": " +
-                    convertIntToCard(players[currentPlayer] -> getPlayerCards()[i]) + '\n';
+					convertIntToCard(players[currentPlayer] -> getPlayerCards()[i]) + " - " +
+                    returnLocSection(players[currentPlayer] -> getPlayerCards()[i]) + '\n';
         }
         std::cout << "Enter the number of the card you would like to discard. Enter 'CANCEL' to cancel: ";
         std::string cardToDiscardString;
@@ -460,7 +461,8 @@ std::string GameStateManager::printPlayerCards(std::string playerName) {
 	if (playerName == "") { // If no player is specified, view current player's cards
 		for (int i = 0; i < players[currentPlayer] -> getPlayerCards().size(); i++) {
 			output.append("Card " + std::to_string(i + 1) + ": " +
-					convertIntToCard(players[currentPlayer] -> getPlayerCards()[i]) + '\n');
+					convertIntToCard(players[currentPlayer] -> getPlayerCards()[i]) + " - " +
+                    returnLocSection(players[currentPlayer] -> getPlayerCards()[i]) + '\n');
 		}
 	} else { // View specified player's cards
         int playerNum = atoi(playerName.c_str()) - 1;
@@ -469,7 +471,8 @@ std::string GameStateManager::printPlayerCards(std::string playerName) {
         }
 		for (int i = 0; i < players[playerNum] -> getPlayerCards().size(); i++) {
 			output.append("Card " + std::to_string(i + 1) + ": " +
-					convertIntToCard(players[playerNum] -> getPlayerCards()[i]) + '\n');
+					convertIntToCard(players[playerNum] -> getPlayerCards()[i]) + " - " +
+                    returnLocSection(players[playerNum] -> getPlayerCards()[i]) + '\n');
 		}
 	}
 
@@ -490,7 +493,7 @@ int GameStateManager::autoSave(std::string filename = "autosave.txt") {
 	else return -1;
 }
 
-int GameStateManager::incrementInfect(int loca, std::vector<int> track, int meme) {
+int GameStateManager::incrementInfect(int loca, std::vector<int> track, int meme, int outbreakTrackIncremented) {
 	//check if the location has already been infected this cycle
 	for(int i = 0; i < track.size()-1; i++)
 	{
@@ -543,16 +546,19 @@ int GameStateManager::incrementInfect(int loca, std::vector<int> track, int meme
 	{
 		//if the location is at 3, then recursively call this function on the adjacent locations
 		std::vector<int> adja = locations.getAdjacentLocations(loca);
-		setOutbreakTrack(getOutbreakTrack() + 1);
+		if(outbreakTrackIncremented == 0){
+			setOutbreakTrack(getOutbreakTrack() + 1);
+		}
 		for(int i = 0; i < adja.size(); i++)
 		{
 			//setOutbreakTrack(getOutbreakTrack()+1);
 			track.push_back(adja[i]);
-			incrementInfect(adja[i], track, meme);
+			incrementInfect(adja[i], track, meme, 1);
 			track.pop_back();
 		}
+		return 1;
 	}
-	return 1;
+	return 0;
 }
 int GameStateManager::nextTurn() {
     playerHasDrawn = 0;
@@ -568,6 +574,7 @@ int GameStateManager::nextTurn() {
 	std::random_device rd;
 	std::mt19937 eng(rd());
 	std::uniform_int_distribution<> distr(0,23);
+	int outbroke = 0;
 	for(int x = 0; x < viralQuotient; x++)
 	{
 		//choose the location
@@ -575,7 +582,7 @@ int GameStateManager::nextTurn() {
 		std::vector<int> locas;
 		locas.push_back(loca);
 		int meme = 0;
-		incrementInfect(loca, locas, meme);
+		outbroke = incrementInfect(loca, locas, meme, outbroke);
 	}
 	return 1;
 }
@@ -749,7 +756,9 @@ int GameStateManager::saveGame(std::string filename) {
 	for (int i = 0; i < players.size(); i++) {
 		fs << i << "," << players[i]->getPlayerName() << "," <<
 			players[i]->getPlayerRole() << "," << players[i]->getPlayerLocation() <<
-			"," << players[i]->getPlayerCards().size() << ",";
+			"," << players[i]->getPlayerCards().size();
+		if (players[i]->getPlayerCards().size() != 0)
+			fs << ",";
 		for (int j = 0; players[i]->getPlayerCards().size() != 0 && j < players[i]->getPlayerCards().size() - 1; j++) {
 			fs << players[i]->getPlayerCards()[j] << ",";
 		}
@@ -885,37 +894,45 @@ int GameStateManager::endGame() {
 		won = true;
 	}
 	if (won) {
-		std::cout << "You Won" << std::endl;
-		gameEnd = true;
+		system("cls||clear");
+		board.printBoard();
+		std::cout << "You Win!" << std::endl;
+		std::cout << "Type any command to return to the main menu..." << std::endl;
+		std::cin.ignore();
+		mainMenu();
+		return 0;
 	}
 
 	if (outbreakTrack == 8) {
-		std::cout << "You Lost: Out break reached" << std::endl;
-		std::cout << "Game Over" << std::endl;
+		system("cls||clear");
+		board.printBoard();
+		std::cout << "The outbreak tracker reached 8! You Lose!" << std::endl;
 		gameEnd = true;
 	} else if (cards.size() < 2) {
-		std::cout << "You Lost: Not enough cards" << std::endl;
-        std::cout << "Game Over" << std::endl;
-        gameEnd = true;
+		system("cls||clear");
+		board.printBoard();
+		std::cout << "The player card pile reached 0! You lose!" << std::endl;
+		gameEnd = true;
 	} else {
 		//checks cubesLeft array to see if there are any cubes left for a meme
 		//if not then the game is lost
 		for (int i = 0; i < 4; i++) {
 			std::cout << i << ": " << cubesLeft[i] << std::endl;
 			if (cubesLeft[i] < 0) {
-				std::cout << "You Lost: No more cubes left" << std::endl;
-				std::cout << "Game Over" << std::endl;
-                gameEnd = true;
+				system("cls||clear");
+				board.printBoard();
+				std::cout << "Meme cubes for meme " << i + 1 << " ran out! You lose!" << std::endl;
+				gameEnd = true;
                 break;
 			}
 		}
 	}
 
 	if (gameEnd) {
+		std::cout << "Type any command to return to the main menu..." << std::endl;
 		std::cin.ignore();
 		mainMenu();
 	}
-
 	return 0;
 }
 
@@ -984,6 +1001,20 @@ std::string GameStateManager::convertIntToCard(int intCard) {
 		default:
 			return "";
 	}
+}
+
+std::string GameStateManager::returnLocSection(int loc) {
+    if (loc == 16 || loc == 1 || loc == 0 || loc == 2 || loc == 3) {
+        return "&";
+    } else if (loc == 17 || loc == 14 || loc == 9 || loc == 13 || loc == 12 || loc == 10 || loc == 11) {
+        return "#";
+    } else if (loc == 15 || loc == 8 || loc == 7 || loc == 4 || loc == 6 || loc == 5) {
+        return "$";
+    } else if (loc == 18 || loc == 20 || loc == 19 || loc == 21 || loc == 22 || loc == 23) {
+        return "#";
+    } else {
+        return "";
+    }
 }
 
 bool GameStateManager::locationHasPlayer(int loc) {

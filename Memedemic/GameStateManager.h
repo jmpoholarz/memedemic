@@ -36,7 +36,7 @@ public:
 	std::string printCMCLocations();
 	int updateBoard();
 	int autoSave(std::string filename);
-	int incrementInfect(int loca, std::vector<int> track, int meme);
+	int incrementInfect(int loca, std::vector<int> track, int meme, int outbreakTrackIncremented);
 	int nextTurn();
 	int initialInfection();
 	int infect(int location, int meme, int count);
@@ -64,6 +64,7 @@ public:
 
 private:
     std::string convertIntToCard(int);
+    std::string returnLocSection(int);
     bool locationHasPlayer(int);
 	Board& board;
 	Location& locations;

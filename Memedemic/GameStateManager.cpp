@@ -26,7 +26,7 @@ GameStateManager::GameStateManager(Board& b, Location& l) : board(b), locations(
 	// Initialize variables
 	//outbreakTrack = 8;
 	outbreakTrack = 0;
-	viralQuotient = 2;
+	viralQuotient = 0;
 	currentPlayer = 0;
     actionsRemaining = 4;
     playerHasDrawn = 0; // may need to be stored in save file
@@ -574,7 +574,6 @@ int GameStateManager::drawCards() {
         if (card != 29) {
             players[currentPlayer] -> addCard(card);
         } else {
-            std::cout << "pulled epidemic" << std::endl;
             epidemicCard();
         }
         cards.pop_back();
@@ -582,7 +581,6 @@ int GameStateManager::drawCards() {
         if (card != 29) {
             players[currentPlayer] -> addCard(card);
         } else {
-        std::cout << "pulled epidemic" << std::endl;
             epidemicCard();
         }
         cards.pop_back();
@@ -592,7 +590,9 @@ int GameStateManager::drawCards() {
 	return 0;
 }
 int GameStateManager::epidemicCard() {
-	board.increaseViralQuotient();
+	std::cout << "You drew an epidemic card" << std::endl;
+	setViralQuotient(viralQuotient++);
+
 	int card = infectionCards.back();
 	infectionCards.pop_back();
 	std::string color = returnLocSection(card);

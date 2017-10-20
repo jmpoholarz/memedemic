@@ -405,23 +405,27 @@ int GameStateManager::shareCard(int direction, int card, std::string playerName)
 int GameStateManager::drawCards() {
     int playerHandSize = players[currentPlayer] -> getPlayerCards().size();
 
-    if (playerHasDrawn) {
-        return -3;
-    } else if (playerHandSize == 7) {
-        return -1;
-    } else if (playerHandSize >= 8) {
-        return -2;
+	if (playerHasDrawn) {
+		return -3;
+	//} else if (playerHandSize == 7) {
+	//    return -1;
+	//} else if (playerHandSize >= 8) {
+	//	  return -2;
+	} else if (playerHandSize == 6) {
+		return -1;
+	} else if (playerHandSize >= 7) {
+		return -2;
     } else if (cards.size() < 2) {
         endGame();
     } else if (cards.size() <= 0) {
         std::cout << "Error: no cards remaining" << std::endl;
         return -1;
-    } else if (cards.size() == 1 || playerHandSize == 6) { // Add one card to player's deck
-        playerHasDrawn = 1;
-        players[currentPlayer] -> addCard(cards.back());
-        cards.pop_back();
-        board.updatePlayerCardCount(cards.size());
-		return 2;
+    //} else if (cards.size() == 1 || playerHandSize == 6) { // Add one card to player's deck
+    //    playerHasDrawn = 1;
+    //    players[currentPlayer] -> addCard(cards.back());
+    //    cards.pop_back();
+    //    board.updatePlayerCardCount(cards.size());
+	//	return 2;
     } else { // Add two cards to player's deck
         playerHasDrawn = 1;
         players[currentPlayer] -> addCard(cards.back());
@@ -561,6 +565,17 @@ int GameStateManager::incrementInfect(int loca, std::vector<int> track, int meme
 	}
 	return 0;
 }
+
+// At the end of a player's turn, the current player must draw two cards
+// i they have not already drawn, and if necessary, must discard one
+// or two cards
+int GameStateManager::endTurn() {
+	if (playerHasDrawn == 0) {
+		return drawCards();
+	}
+	return 0;
+}
+
 int GameStateManager::nextTurn() {
     playerHasDrawn = 0;
     actionsRemaining = 4;

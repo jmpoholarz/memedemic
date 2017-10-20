@@ -492,8 +492,22 @@ void Board::printOutbreaks() {
 }
 
 void Board::printViralQuotient() {
-	std::cout << "Viral Quote: 2" << viralQuotientCounter;
-	             //"- - - - - - -"
+	switch (viralQuotientCounter) {
+		case (0): std::cout << " 2 - - - - - -";
+				  break;
+		case (1): std::cout << " - 2 - - - - -";
+				  break;
+		case (2): std::cout << " - - 2 - - - -";
+				  break;
+		case (3): std::cout << " - - - 3 - - -";
+				  break;
+		case (4): std::cout << " - - - - 3 - -";
+				  break;
+		case (5): std::cout << " - - - - - 4 -";
+				  break;
+		default: std::cout << " - - - - - - 4";
+				 break;
+	}
 }
 
 void Board::printCures() {

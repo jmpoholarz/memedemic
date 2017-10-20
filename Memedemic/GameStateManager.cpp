@@ -625,6 +625,7 @@ int GameStateManager::epidemicCard() {
 		auto rng = std::default_random_engine {};
         std::shuffle(std::begin(infectionCards), std::end(infectionCards), rng);
 	}
+	return 0;
 }
 int GameStateManager::discardCard(int card1, int card2) {
     int maxSize = players[currentPlayer] -> getPlayerCards().size();

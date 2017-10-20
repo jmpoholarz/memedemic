@@ -390,6 +390,10 @@ std::string Parser::parse(std::string command) {
 			// Not at a CMC Server
 			return "You must be at a CMC Server to develop a filter.";
 		}
+		else if (successful == -6) {
+			// Used the same card multiple times
+			return "You cannot use the same card more than once.";
+		}
 		else return "Unable to develop meme filter.";
 	}
 	else if (tokens[0] == "event") {

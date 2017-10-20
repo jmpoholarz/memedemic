@@ -493,7 +493,7 @@ int GameStateManager::autoSave(std::string filename = "autosave.txt") {
 	else return -1;
 }
 
-int GameStateManager::incrementInfect(int loca, std::vector<int> track, int meme) {
+int GameStateManager::incrementInfect(int loca, std::vector<int> track, int meme, int outbreakTrackIncremented) {
 	//check if the location has already been infected this cycle
 	for(int i = 0; i < track.size()-1; i++)
 	{
@@ -546,16 +546,19 @@ int GameStateManager::incrementInfect(int loca, std::vector<int> track, int meme
 	{
 		//if the location is at 3, then recursively call this function on the adjacent locations
 		std::vector<int> adja = locations.getAdjacentLocations(loca);
-		setOutbreakTrack(getOutbreakTrack() + 1);
+		if(outbreakTrackIncremented == 0){
+			setOutbreakTrack(getOutbreakTrack() + 1);
+		}
 		for(int i = 0; i < adja.size(); i++)
 		{
 			//setOutbreakTrack(getOutbreakTrack()+1);
 			track.push_back(adja[i]);
-			incrementInfect(adja[i], track, meme);
+			incrementInfect(adja[i], track, meme, 1);
 			track.pop_back();
 		}
+		return 1;
 	}
-	return 1;
+	return 0;
 }
 int GameStateManager::nextTurn() {
     playerHasDrawn = 0;
@@ -571,6 +574,7 @@ int GameStateManager::nextTurn() {
 	std::random_device rd;
 	std::mt19937 eng(rd());
 	std::uniform_int_distribution<> distr(0,23);
+	int outbroke = 0;
 	for(int x = 0; x < viralQuotient; x++)
 	{
 		//choose the location
@@ -578,7 +582,7 @@ int GameStateManager::nextTurn() {
 		std::vector<int> locas;
 		locas.push_back(loca);
 		int meme = 0;
-		incrementInfect(loca, locas, meme);
+		outbroke = incrementInfect(loca, locas, meme, outbroke);
 	}
 	return 1;
 }
@@ -752,7 +756,9 @@ int GameStateManager::saveGame(std::string filename) {
 	for (int i = 0; i < players.size(); i++) {
 		fs << i << "," << players[i]->getPlayerName() << "," <<
 			players[i]->getPlayerRole() << "," << players[i]->getPlayerLocation() <<
-			"," << players[i]->getPlayerCards().size() << ",";
+			"," << players[i]->getPlayerCards().size();
+		if (players[i]->getPlayerCards().size() != 0)
+			fs << ",";
 		for (int j = 0; players[i]->getPlayerCards().size() != 0 && j < players[i]->getPlayerCards().size() - 1; j++) {
 			fs << players[i]->getPlayerCards()[j] << ",";
 		}

@@ -4,7 +4,7 @@
 int testScript() {
 	int score = 0;
 	int currentTest = 0;
-	int testsRemaining = 10;
+	int testsRemaining = 24;
 	int MAX_SCORE = testsRemaining;
 	while (testsRemaining > 0) {
 		// Perform uniform start-up process
@@ -92,6 +92,118 @@ int testScript() {
 				score++;
 			}
 			else std::cout << "Test 0502 failed.\n";
+			testsRemaining--;
+		}
+		else if (currentTest == 10) {
+			if (test0601(board, gsm, parser)) {
+				std::cout << "Test 0601 passed.\n";
+				score++;
+			}
+			else std::cout << "Test 0601 failed.\n";
+			testsRemaining--;
+		}
+		else if (currentTest == 11) {
+			if (test0602(board, gsm, parser)) {
+				std::cout << "Test 0602 passed.\n";
+				score++;
+			}
+			else std::cout << "Test 0602 failed.\n";
+			testsRemaining--;
+		}
+		else if (currentTest == 12) {
+			if (test0603(board, gsm, parser)) {
+				std::cout << "Test 0603 passed.\n";
+				score++;
+			}
+			else std::cout << "Test 0603 failed.\n";
+			testsRemaining--;
+		}
+		else if (currentTest == 13) {
+			if (test0604(board, gsm, parser)) {
+				std::cout << "Test 0604 passed.\n";
+				score++;
+			}
+			else std::cout << "Test 0604 failed.\n";
+			testsRemaining--;
+		}
+		else if (currentTest == 14) {
+			if (test0605(board, gsm, parser)) {
+				std::cout << "Test 0605 passed.\n";
+				score++;
+			}
+			else std::cout << "Test 0605 failed.\n";
+			testsRemaining--;
+		}
+		else if (currentTest == 15) {
+			if (test0606(board, gsm, parser)) {
+				std::cout << "Test 0606 passed.\n";
+				score++;
+			}
+			else std::cout << "Test 0606 failed.\n";
+			testsRemaining--;
+		}
+		else if (currentTest == 16) {
+			if (test0701(board, gsm, parser)) {
+				std::cout << "Test 0701 passed.\n";
+				score++;
+			}
+			else std::cout << "Test 0701 failed.\n";
+			testsRemaining--;
+		}
+		else if (currentTest == 17) {
+			if (test0702(board, gsm, parser)) {
+				std::cout << "Test 0702 passed.\n";
+				score++;
+			}
+			else std::cout << "Test 0702 failed.\n";
+			testsRemaining--;
+		}
+		else if (currentTest == 18) {
+			if (test0703(board, gsm, parser)) {
+				std::cout << "Test 0703 passed.\n";
+				score++;
+			}
+			else std::cout << "Test 0703 failed.\n";
+			testsRemaining--;
+		}
+		else if (currentTest == 19) {
+			if (test0704(board, gsm, parser)) {
+				std::cout << "Test 0704 passed.\n";
+				score++;
+			}
+			else std::cout << "Test 0704 failed.\n";
+			testsRemaining--;
+		}
+		else if (currentTest == 20) {
+			if (test0705(board, gsm, parser)) {
+				std::cout << "Test 0705 passed.\n";
+				score++;
+			}
+			else std::cout << "Test 0705 failed.\n";
+			testsRemaining--;
+		}
+		else if (currentTest == 21) {
+			if (test0706(board, gsm, parser)) {
+				std::cout << "Test 0706 passed.\n";
+				score++;
+			}
+			else std::cout << "Test 0706 failed.\n";
+			testsRemaining--;
+		}
+		else if (currentTest == 22) {
+			if (test0707(board, gsm, parser)) {
+				std::cout << "Test 0707 passed.\n";
+				score++;
+			}
+			else std::cout << "Test 0707 failed.\n";
+			testsRemaining--;
+		}
+		else if (currentTest == 23) {
+			if (test0708(board, gsm, parser)) {
+				std::cout << "Test 0708 passed.\n";
+				score++;
+			}
+			else std::cout << "Test 0708 failed.\n";
 			testsRemaining--;
 		}
 		currentTest++;
@@ -358,6 +470,370 @@ bool test0502(Board& board, GameStateManager& gsm, Parser& parser) {
 	gsm.saveGame("TestScript/test0502save.txt");
 
 	std::fstream fs2("TestScript/test0502save.txt", std::fstream::in);
+	do {
+		std::getline(fs2, line);
+		programOutput += line;
+	} while (line != "");
+
+	if (programOutput == validOutput)
+		return true;
+	else return false;
+}
+bool test0601(Board& board, GameStateManager& gsm, Parser& parser) {
+	std::string programOutput = "";
+	std::string validOutput = "";
+	// Obtain answer key
+	std::fstream fs("TestScript/test0601key.txt", std::fstream::in);
+	std::string line;
+	do {
+		std::getline(fs, line);
+		validOutput += line;
+	} while (line != "");
+
+	// Create save file to compare to key
+	gsm.loadGame("TestScript/test0601load.txt");
+	std::string response = parser.parse("ban 1");
+	gsm.saveGame("TestScript/test0601save.txt");
+
+	std::fstream fs2("TestScript/test0601save.txt", std::fstream::in);
+	do {
+		std::getline(fs2, line);
+		programOutput += line;
+	} while (line != "");
+
+	if (programOutput == validOutput)
+		return true;
+	else return false;
+}
+bool test0602(Board& board, GameStateManager& gsm, Parser& parser) {
+	std::string programOutput = "";
+	std::string validOutput = "";
+	// Obtain answer key
+	std::fstream fs("TestScript/test0602key.txt", std::fstream::in);
+	std::string line;
+	do {
+		std::getline(fs, line);
+		validOutput += line;
+	} while (line != "");
+
+	// Create save file to compare to key
+	gsm.loadGame("TestScript/test0602load.txt");
+	std::string response = parser.parse("ban bananas");
+	gsm.saveGame("TestScript/test0602save.txt");
+
+	std::fstream fs2("TestScript/test0602save.txt", std::fstream::in);
+	do {
+		std::getline(fs2, line);
+		programOutput += line;
+	} while (line != "");
+
+	if (programOutput == validOutput)
+		return true;
+	else return false;
+}
+bool test0603(Board& board, GameStateManager& gsm, Parser& parser) {
+	std::string programOutput = "";
+	std::string validOutput = "";
+	// Obtain answer key
+	std::fstream fs("TestScript/test0603key.txt", std::fstream::in);
+	std::string line;
+	do {
+		std::getline(fs, line);
+		validOutput += line;
+	} while (line != "");
+
+	// Create save file to compare to key
+	gsm.loadGame("TestScript/test0603load.txt");
+	std::string response = parser.parse("ban 1");
+	gsm.saveGame("TestScript/test0603save.txt");
+
+	std::fstream fs2("TestScript/test0603save.txt", std::fstream::in);
+	do {
+		std::getline(fs2, line);
+		programOutput += line;
+	} while (line != "");
+
+	if (programOutput == validOutput)
+		return true;
+	else return false;
+}
+bool test0604(Board& board, GameStateManager& gsm, Parser& parser) {
+	std::string programOutput = "";
+	std::string validOutput = "";
+	// Obtain answer key
+	std::fstream fs("TestScript/test0604key.txt", std::fstream::in);
+	std::string line;
+	do {
+		std::getline(fs, line);
+		validOutput += line;
+	} while (line != "");
+
+	// Create save file to compare to key
+	gsm.loadGame("TestScript/test0604load.txt");
+	std::string response = parser.parse("ban 2");
+	gsm.saveGame("TestScript/test0604save.txt");
+
+	std::fstream fs2("TestScript/test0604save.txt", std::fstream::in);
+	do {
+		std::getline(fs2, line);
+		programOutput += line;
+	} while (line != "");
+
+	if (programOutput == validOutput)
+		return true;
+	else return false;
+}
+bool test0605(Board& board, GameStateManager& gsm, Parser& parser) {
+	std::string programOutput = "";
+	std::string validOutput = "";
+	// Obtain answer key
+	std::fstream fs("TestScript/test0605key.txt", std::fstream::in);
+	std::string line;
+	do {
+		std::getline(fs, line);
+		validOutput += line;
+	} while (line != "");
+
+	// Create save file to compare to key
+	gsm.loadGame("TestScript/test0605load.txt");
+	std::string response = parser.parse("ban 0");
+	gsm.saveGame("TestScript/test0605save.txt");
+
+	std::fstream fs2("TestScript/test0605save.txt", std::fstream::in);
+	do {
+		std::getline(fs2, line);
+		programOutput += line;
+	} while (line != "");
+
+	if (programOutput == validOutput)
+		return true;
+	else return false;
+}
+bool test0606(Board& board, GameStateManager& gsm, Parser& parser) {
+	std::string programOutput = "";
+	std::string validOutput = "";
+	// Obtain answer key
+	std::fstream fs("TestScript/test0606key.txt", std::fstream::in);
+	std::string line;
+	do {
+		std::getline(fs, line);
+		validOutput += line;
+	} while (line != "");
+
+	// Create save file to compare to key
+	gsm.loadGame("TestScript/test0606load.txt");
+	std::string response = parser.parse("ban 5");
+	gsm.saveGame("TestScript/test0606save.txt");
+
+	std::fstream fs2("TestScript/test0606save.txt", std::fstream::in);
+	do {
+		std::getline(fs2, line);
+		programOutput += line;
+	} while (line != "");
+
+	if (programOutput == validOutput)
+		return true;
+	else return false;
+}
+bool test0701(Board& board, GameStateManager& gsm, Parser& parser) {
+	std::string programOutput = "";
+	std::string validOutput = "";
+	// Obtain answer key
+	std::fstream fs("TestScript/test0701key.txt", std::fstream::in);
+	std::string line;
+	do {
+		std::getline(fs, line);
+		validOutput += line;
+	} while (line != "");
+
+	// Create save file to compare to key
+	gsm.loadGame("TestScript/test0701load.txt");
+	std::string response = parser.parse("give 3 player2");
+	gsm.saveGame("TestScript/test0701save.txt");
+
+	std::fstream fs2("TestScript/test0701save.txt", std::fstream::in);
+	do {
+		std::getline(fs2, line);
+		programOutput += line;
+	} while (line != "");
+
+	if (programOutput == validOutput)
+		return true;
+	else return false;
+}
+bool test0702(Board& board, GameStateManager& gsm, Parser& parser) {
+	std::string programOutput = "";
+	std::string validOutput = "";
+	// Obtain answer key
+	std::fstream fs("TestScript/test0702key.txt", std::fstream::in);
+	std::string line;
+	do {
+		std::getline(fs, line);
+		validOutput += line;
+	} while (line != "");
+
+	// Create save file to compare to key
+	gsm.loadGame("TestScript/test0702load.txt");
+	std::string response = parser.parse("give 3 player2");
+	gsm.saveGame("TestScript/test0702save.txt");
+
+	std::fstream fs2("TestScript/test0702save.txt", std::fstream::in);
+	do {
+		std::getline(fs2, line);
+		programOutput += line;
+	} while (line != "");
+
+	if (programOutput == validOutput)
+		return true;
+	else return false;
+}
+bool test0703(Board& board, GameStateManager& gsm, Parser& parser) {
+	std::string programOutput = "";
+	std::string validOutput = "";
+	// Obtain answer key
+	std::fstream fs("TestScript/test0703key.txt", std::fstream::in);
+	std::string line;
+	do {
+		std::getline(fs, line);
+		validOutput += line;
+	} while (line != "");
+
+	// Create save file to compare to key
+	gsm.loadGame("TestScript/test0703load.txt");
+	std::string response = parser.parse("give bananas player2");
+	gsm.saveGame("TestScript/test0703save.txt");
+
+	std::fstream fs2("TestScript/test0703save.txt", std::fstream::in);
+	do {
+		std::getline(fs2, line);
+		programOutput += line;
+	} while (line != "");
+
+	if (programOutput == validOutput)
+		return true;
+	else return false;
+}
+bool test0704(Board& board, GameStateManager& gsm, Parser& parser) {
+	std::string programOutput = "";
+	std::string validOutput = "";
+	// Obtain answer key
+	std::fstream fs("TestScript/test0704key.txt", std::fstream::in);
+	std::string line;
+	do {
+		std::getline(fs, line);
+		validOutput += line;
+	} while (line != "");
+
+	// Create save file to compare to key
+	gsm.loadGame("TestScript/test0704load.txt");
+	std::string response = parser.parse("give 3 bananas");
+	gsm.saveGame("TestScript/test0704save.txt");
+
+	std::fstream fs2("TestScript/test0704save.txt", std::fstream::in);
+	do {
+		std::getline(fs2, line);
+		programOutput += line;
+	} while (line != "");
+
+	if (programOutput == validOutput)
+		return true;
+	else return false;
+}
+bool test0705(Board& board, GameStateManager& gsm, Parser& parser) {
+	std::string programOutput = "";
+	std::string validOutput = "";
+	// Obtain answer key
+	std::fstream fs("TestScript/test0705key.txt", std::fstream::in);
+	std::string line;
+	do {
+		std::getline(fs, line);
+		validOutput += line;
+	} while (line != "");
+
+	// Create save file to compare to key
+	gsm.loadGame("TestScript/test0705load.txt");
+	std::string response = parser.parse("take 3 player2");
+	gsm.saveGame("TestScript/test0705save.txt");
+
+	std::fstream fs2("TestScript/test0705save.txt", std::fstream::in);
+	do {
+		std::getline(fs2, line);
+		programOutput += line;
+	} while (line != "");
+
+	if (programOutput == validOutput)
+		return true;
+	else return false;
+}
+bool test0706(Board& board, GameStateManager& gsm, Parser& parser) {
+	std::string programOutput = "";
+	std::string validOutput = "";
+	// Obtain answer key
+	std::fstream fs("TestScript/test0706key.txt", std::fstream::in);
+	std::string line;
+	do {
+		std::getline(fs, line);
+		validOutput += line;
+	} while (line != "");
+
+	// Create save file to compare to key
+	gsm.loadGame("TestScript/test0706load.txt");
+	std::string response = parser.parse("take 1 player2");
+	gsm.saveGame("TestScript/test0706save.txt");
+
+	std::fstream fs2("TestScript/test0706save.txt", std::fstream::in);
+	do {
+		std::getline(fs2, line);
+		programOutput += line;
+	} while (line != "");
+
+	if (programOutput == validOutput)
+		return true;
+	else return false;
+}
+bool test0707(Board& board, GameStateManager& gsm, Parser& parser) {
+	std::string programOutput = "";
+	std::string validOutput = "";
+	// Obtain answer key
+	std::fstream fs("TestScript/test0707key.txt", std::fstream::in);
+	std::string line;
+	do {
+		std::getline(fs, line);
+		validOutput += line;
+	} while (line != "");
+
+	// Create save file to compare to key
+	gsm.loadGame("TestScript/test0707load.txt");
+	std::string response = parser.parse("give 0 player2");
+	gsm.saveGame("TestScript/test0707save.txt");
+
+	std::fstream fs2("TestScript/test0707save.txt", std::fstream::in);
+	do {
+		std::getline(fs2, line);
+		programOutput += line;
+	} while (line != "");
+
+	if (programOutput == validOutput)
+		return true;
+	else return false;
+}
+bool test0708(Board& board, GameStateManager& gsm, Parser& parser) {
+	std::string programOutput = "";
+	std::string validOutput = "";
+	// Obtain answer key
+	std::fstream fs("TestScript/test0708key.txt", std::fstream::in);
+	std::string line;
+	do {
+		std::getline(fs, line);
+		validOutput += line;
+	} while (line != "");
+
+	// Create save file to compare to key
+	gsm.loadGame("TestScript/test0708load.txt");
+	std::string response = parser.parse("take 12 player2");
+	gsm.saveGame("TestScript/test0708save.txt");
+
+	std::fstream fs2("TestScript/test0708save.txt", std::fstream::in);
 	do {
 		std::getline(fs2, line);
 		programOutput += line;

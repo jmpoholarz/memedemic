@@ -499,7 +499,7 @@ void Board::printCures() {
 			std::cout << "E";
 		}
 		else {
-			std::cout << " ";
+			std::cout << "-";
 		}
 		if (i != 3) {
 			std::cout << " ";

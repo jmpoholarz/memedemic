@@ -1,0 +1,9 @@
+totalPlayers
+locationNumber,memeLevel,memeLevel,memeLevel,memeLevel,hasCMC (Board Info x24)
+playerDeckCardsRemaining,Card,Card,Card,Card,Card...
+memeDeckCardsRemaining,Card,Card,Card,Card,Card,...
+outbreakTrack
+viralQuotient
+memeStatus,memeStatus,memeStatus,memeStatus (if filtered or not)
+PlayerNumber,Name,Role,CurrentLocation,TotalCardsHeld,Card,Card,Card,... xPlayers
+currentPlayer,actionsRemaining

@@ -31,10 +31,10 @@ GameStateManager::GameStateManager(Board& b, Location& l) : board(b), locations(
     playerHasDrawn = 0; // may need to be stored in save file
     gameEnd = false;
     // Each meme is allocated 12 cubes
-    cubesLeft[0] = 16;
-    cubesLeft[1] = 16;
-    cubesLeft[2] = 16;
-    cubesLeft[3] = 16;
+    cubesLeft[0] = 18;
+    cubesLeft[1] = 18;
+    cubesLeft[2] = 18;
+    cubesLeft[3] = 18;
 	//initialInfection(); // called in Main's game setup to not break loading
     //setupDeck(); // called in Main's game setup to not break loading
 }
@@ -666,7 +666,7 @@ int GameStateManager::infect(int location, int meme, int count) {
 
 	// Decrements number of cubes available for that meme
 	// If it's less than 0 than game lost
-	cubesLeft[meme]--;
+	cubesLeft[meme] = cubesLeft[meme] - count;
 	if (cubesLeft[meme] < 0) {
 		endGame();
 	}
@@ -740,7 +740,7 @@ int GameStateManager::saveGame(std::string filename) {
 	}
 	// PlayerDeckCardsRemaining,Card,Card,Card,...
 	fs << cards.size() << ",";
-	for (int i = 0; i < cards.size()-1; i++) {
+	for (int i = 0; cards.size() != 0 && i < cards.size()-1; i++) {
 		fs << cards[i] << ",";
 	}
 	fs << cards[cards.size() - 1] << std::endl;
@@ -884,6 +884,7 @@ int GameStateManager::loadGame(std::string filename) {
 
 
 int GameStateManager::endGame() {
+	std::cout << "in end game" << std::endl;
 	bool won = false;
 	for (int i = 0; i < 4; i++) {
 		if (board.getCure(i) == 0) {
@@ -901,39 +902,38 @@ int GameStateManager::endGame() {
 		mainMenu();
 		return 0;
 	}
+
 	if (outbreakTrack == 8) {
 		system("cls||clear");
 		board.printBoard();
 		std::cout << "The outbreak tracker reached 8! You Lose!" << std::endl;
-		std::cout << "Type any command to return to the main menu..." << std::endl;
-		std::cin.ignore();
-		mainMenu();
-		return 0;
-	}
-	else if (cards.size() < 2) {
+		gameEnd = true;
+	} else if (cards.size() < 2) {
 		system("cls||clear");
 		board.printBoard();
 		std::cout << "The player card pile reached 0! You lose!" << std::endl;
-		std::cout << "Type any command to return to the main menu..." << std::endl;
-		std::cin.ignore();
-		mainMenu();
-		return 0;
+		gameEnd = true;
 	} else {
 		//checks cubesLeft array to see if there are any cubes left for a meme
 		//if not then the game is lost
 		for (int i = 0; i < 4; i++) {
+			std::cout << i << ": " << cubesLeft[i] << std::endl;
 			if (cubesLeft[i] < 0) {
 				system("cls||clear");
 				board.printBoard();
 				std::cout << "Meme cubes for meme " << i + 1 << " ran out! You lose!" << std::endl;
-				std::cout << "Type any command to return to the main menu..." << std::endl;
-				std::cin.ignore();
-				mainMenu();
-				return 0;
+				gameEnd = true;
+                break;
 			}
 		}
-		return 0;
 	}
+
+	if (gameEnd) {
+		std::cout << "Type any command to return to the main menu..." << std::endl;
+		std::cin.ignore();
+		mainMenu();
+	}
+	return 0;
 }
 
 std::string GameStateManager::convertIntToCard(int intCard) {

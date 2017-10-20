@@ -541,6 +541,7 @@ int GameStateManager::incrementInfect(int loca, std::vector<int> track, int meme
 int GameStateManager::nextTurn() {
     playerHasDrawn = 0;
     actionsRemaining = 4;
+	setActionsRemaining(4);
 	currentPlayer++;
 	currentPlayer %= players.size();
 

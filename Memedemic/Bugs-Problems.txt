@@ -1,1 +1,5 @@
-Memedemic Current Bug List
+Memedemic Current Bug List:
+
+Memedemic Past Bug List:
+- Segfault on game initialization; deck needed to be initialized before player setup
+- Segfault when current player runs out of cards; when cards.size() = 0, cards.size() - 1 is undefined, as size() returns an unsigned int

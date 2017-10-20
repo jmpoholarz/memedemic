@@ -3,10 +3,19 @@
 #include <string>
 #include <vector>
 
+Player::Player() : playerName(""), playerRole(UNASSIGNED), 
+playerLocation(EMAIL) {
+
+}
+
 Player::Player(std::string name, PlayerRoles role, CardNames location) {
     this -> playerName = name;
     this -> playerRole = role;
     this -> playerLocation = location;
+}
+
+Player::~Player() {
+
 }
 
 // Sets player's name
@@ -26,23 +35,29 @@ PlayerRoles Player::getPlayerRole() {
 }
 
 // Returns player's hand
-std::vector<CardNames> Player::getPlayerCards() {
+std::vector<int> Player::getPlayerCards() {
     return this -> playerCards;
 }
 
 // Returns player's location
-CardNames Player::getPlayerLocation() {
+int Player::getPlayerLocation() {
     return this -> playerLocation;
 }
 
 // Sets player's location
-bool Player::setPlayerLocation(CardNames location) {
+bool Player::setPlayerLocation(int location) {
     this -> playerLocation = location;
     return true;
 }
 
+// Sets player's role
+bool Player::setPlayerRole(PlayerRoles role) {
+    this -> playerRole = role;
+	return true;
+}
+
 // Checks if player holds n instances of the specified card
-bool Player::holdsNCards(CardNames card, int n) {
+bool Player::holdsNCards(int card, int n) {
     int i;
     int count = 0;
 
@@ -63,7 +78,7 @@ bool Player::holdsNCards(CardNames card, int n) {
 }
 
 // Adds a card to the player's hand
-bool Player::addCard(CardNames card) {
+bool Player::addCard(int card) {
     try {
         this -> playerCards.push_back(card);
     } catch (std::bad_alloc) { // If push_back fails to allocate memory to expand the vector
@@ -73,7 +88,7 @@ bool Player::addCard(CardNames card) {
 }
 
 // Removes n instances of the specified card
-bool Player::removeNCards(CardNames card, int n) {
+bool Player::removeNCards(int card, int n) {
     int i = 0;
     bool success = false;
     while (i < this -> playerCards.size() && n > 0) {
@@ -88,4 +103,11 @@ bool Player::removeNCards(CardNames card, int n) {
     }
 
     return success;
+}
+
+// Removes card from index in player's hand
+int Player::removeCardAtIndex(int index) {
+    int card = playerCards[index];
+    playerCards.erase(playerCards.begin() + index);
+    return card;
 }

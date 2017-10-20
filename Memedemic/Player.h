@@ -6,21 +6,24 @@
 class Player {
 	
 public:
+	Player();
 	Player(std::string name, PlayerRoles playerRole, CardNames location);
 	~Player();
 
 	bool setPlayerName(std::string name);
 	std::string getPlayerName();
 	PlayerRoles getPlayerRole();
-	std::vector<CardNames> getPlayerCards();
-	CardNames getPlayerLocation();
-    bool setPlayerLocation(CardNames location);
-    bool holdsNCards(CardNames card, int n);
-    bool addCard(CardNames card);
-    bool removeNCards(CardNames card, int n);
+	std::vector<int> getPlayerCards();
+	int getPlayerLocation();
+    bool setPlayerLocation(int location);
+    bool setPlayerRole(PlayerRoles role);
+    bool holdsNCards(int card, int n);
+    bool addCard(int card);
+    bool removeNCards(int card, int n);
+    int removeCardAtIndex(int index);
 private:
 	std::string playerName;
 	PlayerRoles playerRole;
-	CardNames playerLocation;
-	std::vector<CardNames> playerCards;
+	int playerLocation;
+	std::vector<int> playerCards;
 };

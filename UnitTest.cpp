@@ -161,7 +161,7 @@ void parserTest11(Parser& parser) {
 		<< "\treceived: " << response << std::endl;
 }
 
-
+/*
 int main() {
 	
 	// Create GameStateManager to setup game
@@ -180,4 +180,4 @@ int main() {
 	parserTest09(*parser);
 	parserTest10(*parser);
 	parserTest11(*parser);
-}
+}*/

@@ -12,7 +12,7 @@ Location::Location() {
 	site IFUNNY = {0};
 	IFUNNY.id = 1;
 	IFUNNY.siteName = "IFUNNY";
-	IFUNNY.adjacencies = {0, 15};
+	IFUNNY.adjacencies = {0, 15, 16};
 
 	site IMGUR = {0};
 	IMGUR.id = 2;
@@ -52,7 +52,7 @@ Location::Location() {
 	site VINE = {0};
 	VINE.id = 9;
 	VINE.siteName = "VINE";
-	VINE.adjacencies = {8,13};
+	VINE.adjacencies = {8,12,13};
 	
 	site SNAPCHAT = {0};
 	SNAPCHAT.id = 10;
@@ -67,8 +67,8 @@ Location::Location() {
 	site PINTEREST = {0};
 	PINTEREST.id = 12;
 	PINTEREST.siteName = "PINTEREST";
-	PINTEREST.adjacencies = {11,13,10};
-	
+	PINTEREST.adjacencies = {9,11,13,10};
+
 	site TWITTER = {0};
 	TWITTER.id = 13;
 	TWITTER.siteName = "TWITTER";
@@ -87,7 +87,7 @@ Location::Location() {
 	site TUMBLR = {0};
 	TUMBLR.id = 16;
 	TUMBLR.siteName = "TUMBLR";
-	TUMBLR.adjacencies = {17,15};
+	TUMBLR.adjacencies = {1,17,15};
 	
 	site MYSPACE = {0};
 	MYSPACE.id = 17;
@@ -107,13 +107,13 @@ Location::Location() {
 	site WECHAT = {0};
 	WECHAT.id = 20;
 	WECHAT.siteName = "WECHAT";
-	WECHAT.adjacencies = {19,21};
+	WECHAT.adjacencies = {19,21,22};
 	
 	site WEIBO = {0};
 	WEIBO.id = 21;
 	WEIBO.siteName = "WEIBO";
 	WEIBO.adjacencies = {20,22};
-
+	
 	site QQ = {0};
 	QQ.id = 22;
 	QQ.siteName = "QQ";
@@ -152,10 +152,45 @@ Location::Location() {
 
 std::vector<int> Location::getMemeStatus() {
 	return this->memeStatus;
+/*
+Location::Location(int name) {
+	this->name = name;
+}*/
+
+std::vector<int> Location::getMemeStatus(int name) {
+	std::list<site>::iterator it;
+	for (it = this->sites.begin(); it != this->sites.end(); ++it) {
+    		if (it->id == name) {
+			return it->memeStatus;
+		}
+	}
+	std::vector<int> error = {-1};
+	return error;
+}
+void Location::setMemeStatus(int meme, int level, int name) {
+	std::list<site>::iterator it;
+	for (it = this->sites.begin(); it != this->sites.end(); ++it) {
+    	if (it->id == name) {
+			it->memeStatus[meme] = level;
+		}
+	}
 }
 
-bool Location::hasCMCServer() {
-	return this->CMCServer;
+bool Location::hasCMCServer(int name) {
+	std::list<site>::iterator it;
+	for (it = this->sites.begin(); it != this->sites.end(); ++it) {
+    		if (it->id == name) {
+			return it->CMCServer;
+		}
+	}
+}
+void Location::setCMCServer(int name) {
+	std::list<site>::iterator it;
+	for (it = this->sites.begin(); it != this->sites.end(); ++it) {
+    		if (it->id == name) {
+			it->CMCServer = true;
+		}
+	}
 }
 
 site Location::getLocation(int name) {
@@ -170,7 +205,7 @@ site Location::getLocation(int name) {
 std::vector<int> Location::getAdjacentLocations(int name) {
 	std::list<site>::iterator it;
 	for (it = this->sites.begin(); it != this->sites.end(); ++it) {
-    	if (it->id == name) {
+    		if (it->id == name) {
 			return it->adjacencies;
 		}
 	}

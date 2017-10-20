@@ -1,6 +1,5 @@
 #pragma once
 #include <vector>
-#include <string>
 #include "Enums.h"
 
 class Board {
@@ -12,10 +11,12 @@ public:
 		bool cmcServer = false;
 	};
 
-	Board();
+	Board(PlayerRoles p1Role);
+	Board(PlayerRoles p1Role, PlayerRoles p2Role);
+	Board(PlayerRoles p1Role, PlayerRoles p2Role, PlayerRoles p3Role);
+	Board(PlayerRoles p1Role, PlayerRoles p2Role, PlayerRoles p3Role, PlayerRoles p4Role);
 	~Board();
 
-	void setupPlayers(int players);
 	void printBoard();
 	void addMemeCubes(int loc, int meme, int count);
 	void removeMemeCube(int loc, int meme);
@@ -23,24 +24,20 @@ public:
 	void removeCMC(int loc);
 	void movePlayer(int location, int player);
 	void addOutbreak();
-	void increaseViralQuotient();
+	void increaseInfectionRateCounter();
 	void addCure(int meme);
 	void eradicateMeme(int meme);
-	void updatePlayerCardCount(int playerCardCount);
+	void removePlayerCard();
 
 	BoardLocation getLocation(int loc);
 	int getOutbreakCounter();
 	int getCure(int meme);
-	void setCure(int meme, int value);
 	int getPlayerCards();
 	std::vector<std::string> getPlayerRoles();
 
 	void setMemes(int location, int values[]);
 	void setPlayers(int location, int playerNumber, bool present);
 	void setCMCServer(int location, bool exists);
-	void setOutbreakTrack(int value);
-	void setViralQuotient(int value);
-	void setActionsRemaining(int value);
 
 private:
 	std::vector<BoardLocation> locations;
@@ -48,8 +45,7 @@ private:
 	std::vector<std::string> playerRoles;
 
 	int outbreakCounter;
-	int viralQuotientCounter;
-	int actionsCounter;
+	int infectionRateCounter;
 	int cures[4]; // 0 = not cured, 1 = cured, 2 = eradicated
 	int playerCards;
 
@@ -59,7 +55,7 @@ private:
 	void printCMC(int loc);
 	void printPlayers(int loc);
 	void printOutbreaks();
-	void printViralQuotient();
+	void printInfectionRate();
 	void printCures();
 	void printPlayerCards();
 

@@ -1,67 +1,21 @@
 ﻿#include "Board.h"
 #include <string>
 #include <iostream>
-#include <vector>
 
 /**
-	Two Player Constructor
+	One Player Constructor
 */
-Board::Board(std::string p1Role, std::string p2Role) {
-	outbreakCounter = 2;
-	cures[4] = { false };
+Board::Board() {
+	actionsCounter = 4;
+	outbreakCounter = 0;
+	viralQuotientCounter = 2;
+	cures[0] = 0;
+	cures[1] = 0;
+	cures[2] = 0;
+	cures[3] = 0;
 	playerCards = 59;
 
-	playerRoles.push_back(p1Role);
-	playerRoles.push_back(p2Role);
-
 	initializeLocations();
-
-	locations[18].players[0] = true;
-	locations[18].players[1] = true;
-
-	locations[18].cmcServer = true;
-}
-
-/**
-	Three Player Constructor
-*/
-Board::Board(std::string p1Role, std::string p2Role, std::string p3Role) {
-	outbreakCounter = 2;
-	cures[4] = { false };
-	playerCards = 59;
-
-	playerRoles.push_back(p1Role);
-	playerRoles.push_back(p2Role);
-	playerRoles.push_back(p3Role);
-
-	initializeLocations();
-
-	locations[18].players[0] = true;
-	locations[18].players[1] = true;
-	locations[18].players[2] = true;
-
-	locations[18].cmcServer = true;
-}
-
-/**
-	Four Player Constructor
-*/
-Board::Board(std::string p1Role, std::string p2Role, std::string p3Role, std::string p4Role) {
-	outbreakCounter = 2;
-	cures[4] = { false };
-	playerCards = 59;
-
-	playerRoles.push_back(p1Role);
-	playerRoles.push_back(p2Role);
-	playerRoles.push_back(p3Role);
-	playerRoles.push_back(p4Role);
-
-	initializeLocations();
-
-	locations[18].players[0] = true;
-	locations[18].players[1] = true;
-	locations[18].players[2] = true;
-	locations[18].players[3] = true;
 
 	locations[18].cmcServer = true;
 }
@@ -70,7 +24,34 @@ Board::Board(std::string p1Role, std::string p2Role, std::string p3Role, std::st
 	TODO: Destructor
 */
 Board::~Board() {
-	
+
+}
+
+/**
+	TODO: Initialize player roles
+*/
+void Board::setupPlayers(int players) {
+	switch (players) {
+	case 1:
+		playerRoles.push_back("p1");
+	case 2:
+		playerRoles.push_back("p1");
+		playerRoles.push_back("p2");
+	case 3:
+		playerRoles.push_back("p1");
+		playerRoles.push_back("p2");
+		playerRoles.push_back("p3");
+	default:
+		playerRoles.push_back("p1");
+		playerRoles.push_back("p2");
+		playerRoles.push_back("p3");
+		playerRoles.push_back("p4");
+		break;
+	}
+	// Set default player locations
+	for (int i = 0; i < players; i++) {
+		locations[18].players[i] = true;
+	}
 }
 
 /**
@@ -82,11 +63,30 @@ void Board::initializeLocations() {
 	}
 }
 
+std::string Board::getRoleAbbreviation(PlayerRoles role) {
+	switch (role) {
+	case MEMESTUDIESPROFESSOR:
+		return "ME";
+	case HACKER:
+		return "HA";
+	case MODERATOR:
+		return "MO";
+	case ROUTER:
+		return "RO";
+	case FIREWALL:
+		return "FI";
+	case MILLENIAL:
+		return "MI";
+	default :
+		return "NA";
+	}
+}
+
 /**
 	Adds a meme cube to the given location
 */
-void Board::addMemeCube(int loc, int meme) {
-	locations[loc].memes[meme] = locations[loc].memes[meme] + 1;
+void Board::addMemeCubes(int loc, int meme, int count) {
+	locations[loc].memes[meme] = locations[loc].memes[meme] + count;
 }
 
 /**
@@ -131,49 +131,64 @@ void Board::addOutbreak() {
 }
 
 /**
+	Increases the infection rate counter by one
+*/
+void Board::increaseViralQuotient() {
+	viralQuotientCounter++;
+}
+
+/**
 	Sets the boolean for the given cure to true
 */
 void Board::addCure(int meme) {
-	cures[meme] = true;
+	cures[meme] = 1;
+}
+
+void Board::setCure(int meme, int value) {
+	cures[meme] = value;
+}
+
+void Board::eradicateMeme(int meme) {
+	cures[meme] = 2;
 }
 
 /**
-	Reduces the player cards counter by one
+	Updates the player cards counter
 */
-void Board::removePlayerCard() {
-	playerCards--;
+void Board::updatePlayerCardCount(int playerCardCount) {
+	playerCards = playerCardCount;
 }
 
 /**
-	Returns the given location.  Used for testing purposes
+	Returns the given location.
 */
 Board::BoardLocation Board::getLocation(int loc) {
 	return locations[loc];
 }
 
 /**
-	Returns the outbreak counter.  Used for testing purposes
+	Returns the outbreak counter.
 */
 int Board::getOutbreakCounter() {
 	return outbreakCounter;
 }
 
 /**
-	Returns whether the given meme has been cured or not.  Used for testing purposes
+	Returns whether the given meme has been cured or not.
 */
-bool Board::getCure(int meme) {
+int Board::getCure(int meme) {
 	return cures[meme];
 }
 
 /**
-	Returns the player card count.  Used for testing purposes
+	Returns the player card count.
 */
 int Board::getPlayerCards() {
 	return playerCards;
 }
 
 /**
-	Returns the player roles.  Used for testing purposes
+	Returns the player roles.
 */
 std::vector<std::string> Board::getPlayerRoles() {
 	return playerRoles;
@@ -187,13 +202,13 @@ void Board::printBoard() {
 	Example print out of the game board (using old extending Ascii characters):
 
 	std::cout << "┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐\n";
-	std::cout << "│  Tumbler  │  │  iFunny   │  │   9GAG    │  │   Imgur   │  │   4chan   │\n";
+	std::cout << "│  Tumblr   │  │  iFunny   │  │   9GAG    │  │   Imgur   │  │   4chan   │\n";
 	std::cout << "│           │  │           ├--┤           ├--┤           ├--┤           │\n";
 	std::cout << "│           │  │           │  │           │  │           │  │           │\n";
 	std::cout << "└─────┬─────┘\ └─────┬─────┘ /└───────────┘  └───────────┘\ └─────┬─────┘\n";
 	std::cout << "      |      \\      |      //                            \\      |      \n";
 	std::cout << "┌─────┴─────┐ \┌─────┴─────┐/ ┌───────────┐  ┌───────────┐ \┌─────┴─────┐\n";
-	std::cout << "│  Myspace  │  │ BuzzFeed  │  │  Youtube  │  │  Twitch   │  │  Reddit   │\n";
+	std::cout << "│  Myspace  │  │ BuzzFeed  │  │  YouTube  │  │  Twitch   │  │  Reddit   │\n";
 	std::cout << "│           │  │           ├--┤           ├--┤           ├--┤           │\n";
 	std::cout << "│           │  │           │  │           │  │           │  │           │\n";
 	std::cout << "└───────────┘\ └─────┬─────┘  └─────┬─────┘  └─────┬─────┘\ └───────────┘\n";
@@ -213,27 +228,27 @@ void Board::printBoard() {
 	std::cout << "┌─────┴─────┐ \┌─────┴─────┐ \┌───────────┐  ┌─────┴─────┐/              \n";
 	std::cout << "│   Weibo   │  │    QQ     │  │    VK     │  │ Instagram │ Cures: C C C C\n";
 	std::cout << "│           ├--┤           ├--┤           │  │           │ Outbreaks: 3/8\n";
-	std::cout << "│           │  │           │  │           │  │           │ P-Cards: 14/59\n";
-	std::cout << "└───────────┘  └───────────┘  └───────────┘  └───────────┘               \n";
+	std::cout << "│           │  │           │  │           │  │           │ Infect Rate: 2\n";
+	std::cout << "└───────────┘  └───────────┘  └───────────┘  └───────────┘ P-Cards: 14/59\n";
 	*/
 
 	// First row of locations
-	std::cout << "+-----------+  +-----------+  +-----------+  +-----------+  +-----------+\n";
-	std::cout << "|  Tumbler  |  |  iFunny   |  |   9GAG    |  |   Imgur   |  |   4chan   |\n";
+	std::cout << "&-----------&  &-----------&  &-----------&  &-----------&  &-----------&\n";
+	std::cout << "|  Tumblr   |  |  iFunny   |  |   9GAG    |  |   Imgur   |  |   4chan   |\n";
 	std::cout << "|           |  |           |  |           |  |           |  |           |\n";
 	std::cout << "|";
 	printCounters(16);
 	printCMC(16);
-	std::cout << "|  |";
+	std::cout << "&--&";
 	printCounters(1);
 	printCMC(1);
-	std::cout << "+--+";
+	std::cout << "&--&";
 	printCounters(0);
 	printCMC(0);
-	std::cout << "+--+";
+	std::cout << "&--&";
 	printCounters(2);
 	printCMC(2);
-	std::cout << "+--+";
+	std::cout << "&--&";
 	printCounters(3);
 	printCMC(3);
 	std::cout << "|\n";
@@ -252,12 +267,12 @@ void Board::printBoard() {
 	printPlayers(3);
 	std::cout << "|\n";
 
-	std::cout << "+-----+-----+\\ +-----+-----+ /+-----------+  +-----------+\\ +-----+-----+\n";
+	std::cout << "&-----&-----&\\ &-----&-----& /&-----------&  &-----------&\\ &-----&-----&\n";
 	std::cout << "      |      \\\\      |      //                            \\\\      |      \n";
 	
 	// Second row of locations
-	std::cout << "+-----+-----+ \\+-----+-----+/ +-----------+  +-----------+ \\+-----+-----+\n";
-	std::cout << "|  Myspace  |  | BuzzFeed  |  |  Youtube  |  |  Twitch   |  |  Reddit   |\n";
+	std::cout << "#=====#=====# \\$- - -$- - -$/ $- - - - - -$  $- - - - - -$ \\$- - -$- - -$\n";
+	std::cout << "|  Myspace  |  | BuzzFeed  |  |  YouTube  |  |  Twitch   |  |  Reddit   |\n";
 	std::cout << "|           |  |           |  |           |  |           |  |           |\n";
 
 	std::cout << "|";
@@ -266,13 +281,13 @@ void Board::printBoard() {
 	std::cout << "|  |";
 	printCounters(15);
 	printCMC(15);
-	std::cout << "+--+";
+	std::cout << "$--$";
 	printCounters(8);
 	printCMC(8);
-	std::cout << "+--+";
+	std::cout << "$--$";
 	printCounters(7);
 	printCMC(7);
-	std::cout << "+--+";
+	std::cout << "$--$";
 	printCounters(4);
 	printCMC(4);
 	std::cout << "|\n";
@@ -291,18 +306,18 @@ void Board::printBoard() {
 	printPlayers(4);
 	std::cout << "|\n";
 
-	std::cout << "+-----------+\\ +-----+-----+  +-----+-----+  +-----+-----+\\ +-----------+\n";
+	std::cout << "#===========#\\ $- - -$- - -$  $- - -$- - -$  $- - -$- - -$\\ $- - - - - -$\n";
 	std::cout << "             \\\\      |              |              |      \\\\             \n";
 	
 	// Third row of locations
-	std::cout << "+-----------+ \\+-----+-----+  +-----+-----+  +-----+-----+ \\+-----------+\n";
+	std::cout << "@-----------@ \\#=====#=====#  #=====#=====#  $- - -$- - -$ \\$- - - - - -$\n";
 	std::cout << "|   Email   |  | Facebook  |  |   Vine    |  |   Steam   |  |  Discord  |\n";
 	std::cout << "|           |  |           |  |           |  |           |  |           |\n";
 
 	std::cout << "|";
 	printCounters(18);
 	printCMC(18);
-	std::cout << "+--+";
+	std::cout << "@--#";
 	printCounters(14);
 	printCMC(14);
 	std::cout << "|  |";
@@ -311,7 +326,7 @@ void Board::printBoard() {
 	std::cout << "|  |";
 	printCounters(6);
 	printCMC(6);
-	std::cout << "+--+";
+	std::cout << "$--$";
 	printCounters(5);
 	printCMC(5);
 	std::cout << "|\n";
@@ -330,27 +345,27 @@ void Board::printBoard() {
 	printPlayers(5);
 	std::cout << "|\n";
 
-	std::cout << "+-----------+\\ +-----+-----+\\ +-----+-----+\\ +-----------+  +-----------+\n";
+	std::cout << "@-----------@\\ #=====#=====#\\ #=====#=====#\\ $- - - - - -$  $- - - - - -$\n";
 	std::cout << "             \\\\      |      \\\\      |      \\\\                            \n";
 	
 	// Fourth row of locations
-	std::cout << "+-----------+ \\+-----+-----+ \\+-----+-----+ \\+-----------+  +-----------+\n";
+	std::cout << "@-----------@ \\@-----@-----@ \\#=====#=====# \\#===========#  #===========#\n";
 	std::cout << "|  WeChat   |  | WhatsApp  |  |  Twitter  |  | Pinterest |  | Snapchat  |\n";
 	std::cout << "|           |  |           |  |           |  |           |  |           |\n";
 
 	std::cout << "|";
 	printCounters(20);
 	printCMC(20);
-	std::cout << "+--+";
+	std::cout << "@--@";
 	printCounters(19);
 	printCMC(19);
 	std::cout << "|  |";
 	printCounters(13);
 	printCMC(13);
-	std::cout << "+--+";
+	std::cout << "#--#";
 	printCounters(12);
 	printCMC(12);
-	std::cout << "+--+";
+	std::cout << "#--#";
 	printCounters(10);
 	printCMC(10);
 	std::cout << "|\n";
@@ -369,24 +384,24 @@ void Board::printBoard() {
 	printPlayers(10);
 	std::cout << "|\n";
 
-	std::cout << "+-----+-----+\\ +-----+-----+\\ +-----------+  +-----+-----+ /+-----------+\n";
+	std::cout << "@-----@-----@\\ @-----@-----@\\ #===========#  #=====#=====# /#===========#\n";
 	std::cout << "      |      \\\\      |      \\\\                     |      //             \n";
 	
 	// Fifth row of locations
-	std::cout << "+-----+-----+ \\+-----+-----+ \\+-----------+  +-----------+/              \n";
-	std::cout << "|   Weibo   |  |    QQ     |  |    VK     |  | Instagram | ";
+	std::cout << "@-----@-----@ \\@-----@-----@ \\@-----------@  #===========#/              \n";
+	std::cout << "|   Weibo   |  |    QQ     |  |    VK     |  | Instagram |                 \n";
+
+	std::cout << "|           |  |           |  |           |  |           | ";
 	printCures();
 	std::cout << "\n";
-
-	std::cout << "|           |  |           |  |           |  |           |               \n";
 
 	std::cout << "|";
 	printCounters(21);
 	printCMC(21);
-	std::cout << "+--+";
+	std::cout << "@--@";
 	printCounters(22);
 	printCMC(22);
-	std::cout << "+--+";
+	std::cout << "@--@";
 	printCounters(23);
 	printCMC(23);
 	std::cout << "|  |";
@@ -396,7 +411,9 @@ void Board::printBoard() {
 	printOutbreaks();
 	std::cout << "\n";
 
-	std::cout << "|           |  |           |  |           |  |           |               \n";
+	std::cout << "|           |  |           |  |           |  |           | ";
+	printViralQuotient();
+	std::cout << "\n";
 
 	std::cout << "|";
 	printPlayers(21);
@@ -410,12 +427,13 @@ void Board::printBoard() {
 	printPlayerCards();
 	std::cout << "\n";
 	
-	std::cout << "+-----------+  +-----------+  +-----------+  +-----------+               \n\n";
+	std::cout << "@-----------@  @-----------@  @-----------@  #===========#               \n";
+	std::cout << "                                                           Actions left: " << actionsCounter << "\n";
 }
 
 /**
 	Prints the meme counters for the given location to the command line.  If the meme counter
-	is zero for the given meme, prints an empty space
+	is zero for the given meme, prints an underscore
 */
 void Board::printCounters(int loc) {
 	for (int i = 0; i < 4; i++) {
@@ -423,7 +441,7 @@ void Board::printCounters(int loc) {
 			std::cout << locations[loc].memes[i];
 		}
 		else {
-			std::cout << " ";
+			std::cout << "_";
 		}
 		std::cout << " ";
 	}
@@ -467,11 +485,18 @@ void Board::printOutbreaks() {
 	std::cout << "Outbreaks: " << outbreakCounter << "/8";
 }
 
+void Board::printViralQuotient() {
+	std::cout << "Viral Quote: " << viralQuotientCounter;
+}
+
 void Board::printCures() {
 	std::cout << "Cures: ";
 	for (int i = 0; i < 4; i++) {
-		if (cures[i]) {
+		if (cures[i] == 1) {
 			std::cout << "C";
+		}
+		else if (cures[i] == 2) {
+			std::cout << "E";
 		}
 		else {
 			std::cout << " ";
@@ -487,4 +512,24 @@ void Board::printCures() {
 */
 void Board::printPlayerCards() {
 	std::cout << "P-Cards: " << playerCards << "/59";
+}
+
+void Board::setCMCServer(int location, bool exists) {
+	locations[location].cmcServer = exists;
+}
+void Board::setMemes(int location, int values[]) {
+	for (int i = 0; i < 4; i++)
+		locations[location].memes[i] = values[i];
+}
+void Board::setPlayers(int location, int playerNumber, bool present) {
+	locations[location].players[playerNumber] = present;
+}
+void Board::setActionsRemaining(int value) {
+	actionsCounter = value;
+}
+void Board::setViralQuotient(int value) {
+	viralQuotientCounter = value;
+}
+void Board::setOutbreakTrack(int value) {
+	outbreakCounter = value;
 }

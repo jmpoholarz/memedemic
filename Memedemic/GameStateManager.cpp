@@ -58,17 +58,19 @@ void GameStateManager::setupPlayers(int numPlayers, bool loadingGame) {
 				p->addCard(cards.back());
 				cards.pop_back();
 			}
-			// Insert Epidemic cards
-			std::random_device rd;
-			std::mt19937 eng(rd());
-			std::uniform_int_distribution<> distr(0, cards.size());
-			for (int i = 0; i < 6; i++) {
-				cards.insert(cards.begin() + distr(eng), 29);
-			}
-			board.updatePlayerCardCount(cards.size());
 		}
 
 		players.push_back(p);
+	}
+	if (loadingGame == false) {
+		// Insert Epidemic cards
+		std::random_device rd;
+		std::mt19937 eng(rd());
+		std::uniform_int_distribution<> distr(0, cards.size());
+		for (int i = 0; i < 6; i++) {
+			cards.insert(cards.begin() + distr(eng), 29);
+		}
+		board.updatePlayerCardCount(cards.size());
 	}
 
 }

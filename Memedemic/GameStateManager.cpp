@@ -449,13 +449,19 @@ std::string GameStateManager::printPlayerLocations() {
 std::string GameStateManager::printPlayerCards(std::string playerName) {
 	std::string output;
 	if (playerName == "") { // If no player is specified, view current player's cards
-		int i;
-		for (i = 0; i < players[currentPlayer] -> getPlayerCards().size(); i++) {
+		for (int i = 0; i < players[currentPlayer] -> getPlayerCards().size(); i++) {
 			output.append("Card " + std::to_string(i + 1) + ": " +
 					convertIntToCard(players[currentPlayer] -> getPlayerCards()[i]) + '\n');
 		}
 	} else { // View specified player's cards
-		// TODO
+        int playerNum = atoi(playerName.c_str()) - 1;
+        if (playerNum < 0 || playerNum > players.size() - 1) {
+            return "INVALIDPLAYER";
+        }
+		for (int i = 0; i < players[playerNum] -> getPlayerCards().size(); i++) {
+			output.append("Card " + std::to_string(i + 1) + ": " +
+					convertIntToCard(players[playerNum] -> getPlayerCards()[i]) + '\n');
+		}
 	}
 
 	return output;

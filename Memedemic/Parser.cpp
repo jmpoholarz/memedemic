@@ -520,7 +520,16 @@ return "Incorrect usage of cmc: " + getUsage("cmc");
 		// Try to print cards
 		if (tokens.size() == 1)
 			return gsm.printPlayerCards("");
-		else return gsm.printPlayerCards(tokens[1]);
+		else {
+            if (tokens[1].size() != 1 || !std::isdigit(tokens[1][0])) {
+                return "Incorrect usage of cards: " + getUsage("cards");
+            }
+            std::string result = gsm.printPlayerCards(tokens[1]);
+            if (result == "INVALIDPLAYER") {
+                return "Invalid player number specified.";
+            }
+            return result;
+        }
 	}
 	else if (tokens[0] == "end") {
 		// Check for wrong number of arguments

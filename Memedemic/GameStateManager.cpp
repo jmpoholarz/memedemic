@@ -318,6 +318,18 @@ int GameStateManager::developMemeFilter(int card1, int card2, int card3,
 		return -2;
 	}
 
+    // Check for duplicates of the same card
+    if (card1 == card2 || card1 == card3 || card1 == card4 || card1 == card5) {
+        return -6;
+    } else if (card2 == card3 || card2 == card4 || card2 == card5) {
+        return -6;
+    } else if (card3 == card4 || card3 == card5) {
+        return -6;
+    } else if (card4 == card5) {
+        return -6;
+    }
+
+
     // Convert hand numbers to card numbers
     int card1Card, card2Card, card3Card, card4Card, card5Card;
     if (players[currentPlayer]->getPlayerRole() == HACKER) {

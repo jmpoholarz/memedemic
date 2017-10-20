@@ -749,7 +749,9 @@ int GameStateManager::saveGame(std::string filename) {
 	for (int i = 0; i < players.size(); i++) {
 		fs << i << "," << players[i]->getPlayerName() << "," <<
 			players[i]->getPlayerRole() << "," << players[i]->getPlayerLocation() <<
-			"," << players[i]->getPlayerCards().size() << ",";
+			"," << players[i]->getPlayerCards().size();
+		if (players[i]->getPlayerCards().size() != 0)
+			fs << ",";
 		for (int j = 0; players[i]->getPlayerCards().size() != 0 && j < players[i]->getPlayerCards().size() - 1; j++) {
 			fs << players[i]->getPlayerCards()[j] << ",";
 		}

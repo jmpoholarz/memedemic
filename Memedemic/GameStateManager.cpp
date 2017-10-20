@@ -494,6 +494,7 @@ int GameStateManager::autoSave(std::string filename = "autosave.txt") {
 }
 
 int GameStateManager::incrementInfect(int loca, std::vector<int> track, int meme, int outbreakTrackIncremented) {
+	//returns 1 if the track counter has been incremented this turn, 0 if not
 	//check if the location has already been infected this cycle
 	for(int i = 0; i < track.size()-1; i++)
 	{

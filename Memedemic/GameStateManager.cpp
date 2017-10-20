@@ -31,10 +31,10 @@ GameStateManager::GameStateManager(Board& b, Location& l) : board(b), locations(
     playerHasDrawn = 0; // may need to be stored in save file
     gameEnd = false;
     // Each meme is allocated 12 cubes
-    cubesLeft[0] = 12;
-    cubesLeft[1] = 12;
-    cubesLeft[2] = 12;
-    cubesLeft[3] = 12;
+    cubesLeft[0] = 18;
+    cubesLeft[1] = 18;
+    cubesLeft[2] = 18;
+    cubesLeft[3] = 18;
 	//initialInfection(); // called in Main's game setup to not break loading
     //setupDeck(); // called in Main's game setup to not break loading
 }
@@ -659,7 +659,7 @@ int GameStateManager::infect(int location, int meme, int count) {
 
 	// Decrements number of cubes available for that meme
 	// If it's less than 0 than game lost
-	cubesLeft[meme]--;
+	cubesLeft[meme] = cubesLeft[meme] - count;
 	if (cubesLeft[meme] < 0) {
 		endGame();
 	}
@@ -733,7 +733,7 @@ int GameStateManager::saveGame(std::string filename) {
 	}
 	// PlayerDeckCardsRemaining,Card,Card,Card,...
 	fs << cards.size() << ",";
-	for (int i = 0; i < cards.size()-1; i++) {
+	for (int i = 0; cards.size() != 0 && i < cards.size()-1; i++) {
 		fs << cards[i] << ",";
 	}
 	fs << cards[cards.size() - 1] << std::endl;
@@ -875,6 +875,7 @@ int GameStateManager::loadGame(std::string filename) {
 
 
 int GameStateManager::endGame() {
+	std::cout << "in end game" << std::endl;
 	bool won = false;
 	for (int i = 0; i < 4; i++) {
 		if (board.getCure(i) == 0) {
@@ -888,15 +889,21 @@ int GameStateManager::endGame() {
 		gameEnd = true;
 	}
 
-	if (outbreakTrack == 8 || cards.size() < 2) {
-		std::cout << "You Lost" << std::endl;
+	if (outbreakTrack == 8) {
+		std::cout << "You Lost: Out break reached" << std::endl;
 		std::cout << "Game Over" << std::endl;
 		gameEnd = true;
+	} else if (cards.size() < 2) {
+		std::cout << "You Lost: Not enough cards" << std::endl;
+        std::cout << "Game Over" << std::endl;
+        gameEnd = true;
 	} else {
 		//checks cubesLeft array to see if there are any cubes left for a meme
 		//if not then the game is lost
 		for (int i = 0; i < 4; i++) {
+			std::cout << i << ": " << cubesLeft[i] << std::endl;
 			if (cubesLeft[i] < 0) {
+				std::cout << "You Lost: No more cubes left" << std::endl;
 				std::cout << "Game Over" << std::endl;
                 gameEnd = true;
                 break;
@@ -905,9 +912,8 @@ int GameStateManager::endGame() {
 	}
 
 	if (gameEnd) {
-		//TODO go back to mainMenu();
-		// This is broken right now, if you try to quit after the main menu shows it goes back to old game board
-		//mainMenu();
+		std::cin.ignore();
+		mainMenu();
 	}
 
 	return 0;

@@ -13,7 +13,7 @@ int testScript() {
 		GameStateManager gsm = GameStateManager(board, locations);
 		Parser parser = Parser(gsm);
 		Screen screen = Screen(gsm, parser);
-	
+
 		if (currentTest == 0) {
 			if (test0001(board, gsm, parser)) {
 				std::cout << "Test 0001 passed.\n";

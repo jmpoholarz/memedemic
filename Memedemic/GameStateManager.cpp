@@ -23,7 +23,8 @@
 
 GameStateManager::GameStateManager(Board& b, Location& l) : board(b), locations(l) {
 	// Initialize variables
-	outbreakTrack = 8;
+	//outbreakTrack = 8;
+	outbreakTrack = 0;
 	viralQuotient = 2;
 	currentPlayer = 0;
     actionsRemaining = 4;
@@ -273,9 +274,17 @@ int GameStateManager::banMeme(int memeNumber) {
 			return -2;
 		}
 		else {
-			board.removeMemeCube(players[currentPlayer]->getPlayerLocation(), memeNumber);
-			//locations.setMemeStatus(memeNumber, numberOfRemainingCubes - 1,
-			//	players[currentPlayer]->getPlayerLocation());
+			if (players[currentPlayer]->getPlayerRole() == MODERATOR) {
+				int numMemes = board.getLocation(players[currentPlayer]->getPlayerLocation()).memes[memeNumber];
+				for (int count = 0; count < numMemes; count++) {
+					board.removeMemeCube(players[currentPlayer]->getPlayerLocation(), memeNumber);
+				}
+			}
+			else {
+				board.removeMemeCube(players[currentPlayer]->getPlayerLocation(), memeNumber);
+				//locations.setMemeStatus(memeNumber, numberOfRemainingCubes - 1,
+				//	players[currentPlayer]->getPlayerLocation());
+			}
 			setActionsRemaining(--actionsRemaining);
 			return 1;
 		}
@@ -449,13 +458,19 @@ std::string GameStateManager::printPlayerLocations() {
 std::string GameStateManager::printPlayerCards(std::string playerName) {
 	std::string output;
 	if (playerName == "") { // If no player is specified, view current player's cards
-		int i;
-		for (i = 0; i < players[currentPlayer] -> getPlayerCards().size(); i++) {
+		for (int i = 0; i < players[currentPlayer] -> getPlayerCards().size(); i++) {
 			output.append("Card " + std::to_string(i + 1) + ": " +
 					convertIntToCard(players[currentPlayer] -> getPlayerCards()[i]) + '\n');
 		}
 	} else { // View specified player's cards
-		// TODO
+        int playerNum = atoi(playerName.c_str()) - 1;
+        if (playerNum < 0 || playerNum > players.size() - 1) {
+            return "INVALIDPLAYER";
+        }
+		for (int i = 0; i < players[playerNum] -> getPlayerCards().size(); i++) {
+			output.append("Card " + std::to_string(i + 1) + ": " +
+					convertIntToCard(players[playerNum] -> getPlayerCards()[i]) + '\n');
+		}
 	}
 
 	return output;
@@ -528,9 +543,10 @@ int GameStateManager::incrementInfect(int loca, std::vector<int> track, int meme
 	{
 		//if the location is at 3, then recursively call this function on the adjacent locations
 		std::vector<int> adja = locations.getAdjacentLocations(loca);
+		setOutbreakTrack(getOutbreakTrack() + 1);
 		for(int i = 0; i < adja.size(); i++)
 		{
-			setOutbreakTrack(getOutbreakTrack()+1);
+			//setOutbreakTrack(getOutbreakTrack()+1);
 			track.push_back(adja[i]);
 			incrementInfect(adja[i], track, meme);
 			track.pop_back();
@@ -541,6 +557,7 @@ int GameStateManager::incrementInfect(int loca, std::vector<int> track, int meme
 int GameStateManager::nextTurn() {
     playerHasDrawn = 0;
     actionsRemaining = 4;
+	setActionsRemaining(4);
 	currentPlayer++;
 	currentPlayer %= players.size();
 
@@ -733,12 +750,12 @@ int GameStateManager::saveGame(std::string filename) {
 		fs << i << "," << players[i]->getPlayerName() << "," <<
 			players[i]->getPlayerRole() << "," << players[i]->getPlayerLocation() <<
 			"," << players[i]->getPlayerCards().size() << ",";
-		for (int j = 0; (j < (players[i]->getPlayerCards().size() - 1) && players[i]->getPlayerCards().empty() != 1); j++) {
-			//int x = players[i]->getPlayerCards().size();
+		for (int j = 0; players[i]->getPlayerCards().size() != 0 && j < players[i]->getPlayerCards().size() - 1; j++) {
 			fs << players[i]->getPlayerCards()[j] << ",";
 		}
-		if (players[i]->getPlayerCards().empty() != 1)
-			fs << players[i]->getPlayerCards()[players[i]->getPlayerCards().size() - 1];
+        if (players[i]->getPlayerCards().size() != 0) {
+            fs << players[i]->getPlayerCards()[players[i]->getPlayerCards().size() - 1];
+        }
 		fs << std::endl;
 	}
 	// currentPlayer,actionsRemaining

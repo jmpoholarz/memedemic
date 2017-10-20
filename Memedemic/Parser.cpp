@@ -536,6 +536,18 @@ return "Incorrect usage of cmc: " + getUsage("cmc");
 		if (tokens.size() != 1 && tokens.size() != 2) {
 			return "Incorrect usage of end: " + getUsage("end");
 		}
+
+		// Current player draws (and discards) cards
+		int drawAndDiscardSuccess = gsm.endTurn();
+		if (drawAndDiscardSuccess == -1) {
+			// 1 too many cards in hand
+			return "Holding too many cards.  Please discard at least one.";
+		}
+		else if (drawAndDiscardSuccess == -2) {
+			// 2 too many cards in hand
+			return "Holding too many cards.  Please discard two.";
+		}
+
 		// Attempt to end turn
 		int successful = gsm.nextTurn();
 		if (successful == 1)

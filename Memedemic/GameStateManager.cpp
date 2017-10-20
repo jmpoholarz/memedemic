@@ -31,10 +31,10 @@ GameStateManager::GameStateManager(Board& b, Location& l) : board(b), locations(
     playerHasDrawn = 0; // may need to be stored in save file
     gameEnd = false;
     // Each meme is allocated 12 cubes
-    cubesLeft[0] = 12;
-    cubesLeft[1] = 12;
-    cubesLeft[2] = 12;
-    cubesLeft[3] = 12;
+    cubesLeft[0] = 18;
+    cubesLeft[1] = 18;
+    cubesLeft[2] = 18;
+    cubesLeft[3] = 18;
 	//initialInfection(); // called in Main's game setup to not break loading
     //setupDeck(); // called in Main's game setup to not break loading
 }
@@ -58,17 +58,19 @@ void GameStateManager::setupPlayers(int numPlayers, bool loadingGame) {
 				p->addCard(cards.back());
 				cards.pop_back();
 			}
-			// Insert Epidemic cards
-			std::random_device rd;
-			std::mt19937 eng(rd());
-			std::uniform_int_distribution<> distr(0, cards.size());
-			for (int i = 0; i < 6; i++) {
-				cards.insert(cards.begin() + distr(eng), 29);
-			}
-			board.updatePlayerCardCount(cards.size());
 		}
 
 		players.push_back(p);
+	}
+	if (loadingGame == false) {
+		// Insert Epidemic cards
+		std::random_device rd;
+		std::mt19937 eng(rd());
+		std::uniform_int_distribution<> distr(0, cards.size());
+		for (int i = 0; i < 6; i++) {
+			cards.insert(cards.begin() + distr(eng), 29);
+		}
+		board.updatePlayerCardCount(cards.size());
 	}
 
 }
@@ -532,23 +534,27 @@ int GameStateManager::shareCard(int direction, int card, std::string playerName)
 int GameStateManager::drawCards() {
     int playerHandSize = players[currentPlayer] -> getPlayerCards().size();
 
-    if (playerHasDrawn) {
-        return -3;
-    } else if (playerHandSize == 7) {
-        return -1;
-    } else if (playerHandSize >= 8) {
-        return -2;
+	if (playerHasDrawn) {
+		return -3;
+	//} else if (playerHandSize == 7) {
+	//    return -1;
+	//} else if (playerHandSize >= 8) {
+	//	  return -2;
+	} else if (playerHandSize == 6) {
+		return -1;
+	} else if (playerHandSize >= 7) {
+		return -2;
     } else if (cards.size() < 2) {
         endGame();
     } else if (cards.size() <= 0) {
         std::cout << "Error: no cards remaining" << std::endl;
         return -1;
-    } else if (cards.size() == 1 || playerHandSize == 6) { // Add one card to player's deck
-        playerHasDrawn = 1;
-        players[currentPlayer] -> addCard(cards.back());
-        cards.pop_back();
-        board.updatePlayerCardCount(cards.size());
-		return 2;
+    //} else if (cards.size() == 1 || playerHandSize == 6) { // Add one card to player's deck
+    //    playerHasDrawn = 1;
+    //    players[currentPlayer] -> addCard(cards.back());
+    //    cards.pop_back();
+    //    board.updatePlayerCardCount(cards.size());
+	//	return 2;
     } else { // Add two cards to player's deck
         playerHasDrawn = 1;
         players[currentPlayer] -> addCard(cards.back());
@@ -621,6 +627,7 @@ int GameStateManager::autoSave(std::string filename = "autosave.txt") {
 }
 
 int GameStateManager::incrementInfect(int loca, std::vector<int> track, int meme, int outbreakTrackIncremented) {
+	//returns 1 if the track counter has been incremented this turn, 0 if not
 	//check if the location has already been infected this cycle
 	for(int i = 0; i < track.size()-1; i++)
 	{
@@ -678,7 +685,6 @@ int GameStateManager::incrementInfect(int loca, std::vector<int> track, int meme
 		}
 		for(int i = 0; i < adja.size(); i++)
 		{
-			//setOutbreakTrack(getOutbreakTrack()+1);
 			track.push_back(adja[i]);
 			incrementInfect(adja[i], track, meme, 1);
 			track.pop_back();
@@ -687,6 +693,17 @@ int GameStateManager::incrementInfect(int loca, std::vector<int> track, int meme
 	}
 	return 0;
 }
+
+// At the end of a player's turn, the current player must draw two cards
+// i they have not already drawn, and if necessary, must discard one
+// or two cards
+int GameStateManager::endTurn() {
+	if (playerHasDrawn == 0) {
+		return drawCards();
+	}
+	return 0;
+}
+
 int GameStateManager::nextTurn() {
     playerHasDrawn = 0;
     actionsRemaining = 4;
@@ -793,7 +810,7 @@ int GameStateManager::infect(int location, int meme, int count) {
 
 	// Decrements number of cubes available for that meme
 	// If it's less than 0 than game lost
-	cubesLeft[meme]--;
+	cubesLeft[meme] = cubesLeft[meme] - count;
 	if (cubesLeft[meme] < 0) {
 		endGame();
 	}
@@ -867,7 +884,7 @@ int GameStateManager::saveGame(std::string filename) {
 	}
 	// PlayerDeckCardsRemaining,Card,Card,Card,...
 	fs << cards.size() << ",";
-	for (int i = 0; i < cards.size()-1; i++) {
+	for (int i = 0; cards.size() != 0 && i < cards.size()-1; i++) {
 		fs << cards[i] << ",";
 	}
 	fs << cards[cards.size() - 1] << std::endl;
@@ -1011,6 +1028,7 @@ int GameStateManager::loadGame(std::string filename) {
 
 
 int GameStateManager::endGame() {
+	std::cout << "in end game" << std::endl;
 	bool won = false;
 	for (int i = 0; i < 4; i++) {
 		if (board.getCure(i) == 0) {
@@ -1020,32 +1038,45 @@ int GameStateManager::endGame() {
 		won = true;
 	}
 	if (won) {
-		std::cout << "You Won" << std::endl;
-		gameEnd = true;
+		system("cls||clear");
+		board.printBoard();
+		std::cout << "You Win!" << std::endl;
+		std::cout << "Type any command to return to the main menu..." << std::endl;
+		std::cin.ignore();
+		mainMenu();
+		return 0;
 	}
 
-	if (outbreakTrack == 8 || cards.size() < 2) {
-		std::cout << "You Lost" << std::endl;
-		std::cout << "Game Over" << std::endl;
+	if (outbreakTrack == 8) {
+		system("cls||clear");
+		board.printBoard();
+		std::cout << "The outbreak tracker reached 8! You Lose!" << std::endl;
+		gameEnd = true;
+	} else if (cards.size() < 2) {
+		system("cls||clear");
+		board.printBoard();
+		std::cout << "The player card pile reached 0! You lose!" << std::endl;
 		gameEnd = true;
 	} else {
 		//checks cubesLeft array to see if there are any cubes left for a meme
 		//if not then the game is lost
 		for (int i = 0; i < 4; i++) {
+			std::cout << i << ": " << cubesLeft[i] << std::endl;
 			if (cubesLeft[i] < 0) {
-				std::cout << "Game Over" << std::endl;
-                gameEnd = true;
+				system("cls||clear");
+				board.printBoard();
+				std::cout << "Meme cubes for meme " << i + 1 << " ran out! You lose!" << std::endl;
+				gameEnd = true;
                 break;
 			}
 		}
 	}
 
 	if (gameEnd) {
-		//TODO go back to mainMenu();
-		// This is broken right now, if you try to quit after the main menu shows it goes back to old game board
-		//mainMenu();
+		std::cout << "Type any command to return to the main menu..." << std::endl;
+		std::cin.ignore();
+		mainMenu();
 	}
-
 	return 0;
 }
 

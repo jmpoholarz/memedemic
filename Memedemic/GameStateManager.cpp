@@ -556,7 +556,6 @@ int GameStateManager::incrementInfect(int loca, std::vector<int> track, int meme
 		}
 		for(int i = 0; i < adja.size(); i++)
 		{
-			//setOutbreakTrack(getOutbreakTrack()+1);
 			track.push_back(adja[i]);
 			incrementInfect(adja[i], track, meme, 1);
 			track.pop_back();

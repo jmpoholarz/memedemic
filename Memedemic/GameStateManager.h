@@ -30,6 +30,7 @@ public:
 	int discardCard(int card1, int card2);
 	int shareCard(int direction, int card, std::string playerName);
 	int drawCards();
+	int epidemicCard();
 	std::string printPlayerRoles();
 	std::string printPlayerLocations();
 	std::string printPlayerCards(std::string playerName);
@@ -74,9 +75,9 @@ private:
 	int currentPlayer;
 	int actionsRemaining;
 
-	//TODO tracks how many cubes of each meme is left, losing condition if any is < 0
 	int cubesLeft[4];
     int playerHasDrawn;
 	std::vector<int> cards;
+	std::vector<int> infectionCards;
     std::vector<int> discardPile;
 };

@@ -86,7 +86,11 @@ std::string Board::getRoleAbbreviation(PlayerRoles role) {
 	Adds a meme cube to the given location
 */
 void Board::addMemeCubes(int loc, int meme, int count) {
-	locations[loc].memes[meme] = locations[loc].memes[meme] + count;
+	if (count == 3) {
+		locations[loc].memes[meme] = 3;
+	} else {
+		locations[loc].memes[meme] = locations[loc].memes[meme] + count;
+	}
 }
 
 /**

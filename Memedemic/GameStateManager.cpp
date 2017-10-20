@@ -2,6 +2,7 @@
 #include "Main.h"
 #include <iostream>
 #include <random>
+#include <algorithm>
 
 /*GameStateManager::GameStateManager() : board(Board(1)), locations(Location()) {
 
@@ -79,7 +80,7 @@ void GameStateManager::setupDeck() {
     std::mt19937 eng(rd());
     std::uniform_int_distribution<> distr(0, 23);
     int i = 0;
-    while (i < 48) {
+    while (i < 5) {
         int randomValue = distr(eng);
         if (values[randomValue] == 2) {
             continue;
@@ -89,6 +90,13 @@ void GameStateManager::setupDeck() {
         }
         i++;
     }
+    i = 0;
+    while (i < 24) {
+        infectionCards.push_back(i);
+        i++;
+    }
+    auto rng = std::default_random_engine {};
+    std::shuffle(std::begin(infectionCards), std::end(infectionCards), rng);
 }
 
 GameStateManager::~GameStateManager() {
@@ -416,22 +424,62 @@ int GameStateManager::drawCards() {
     } else if (cards.size() <= 0) {
         std::cout << "Error: no cards remaining" << std::endl;
         return -1;
-    } else if (cards.size() == 1 || playerHandSize == 6) { // Add one card to player's deck
+    } else if (cards.size() == 1 || playerHandSize == 7) { // Add one card to player's deck
         playerHasDrawn = 1;
-        players[currentPlayer] -> addCard(cards.back());
+        int card = cards.back();
+        if (card != 29) {
+            players[currentPlayer] -> addCard(card);
+        } else {
+            epidemicCard();
+        }
         cards.pop_back();
         board.updatePlayerCardCount(cards.size());
 		return 2;
     } else { // Add two cards to player's deck
         playerHasDrawn = 1;
-        players[currentPlayer] -> addCard(cards.back());
+        int card = cards.back();
+        if (card != 29) {
+            players[currentPlayer] -> addCard(card);
+        } else {
+            std::cout << "pulled epidemic" << std::endl;
+            epidemicCard();
+        }
         cards.pop_back();
-        players[currentPlayer] -> addCard(cards.back());
+        card = cards.back();
+        if (card != 29) {
+            players[currentPlayer] -> addCard(card);
+        } else {
+        std::cout << "pulled epidemic" << std::endl;
+            epidemicCard();
+        }
         cards.pop_back();
         board.updatePlayerCardCount(cards.size());
         return 1;
     }
 	return 0;
+}
+int GameStateManager::epidemicCard() {
+	board.increaseViralQuotient();
+	int card = infectionCards.back();
+	infectionCards.pop_back();
+	std::string color = returnLocSection(card);
+	int meme;
+	if (color == "&") {
+		meme = 0;
+	} else if (color == "#") {
+		meme = 1;
+	} else if (color == "$") {
+     	meme = 2;
+    } else if (color == "@") {
+		meme = 3;
+    }
+	if (board.getCure(card) != 2) {
+		infect(card, meme, 3);
+		std::vector<int> vec = {card};
+		incrementInfect(card, vec, meme, 0);
+		auto rng = std::default_random_engine {};
+        std::shuffle(std::begin(infectionCards), std::end(infectionCards), rng);
+	}
 }
 int GameStateManager::discardCard(int card1, int card2) {
     int maxSize = players[currentPlayer] -> getPlayerCards().size();
@@ -1012,7 +1060,7 @@ std::string GameStateManager::returnLocSection(int loc) {
     } else if (loc == 15 || loc == 8 || loc == 7 || loc == 4 || loc == 6 || loc == 5) {
         return "$";
     } else if (loc == 18 || loc == 20 || loc == 19 || loc == 21 || loc == 22 || loc == 23) {
-        return "#";
+        return "@";
     } else {
         return "";
     }

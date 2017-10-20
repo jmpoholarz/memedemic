@@ -264,3 +264,7 @@ __pycache__/
 # Visual Studio Project files since these may differ on different people's computers? we'll see
 Memedemic/Memedemic.vcxproj
 Memedemic/Memedemic.vcxproj.filters
+
+# Executables and autosave files
+Memedemic/memedemic
+Memedemic/autosave.txt

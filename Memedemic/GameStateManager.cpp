@@ -23,7 +23,8 @@
 
 GameStateManager::GameStateManager(Board& b, Location& l) : board(b), locations(l) {
 	// Initialize variables
-	outbreakTrack = 8;
+	//outbreakTrack = 8;
+	outbreakTrack = 0;
 	viralQuotient = 2;
 	currentPlayer = 0;
     actionsRemaining = 4;
@@ -528,9 +529,10 @@ int GameStateManager::incrementInfect(int loca, std::vector<int> track, int meme
 	{
 		//if the location is at 3, then recursively call this function on the adjacent locations
 		std::vector<int> adja = locations.getAdjacentLocations(loca);
+		setOutbreakTrack(getOutbreakTrack() + 1);
 		for(int i = 0; i < adja.size(); i++)
 		{
-			setOutbreakTrack(getOutbreakTrack()+1);
+			//setOutbreakTrack(getOutbreakTrack()+1);
 			track.push_back(adja[i]);
 			incrementInfect(adja[i], track, meme);
 			track.pop_back();

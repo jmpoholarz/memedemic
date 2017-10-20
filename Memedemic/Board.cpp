@@ -13,7 +13,7 @@ Board::Board() {
 	cures[1] = 0;
 	cures[2] = 0;
 	cures[3] = 0;
-	playerCards = 59;
+	playerCards = 54;
 
 	initializeLocations();
 
@@ -515,7 +515,7 @@ void Board::printCures() {
 	Prints the number of remaining player card to the command line
 */
 void Board::printPlayerCards() {
-	std::cout << "P-Cards: " << playerCards << "/59";
+	std::cout << "P-Cards: " << playerCards << "/54";
 }
 
 void Board::setCMCServer(int location, bool exists) {

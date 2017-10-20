@@ -31,10 +31,10 @@ GameStateManager::GameStateManager(Board& b, Location& l) : board(b), locations(
     playerHasDrawn = 0; // may need to be stored in save file
     gameEnd = false;
     // Each meme is allocated 12 cubes
-    cubesLeft[0] = 12;
-    cubesLeft[1] = 12;
-    cubesLeft[2] = 12;
-    cubesLeft[3] = 12;
+    cubesLeft[0] = 16;
+    cubesLeft[1] = 16;
+    cubesLeft[2] = 16;
+    cubesLeft[3] = 16;
 	//initialInfection(); // called in Main's game setup to not break loading
     //setupDeck(); // called in Main's game setup to not break loading
 }
@@ -886,33 +886,47 @@ int GameStateManager::endGame() {
 		won = true;
 	}
 	if (won) {
-		std::cout << "You Won" << std::endl;
-		gameEnd = true;
+		system("cls||clear");
+		board.printBoard();
+		std::cout << "You Win!" << std::endl;
+		std::cout << "Type any command to return to the main menu..." << std::endl;
+		std::cin.ignore();
+		mainMenu();
+		return 0;
 	}
-
-	if (outbreakTrack == 8 || cards.size() < 2) {
-		std::cout << "You Lost" << std::endl;
-		std::cout << "Game Over" << std::endl;
-		gameEnd = true;
+	if (outbreakTrack == 8) {
+		system("cls||clear");
+		board.printBoard();
+		std::cout << "The outbreak tracker reached 8! You Lose!" << std::endl;
+		std::cout << "Type any command to return to the main menu..." << std::endl;
+		std::cin.ignore();
+		mainMenu();
+		return 0;
+	}
+	else if (cards.size() < 2) {
+		system("cls||clear");
+		board.printBoard();
+		std::cout << "The player card pile reached 0! You lose!" << std::endl;
+		std::cout << "Type any command to return to the main menu..." << std::endl;
+		std::cin.ignore();
+		mainMenu();
+		return 0;
 	} else {
 		//checks cubesLeft array to see if there are any cubes left for a meme
 		//if not then the game is lost
 		for (int i = 0; i < 4; i++) {
 			if (cubesLeft[i] < 0) {
-				std::cout << "Game Over" << std::endl;
-                gameEnd = true;
-                break;
+				system("cls||clear");
+				board.printBoard();
+				std::cout << "Meme cubes for meme " << i + 1 << " ran out! You lose!" << std::endl;
+				std::cout << "Type any command to return to the main menu..." << std::endl;
+				std::cin.ignore();
+				mainMenu();
+				return 0;
 			}
 		}
+		return 0;
 	}
-
-	if (gameEnd) {
-		//TODO go back to mainMenu();
-		// This is broken right now, if you try to quit after the main menu shows it goes back to old game board
-		//mainMenu();
-	}
-
-	return 0;
 }
 
 std::string GameStateManager::convertIntToCard(int intCard) {

@@ -57,19 +57,19 @@ void GameStateManager::setupPlayers(int numPlayers, bool loadingGame) {
 				p->addCard(cards.back());
 				cards.pop_back();
 			}
+			// Insert Epidemic cards
+			std::random_device rd;
+			std::mt19937 eng(rd());
+			std::uniform_int_distribution<> distr(0, cards.size());
+			for (int i = 0; i < 6; i++) {
+				cards.insert(cards.begin() + distr(eng), 29);
+			}
+			board.updatePlayerCardCount(cards.size());
 		}
 
 		players.push_back(p);
 	}
 
-    // Insert Epidemic cards
-    std::random_device rd;
-    std::mt19937 eng(rd());
-    std::uniform_int_distribution<> distr(0, cards.size());
-    for (int i = 0; i < 6; i++) {
-        cards.insert(cards.begin() + distr(eng), 29);
-    }
-    board.updatePlayerCardCount(cards.size());
 }
 
 void GameStateManager::setupDeck() {
@@ -91,10 +91,10 @@ void GameStateManager::setupDeck() {
 }
 
 GameStateManager::~GameStateManager() {
-	delete &board;
-	while (players.size() > 0)
-		delete players[0];
-
+	while (players.size() > 0) {
+		delete players[players.size() - 1];
+		players.pop_back();
+	}
 }
 
 int GameStateManager::movePlayer(int location) {
@@ -733,10 +733,12 @@ int GameStateManager::saveGame(std::string filename) {
 		fs << i << "," << players[i]->getPlayerName() << "," <<
 			players[i]->getPlayerRole() << "," << players[i]->getPlayerLocation() <<
 			"," << players[i]->getPlayerCards().size() << ",";
-		for (int j = 0; j < players[i]->getPlayerCards().size() - 1; j++) {
+		for (int j = 0; (j < (players[i]->getPlayerCards().size() - 1) && players[i]->getPlayerCards().empty() != 1); j++) {
+			//int x = players[i]->getPlayerCards().size();
 			fs << players[i]->getPlayerCards()[j] << ",";
 		}
-		fs << players[i]->getPlayerCards()[players[i]->getPlayerCards().size() - 1];
+		if (players[i]->getPlayerCards().empty() != 1)
+			fs << players[i]->getPlayerCards()[players[i]->getPlayerCards().size() - 1];
 		fs << std::endl;
 	}
 	// currentPlayer,actionsRemaining
@@ -747,6 +749,113 @@ int GameStateManager::saveGame(std::string filename) {
 	std::cout << "Game saved.\n";
 	return 1;
 }
+int GameStateManager::loadGame(std::string filename) {
+	// Begin loading from chosen file
+	std::fstream fs(filename, std::fstream::in);
+	std::string line; // current line in save file
+	std::string elem; // current comma separated item
+	std::vector<std::string> tokens;
+
+	// First line is the number of players
+	int numberOfPlayers = 0;
+	std::getline(fs, line);
+	if (line.length() != 1)
+		return -1;
+	numberOfPlayers = atoi(line.c_str());
+	if (numberOfPlayers < 1 || numberOfPlayers > 4)
+		return -1;
+
+	setupPlayers(numberOfPlayers, true);
+
+	// Next 24 lines are each location
+	for (int i = 0; i < 24; i++) {
+		std::getline(fs, line);
+		std::stringstream ss(line);
+		// Split line by commas
+		while (getline(ss, elem, ',')) {
+			tokens.push_back(elem);
+		}
+		// Set the meme serverity of the site
+		if (tokens.size() != 6)
+			return -1;
+		int levels[4] = {
+			atoi(tokens[1].c_str()), atoi(tokens[2].c_str()),
+			atoi(tokens[3].c_str()), atoi(tokens[4].c_str())
+		};
+		getBoard().setMemes(atoi(tokens[0].c_str()), levels);
+		getBoard().setCMCServer(atoi(tokens[0].c_str()),
+			atoi(tokens[5].c_str()));
+		tokens.clear();
+	}
+	// Next line is player deck
+	//gsm.d
+	std::getline(fs, line);
+	std::stringstream ss(line);
+	while (getline(ss, elem, ',')) {
+		tokens.push_back(elem);
+	}
+	for (int i = 1; i < atoi(tokens[0].c_str()) + 1; i++) {
+		queueCardInDeck(atoi(tokens[i].c_str()));
+	}
+	tokens.clear();
+
+	// Next two lines are outbreak track and viral quotient
+	std::getline(fs, line);
+	if (line.length() != 1)
+		return -1;
+	else {
+		int outbreak = atoi(line.c_str());
+		if (outbreak < 0 || outbreak > 8)
+			return -1;
+		setOutbreakTrack(outbreak);
+	}
+	std::getline(fs, line);
+	if (line.length() != 1)
+		return -1;
+	else {
+		int viralQuotient = atoi(line.c_str());
+		if (viralQuotient < 0 || viralQuotient > 8)
+			return -1;
+		setViralQuotient(viralQuotient);
+	}
+
+	// Next line is the 4 meme statuses
+	std::getline(fs, line);
+	std::stringstream ss2(line);
+	// Split line by commas
+	while (getline(ss2, elem, ',')) {
+		tokens.push_back(elem);
+	}
+	if (tokens.size() != 4)
+		return -1;
+	for (int i = 0; i < 4; i++) {
+		setMemeStatus(i, atoi(tokens[i].c_str()));
+	}
+	tokens.clear();
+	// Last player# of lines details things about the players
+	for (int i = 0; i < numberOfPlayers; i++) {
+		std::getline(fs, line);
+		std::stringstream ss3(line);
+		// Split line by commas
+		while (getline(ss3, elem, ',')) {
+			tokens.push_back(elem);
+		}
+		Player& p = getPlayer(atoi(tokens[0].c_str()));
+		p.setPlayerName(tokens[1]);
+		p.setPlayerRole((PlayerRoles)atoi(tokens[2].c_str()));
+		p.setPlayerLocation(atoi(tokens[3].c_str()));
+		for (int j = 0; j < atoi(tokens[4].c_str()); j++) {
+			p.addCard(atoi(tokens[5 + j].c_str()));
+		}
+		tokens.clear();
+	}
+
+
+
+	fs.close();
+	return 1;
+}
+
 
 int GameStateManager::endGame() {
 	bool won = false;

@@ -57,6 +57,7 @@ public:
 	void queueCardInDeck(int value);
 
 	int saveGame(std::string filename = "autosave.txt");
+	int loadGame(std::string filename = "autosave.txt");
 
 	int endGame();
 	bool gameEnd;

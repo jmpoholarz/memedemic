@@ -1,7 +1,11 @@
 #include "Main.h"
 
+int RUNTESTS = true;
+
 int main() {
-	mainMenu();
+	if (RUNTESTS)
+		testScript();
+	else mainMenu();
 }
 
 int mainMenu() {
@@ -13,6 +17,7 @@ int mainMenu() {
 		// Get start menu response
 		do {
 			// Output start menu
+			system("cls||clear");
 			std::cout << "Memedemic: Please enter 1-3:" << std::endl;
 			std::cout << "1. New" << std::endl;
 			std::cout << "2. Load" << std::endl;
@@ -128,28 +133,30 @@ int setupNewGame(GameStateManager& gsm) {
 }
 
 int loadGame(GameStateManager& gsm) {
+	// Verify that the save file trying to load actually exists
 	bool validFile = false;
 	std::string filename;
 	while (!validFile) {
 		std::cout << "Filename (leave blank for autosave): ";
 		std::getline(std::cin, filename);
 		FILE* file;
+		if (filename == "cancel") return -1;
 		if (filename == "") {
 			filename = "autosave.txt";
-			if (!(fopen(filename.c_str(), "r"))) {
+			if ((file = fopen(filename.c_str(), "r")) != NULL) {
 				fclose(file);
 				validFile = true;
 			}
-			else std::cout << "No autosave found.\n";
+			else std::cout << "No autosave found.  Type 'cancel' to return to menu.\n";
 		}
-		else if (!(fopen(filename.c_str(), "r"))) {
+		else if ((file = fopen(filename.c_str(), "r")) != NULL) {
 			fclose(file);
 			validFile = true;
 		}
-		if (!validFile) std::cout << "Invalid file." << std::endl;
+		if (!validFile) std::cout << "Invalid file. Type 'cancel' to return to menu." << std::endl;
 
 	}
-
+	// Begin loading from chosen file
 	std::fstream fs(filename, std::fstream::in);
 	std::string line; // current line in save file
 	std::string elem; // current comma separated item
@@ -179,7 +186,7 @@ int loadGame(GameStateManager& gsm) {
 			return -1;
 		int levels[4] = {
 			atoi(tokens[1].c_str()), atoi(tokens[2].c_str()),
-			atoi(tokens[2].c_str()), atoi(tokens[3].c_str())
+			atoi(tokens[3].c_str()), atoi(tokens[4].c_str())
 		};
 		gsm.getBoard().setMemes(atoi(tokens[0].c_str()), levels);
 		gsm.getBoard().setCMCServer(atoi(tokens[0].c_str()),

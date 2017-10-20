@@ -1,4 +1,3 @@
-#pragma once
 #include "TestScript.h"
 
 int testScript() {

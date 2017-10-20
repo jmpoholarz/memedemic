@@ -1,6 +1,6 @@
 #include "Main.h"
 
-int RUNTESTS = true;
+int RUNTESTS = false;
 
 int main() {
 	if (RUNTESTS)

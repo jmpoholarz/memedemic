@@ -293,6 +293,15 @@ int GameStateManager::banMeme(int memeNumber) {
 }
 int GameStateManager::developMemeFilter(int card1, int card2, int card3,
 	int card4, int card5) {
+    // Check if player has actions remaining
+    if (actionsRemaining == 0) {
+        return 0;
+    }
+
+    // Check that user is at a CMC server
+    if (board.getLocation(players[currentPlayer]->getPlayerLocation()).cmcServer == false) {
+        return -5;
+    }
 	// Note: card5 might be empty
 	//check if the current player is allowed to make a filter without a 5th card
 	if(players[currentPlayer]->getPlayerRole() != HACKER && card5 == -1)
@@ -307,12 +316,130 @@ int GameStateManager::developMemeFilter(int card1, int card2, int card3,
 		return -2;
 	}
 
-	// Need memeNumber to update Board class
-	int memeNumber = NULL;
-	// Add cure to Board class
-	board.addCure(memeNumber);
+    // Convert hand numbers to card numbers
+    int card1Card, card2Card, card3Card, card4Card, card5Card;
+    if (players[currentPlayer]->getPlayerRole() == HACKER) {
+        if (card1 < 1 || card1 > players[currentPlayer]->getPlayerCards().size() ||
+            card2 < 1 || card2 > players[currentPlayer]->getPlayerCards().size() ||
+            card3 < 1 || card3 > players[currentPlayer]->getPlayerCards().size() ||
+            card4 < 1 || card4 > players[currentPlayer]->getPlayerCards().size()) {
+            return -4;
+        }
+        card1Card = players[currentPlayer]->getPlayerCards()[card1 - 1];
+        card2Card = players[currentPlayer]->getPlayerCards()[card2 - 1];
+        card3Card = players[currentPlayer]->getPlayerCards()[card3 - 1];
+        card4Card = players[currentPlayer]->getPlayerCards()[card4 - 1];
+    } else {
+        if (card1 < 1 || card1 > players[currentPlayer]->getPlayerCards().size() ||
+            card2 < 1 || card2 > players[currentPlayer]->getPlayerCards().size() ||
+            card3 < 1 || card3 > players[currentPlayer]->getPlayerCards().size() ||
+            card4 < 1 || card4 > players[currentPlayer]->getPlayerCards().size() ||
+            card5 < 1 || card5 > players[currentPlayer]->getPlayerCards().size()) {
+            return -4;
+        }
+        card1Card = players[currentPlayer]->getPlayerCards()[card1 - 1];
+        card2Card = players[currentPlayer]->getPlayerCards()[card2 - 1];
+        card3Card = players[currentPlayer]->getPlayerCards()[card3 - 1];
+        card4Card = players[currentPlayer]->getPlayerCards()[card4 - 1];
+        card5Card = players[currentPlayer]->getPlayerCards()[card5 - 1];
+    }
 
-	return 0;
+	// Need memeNumber to update Board class
+    int memeNumber = -1;
+
+    std::string card1Section, card2Section, card3Section, card4Section, card5Section;
+    card1Section = returnLocSection(card1Card);
+    card2Section = returnLocSection(card2Card);
+    card3Section = returnLocSection(card3Card);
+    card4Section = returnLocSection(card4Card);
+    card5Section = returnLocSection(card5Card);
+
+    if (players[currentPlayer]->getPlayerRole() == HACKER) {
+    	// Check that player has the specified cards in their hand
+	    if (!players[currentPlayer]->holdsNCards(card1Card, 1) ||
+	    	!players[currentPlayer]->holdsNCards(card2Card, 1) ||
+	    	!players[currentPlayer]->holdsNCards(card3Card, 1) ||
+	    	!players[currentPlayer]->holdsNCards(card4Card, 1)) {
+            return -4;
+        }
+
+	    // Check that all specified cards are from the same section
+        if (card1Section == card2Section && card2Section == card3Section &&
+            card3Section == card4Section && card4Section == "&") {
+            memeNumber = 0;
+        } else if (card1Section == card2Section && card2Section == card3Section &&
+            card3Section == card4Section && card4Section == "#") {
+            memeNumber = 1;
+        } else if (card1Section == card2Section && card2Section == card3Section &&
+            card3Section == card4Section && card4Section == "$") {
+            memeNumber = 2;
+        } else if (card1Section == card2Section && card2Section == card3Section &&
+            card3Section == card4Section && card4Section == "@") {
+            memeNumber = 3;
+        } else {
+            return -1;
+        }
+    } else {
+        // Check that player has the specified cards in their hand
+        if (!players[currentPlayer]->holdsNCards(card1Card, 1) ||
+            !players[currentPlayer]->holdsNCards(card2Card, 1) ||
+            !players[currentPlayer]->holdsNCards(card3Card, 1) ||
+            !players[currentPlayer]->holdsNCards(card4Card, 1) ||
+            !players[currentPlayer]->holdsNCards(card5Card, 1)) {
+            return -4;
+        }
+
+    	// Check that all specified cards are from the same section
+        if (card1Section == card2Section && card2Section == card3Section &&
+            card3Section == card4Section && card4Section == card5Section &&
+            card5Section == "&") {
+            memeNumber = 0;
+        } else if (card1Section == card2Section && card2Section == card3Section &&
+            card3Section == card4Section && card4Section == card5Section &&
+            card5Section == "#") {
+            memeNumber = 1;
+        } else if (card1Section == card2Section && card2Section == card3Section &&
+            card3Section == card4Section && card4Section == card5Section &&
+            card5Section == "$") {
+            memeNumber = 2;
+        } else if (card1Section == card2Section && card2Section == card3Section &&
+            card3Section == card4Section && card4Section == card5Section &&
+            card5Section == "@") {
+            memeNumber = 3;
+        } else {
+            return -1;
+        }
+    }
+
+	// Add cure to Board class
+    if (board.getCure(memeNumber)) {
+        return -3;
+    }
+
+    // Discard cards and add filter for meme
+    if (players[currentPlayer]->getPlayerRole() == HACKER) {
+        players[currentPlayer]->removeNCards(card1Card, 1);
+        players[currentPlayer]->removeNCards(card2Card, 1);
+        players[currentPlayer]->removeNCards(card3Card, 1);
+        players[currentPlayer]->removeNCards(card4Card, 1);
+        discardPile.push_back(card1Card);
+        discardPile.push_back(card2Card);
+        discardPile.push_back(card3Card);
+        discardPile.push_back(card4Card);
+    } else {
+        players[currentPlayer]->removeNCards(card1Card, 1);
+        players[currentPlayer]->removeNCards(card2Card, 1);
+        players[currentPlayer]->removeNCards(card3Card, 1);
+        players[currentPlayer]->removeNCards(card4Card, 1);
+        players[currentPlayer]->removeNCards(card5Card, 1);
+        discardPile.push_back(card1Card);
+        discardPile.push_back(card2Card);
+        discardPile.push_back(card3Card);
+        discardPile.push_back(card4Card); 
+        discardPile.push_back(card5Card); 
+    }
+	board.addCure(memeNumber);
+	return 1;
 }
 int GameStateManager::buildCMCServer() {
 	// Check if player has actions remaining
@@ -997,7 +1124,7 @@ std::string GameStateManager::returnLocSection(int loc) {
     } else if (loc == 15 || loc == 8 || loc == 7 || loc == 4 || loc == 6 || loc == 5) {
         return "$";
     } else if (loc == 18 || loc == 20 || loc == 19 || loc == 21 || loc == 22 || loc == 23) {
-        return "#";
+        return "@";
     } else {
         return "";
     }

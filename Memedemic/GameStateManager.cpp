@@ -603,7 +603,7 @@ int GameStateManager::drawCards() {
 }
 int GameStateManager::epidemicCard() {
 	std::cout << "You drew an epidemic card" << std::endl;
-	setViralQuotient(viralQuotient++);
+	setViralQuotient(++viralQuotient);
 
 	int card = infectionCards.back();
 	infectionCards.pop_back();
@@ -780,7 +780,8 @@ int GameStateManager::nextTurn() {
 	std::mt19937 eng(rd());
 	std::uniform_int_distribution<> distr(0,23);
 	int outbroke = 0;
-	for(int x = 0; x < viralQuotient; x++)
+	int quotients[7] = {2,2,2,3,3,4,4};
+	for(int x = 0; x < quotients[viralQuotient]; x++)
 	{
 		//choose the location
 		int loca = distr(eng);

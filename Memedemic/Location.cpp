@@ -150,13 +150,6 @@ Location::Location() {
 	this->sites.push_back(VK);
 }
 
-std::vector<int> Location::getMemeStatus() {
-	return this->memeStatus;
-/*
-Location::Location(int name) {
-	this->name = name;
-}*/
-
 std::vector<int> Location::getMemeStatus(int name) {
 	std::list<site>::iterator it;
 	for (it = this->sites.begin(); it != this->sites.end(); ++it) {
@@ -189,15 +182,6 @@ void Location::setCMCServer(int name) {
 	for (it = this->sites.begin(); it != this->sites.end(); ++it) {
     		if (it->id == name) {
 			it->CMCServer = true;
-		}
-	}
-}
-
-site Location::getLocation(int name) {
-	std::list<site>::iterator it;
-	for (it = this->sites.begin(); it != this->sites.end(); ++it) {
-    	if (it->id == name) {
-			return it;
 		}
 	}
 }

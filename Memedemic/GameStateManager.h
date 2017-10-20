@@ -64,6 +64,7 @@ public:
 
 private:
     std::string convertIntToCard(int);
+    std::string returnLocSection(int);
     bool locationHasPlayer(int);
 	Board& board;
 	Location& locations;

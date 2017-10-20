@@ -2,6 +2,7 @@
 #include "Main.h"
 #include <iostream>
 #include <random>
+#include <algorithm>
 
 /*GameStateManager::GameStateManager() : board(Board(1)), locations(Location()) {
 
@@ -25,7 +26,7 @@ GameStateManager::GameStateManager(Board& b, Location& l) : board(b), locations(
 	// Initialize variables
 	//outbreakTrack = 8;
 	outbreakTrack = 0;
-	viralQuotient = 2;
+	viralQuotient = 0;
 	currentPlayer = 0;
     actionsRemaining = 4;
     playerHasDrawn = 0; // may need to be stored in save file
@@ -81,7 +82,7 @@ void GameStateManager::setupDeck() {
     std::mt19937 eng(rd());
     std::uniform_int_distribution<> distr(0, 23);
     int i = 0;
-    while (i < 48) {
+    while (i < 5) {
         int randomValue = distr(eng);
         if (values[randomValue] == 2) {
             continue;
@@ -91,6 +92,13 @@ void GameStateManager::setupDeck() {
         }
         i++;
     }
+    i = 0;
+    while (i < 24) {
+        infectionCards.push_back(i);
+        i++;
+    }
+    auto rng = std::default_random_engine {};
+    std::shuffle(std::begin(infectionCards), std::end(infectionCards), rng);
 }
 
 GameStateManager::~GameStateManager() {
@@ -561,21 +569,62 @@ int GameStateManager::drawCards() {
     } else if (cards.size() <= 0) {
         std::cout << "Error: no cards remaining" << std::endl;
         return -1;
-    //} else if (cards.size() == 1 || playerHandSize == 6) { // Add one card to player's deck
-    //    playerHasDrawn = 1;
-    //    players[currentPlayer] -> addCard(cards.back());
-    //    cards.pop_back();
-    //    board.updatePlayerCardCount(cards.size());
-	//	return 2;
+    /*} else if (cards.size() == 1 || playerHandSize == 7) { // Add one card to player's deck
+        playerHasDrawn = 1;
+        int card = cards.back();
+        if (card != 29) {
+            players[currentPlayer] -> addCard(card);
+        } else {
+            epidemicCard();
+        }
+        cards.pop_back();
+        board.updatePlayerCardCount(cards.size());
+		return 2;*/
     } else { // Add two cards to player's deck
         playerHasDrawn = 1;
-        players[currentPlayer] -> addCard(cards.back());
+        int card = cards.back();
+        if (card != 29) {
+            players[currentPlayer] -> addCard(card);
+        } else {
+            epidemicCard();
+        }
         cards.pop_back();
-        players[currentPlayer] -> addCard(cards.back());
+        card = cards.back();
+        if (card != 29) {
+            players[currentPlayer] -> addCard(card);
+        } else {
+            epidemicCard();
+        }
         cards.pop_back();
         board.updatePlayerCardCount(cards.size());
         return 1;
     }
+	return 0;
+}
+int GameStateManager::epidemicCard() {
+	std::cout << "You drew an epidemic card" << std::endl;
+	setViralQuotient(viralQuotient++);
+
+	int card = infectionCards.back();
+	infectionCards.pop_back();
+	std::string color = returnLocSection(card);
+	int meme;
+	if (color == "&") {
+		meme = 0;
+	} else if (color == "#") {
+		meme = 1;
+	} else if (color == "$") {
+     	meme = 2;
+    } else if (color == "@") {
+		meme = 3;
+    }
+	if (board.getCure(card) != 2) {
+		infect(card, meme, 3);
+		std::vector<int> vec = {card};
+		incrementInfect(card, vec, meme, 0);
+		auto rng = std::default_random_engine {};
+        std::shuffle(std::begin(infectionCards), std::end(infectionCards), rng);
+	}
 	return 0;
 }
 int GameStateManager::discardCard(int card1, int card2) {

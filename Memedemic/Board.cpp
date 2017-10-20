@@ -86,7 +86,11 @@ std::string Board::getRoleAbbreviation(PlayerRoles role) {
 	Adds a meme cube to the given location
 */
 void Board::addMemeCubes(int loc, int meme, int count) {
-	locations[loc].memes[meme] = locations[loc].memes[meme] + count;
+	if (count == 3) {
+		locations[loc].memes[meme] = 3;
+	} else {
+		locations[loc].memes[meme] = locations[loc].memes[meme] + count;
+	}
 }
 
 /**
@@ -389,10 +393,12 @@ void Board::printBoard() {
 	
 	// Fifth row of locations
 	std::cout << "@-----@-----@ \\@-----@-----@ \\@-----------@  #===========#/              \n";
-	std::cout << "|   Weibo   |  |    QQ     |  |    VK     |  | Instagram |                 \n";
+	std::cout << "|   Weibo   |  |    QQ     |  |    VK     |  | Instagram | ";
+	printCures();
+	std::cout << "\n";
 
 	std::cout << "|           |  |           |  |           |  |           | ";
-	printCures();
+	printOutbreaks();
 	std::cout << "\n";
 
 	std::cout << "|";
@@ -408,11 +414,11 @@ void Board::printBoard() {
 	printCounters(11);
 	printCMC(11);
 	std::cout << "| ";
-	printOutbreaks();
+	printPlayerCards();
 	std::cout << "\n";
 
 	std::cout << "|           |  |           |  |           |  |           | ";
-	printViralQuotient();
+	std::cout << " Viral Quote: ";
 	std::cout << "\n";
 
 	std::cout << "|";
@@ -424,7 +430,7 @@ void Board::printBoard() {
 	std::cout << "|  |";
 	printPlayers(11);
 	std::cout << "| ";
-	printPlayerCards();
+	printViralQuotient();
 	std::cout << "\n";
 	
 	std::cout << "@-----------@  @-----------@  @-----------@  #===========#               \n";
@@ -486,7 +492,22 @@ void Board::printOutbreaks() {
 }
 
 void Board::printViralQuotient() {
-	std::cout << "Viral Quote: " << viralQuotientCounter;
+	switch (viralQuotientCounter) {
+		case (0): std::cout << " 2 - - - - - -";
+				  break;
+		case (1): std::cout << " - 2 - - - - -";
+				  break;
+		case (2): std::cout << " - - 2 - - - -";
+				  break;
+		case (3): std::cout << " - - - 3 - - -";
+				  break;
+		case (4): std::cout << " - - - - 3 - -";
+				  break;
+		case (5): std::cout << " - - - - - 4 -";
+				  break;
+		default: std::cout << " - - - - - - 4";
+				 break;
+	}
 }
 
 void Board::printCures() {

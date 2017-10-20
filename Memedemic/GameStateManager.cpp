@@ -274,9 +274,17 @@ int GameStateManager::banMeme(int memeNumber) {
 			return -2;
 		}
 		else {
-			board.removeMemeCube(players[currentPlayer]->getPlayerLocation(), memeNumber);
-			//locations.setMemeStatus(memeNumber, numberOfRemainingCubes - 1,
-			//	players[currentPlayer]->getPlayerLocation());
+			if (players[currentPlayer]->getPlayerRole() == MODERATOR) {
+				int numMemes = board.getLocation(players[currentPlayer]->getPlayerLocation()).memes[memeNumber];
+				for (int count = 0; count < numMemes; count++) {
+					board.removeMemeCube(players[currentPlayer]->getPlayerLocation(), memeNumber);
+				}
+			}
+			else {
+				board.removeMemeCube(players[currentPlayer]->getPlayerLocation(), memeNumber);
+				//locations.setMemeStatus(memeNumber, numberOfRemainingCubes - 1,
+				//	players[currentPlayer]->getPlayerLocation());
+			}
 			setActionsRemaining(--actionsRemaining);
 			return 1;
 		}

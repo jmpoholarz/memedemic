@@ -389,10 +389,12 @@ void Board::printBoard() {
 	
 	// Fifth row of locations
 	std::cout << "@-----@-----@ \\@-----@-----@ \\@-----------@  #===========#/              \n";
-	std::cout << "|   Weibo   |  |    QQ     |  |    VK     |  | Instagram |                 \n";
+	std::cout << "|   Weibo   |  |    QQ     |  |    VK     |  | Instagram | ";
+	printCures();
+	std::cout << "\n";
 
 	std::cout << "|           |  |           |  |           |  |           | ";
-	printCures();
+	printOutbreaks();
 	std::cout << "\n";
 
 	std::cout << "|";
@@ -408,11 +410,11 @@ void Board::printBoard() {
 	printCounters(11);
 	printCMC(11);
 	std::cout << "| ";
-	printOutbreaks();
+	printPlayerCards();
 	std::cout << "\n";
 
 	std::cout << "|           |  |           |  |           |  |           | ";
-	printViralQuotient();
+	std::cout << " Viral Quote: ";
 	std::cout << "\n";
 
 	std::cout << "|";
@@ -424,7 +426,7 @@ void Board::printBoard() {
 	std::cout << "|  |";
 	printPlayers(11);
 	std::cout << "| ";
-	printPlayerCards();
+	printViralQuotient();
 	std::cout << "\n";
 	
 	std::cout << "@-----------@  @-----------@  @-----------@  #===========#               \n";
@@ -486,7 +488,8 @@ void Board::printOutbreaks() {
 }
 
 void Board::printViralQuotient() {
-	std::cout << "Viral Quote: " << viralQuotientCounter;
+	std::cout << "Viral Quote: 2" << viralQuotientCounter;
+	             //"- - - - - - -"
 }
 
 void Board::printCures() {

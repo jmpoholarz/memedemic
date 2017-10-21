@@ -783,7 +783,11 @@ int GameStateManager::incrementInfect(int loca, std::vector<int> &track, int mem
 // or two cards
 int GameStateManager::endTurn() {
 	if (playerHasDrawn == 0) {
-		return drawCards();
+        int result = drawCards();
+        if (result == 1) {
+            announcement = "Drew 2 cards.";
+        }
+		return result;
 	}
 	return 0;
 }

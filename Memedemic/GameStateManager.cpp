@@ -475,8 +475,8 @@ int GameStateManager::developMemeFilter(int card1, int card2, int card3,
         discardPile.push_back(card1Card);
         discardPile.push_back(card2Card);
         discardPile.push_back(card3Card);
-        discardPile.push_back(card4Card); 
-        discardPile.push_back(card5Card); 
+        discardPile.push_back(card4Card);
+        discardPile.push_back(card5Card);
     }
 	board.addCure(memeNumber);
 	return 1;
@@ -527,16 +527,12 @@ int GameStateManager::buildCMCServer() {
 int GameStateManager::playCard(int card) {
 	return 0;
 }
-int GameStateManager::shareCard(int direction, int card, std::string playerName) {
+int GameStateManager::shareCard(int direction, int card, int otherPlayer) {
 	// Check for actions
 	if (actionsRemaining <= 0) return 0;
-	int otherPlayer = -1;
-	for (int i = 0; i < players.size(); i++) {
-		if (players[i]->getPlayerName() == playerName)
-			otherPlayer = i;
-	}
+
 	// If could not find player referenced in trade request
-	if (otherPlayer == -1)
+	if (otherPlayer == currentPlayer || otherPlayer < 0 || otherPlayer >= players.size())
 		return -1;
 	// If location differs
 	if (players[currentPlayer]->getPlayerLocation() !=
@@ -550,10 +546,24 @@ int GameStateManager::shareCard(int direction, int card, std::string playerName)
 		if (card < 0 || card >= players[currentPlayer]->getPlayerCards().size()) {
 			return -2;
 		}
+
+        // If player is not a millenial, ensure the card being shared is
+        // for the current location
+        if (players[currentPlayer]->getPlayerRole() != MILLENIAL &&
+            players[currentPlayer]->getPlayerCards()[card] !=
+            players[currentPlayer]->getPlayerLocation()) {
+            return -5;
+        }
+
 		// Transfer card ownership to otherPlayer
-		players[otherPlayer]->addCard(players[currentPlayer]->getPlayerCards()[card]);
-		players[currentPlayer]->removeCardAtIndex(card);
-		return 1;
+        if (players[otherPlayer]->getPlayerCards().size() < 7) {
+    		players[otherPlayer]->addCard(players[currentPlayer]->getPlayerCards()[card]);
+    		players[currentPlayer]->removeCardAtIndex(card);
+            setActionsRemaining(--actionsRemaining);
+            return 1;
+        } else {
+            return -4;
+        }
 	}
 	// Taking
 	else if (direction == -1) {
@@ -561,10 +571,24 @@ int GameStateManager::shareCard(int direction, int card, std::string playerName)
 		if (card < 0 || card >= players[currentPlayer]->getPlayerCards().size()) {
 			return -2;
 		}
+
+        // If player is not a millenial, ensure the card being shared is
+        // for the current location
+        if (players[currentPlayer]->getPlayerRole() != MILLENIAL &&
+            players[otherPlayer]->getPlayerCards()[card] !=
+            players[otherPlayer]->getPlayerLocation()) {
+            return -5;
+        }
+
 		// Transfer card ownership to currentPlayer
-		players[currentPlayer]->addCard(players[otherPlayer]->getPlayerCards()[card]);
-		players[otherPlayer]->removeCardAtIndex(card);
-		return 1;
+        if (players[currentPlayer]->getPlayerCards().size() < 7) {
+    		players[currentPlayer]->addCard(players[otherPlayer]->getPlayerCards()[card]);
+    		players[otherPlayer]->removeCardAtIndex(card);
+            setActionsRemaining(--actionsRemaining);
+    		return 1;
+        } else {
+            return -4;
+        }
 	}
 
 	return -100;

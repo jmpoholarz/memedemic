@@ -631,7 +631,7 @@ int GameStateManager::epidemicCard() {
 	std::uniform_int_distribution<> distr(0, 23);
 	int infectionLoc = distr(eng);
 	std::string color = returnLocSection(infectionLoc);
-
+	announcement += "Initial infection location: " + convertIntToCard(infectionLoc) + "\n";
 	int meme;
 	if (color == "&") {
 		meme = 0;
@@ -812,6 +812,7 @@ int GameStateManager::nextTurn() {
 	{
 		//choose the location
 		int loca = distr(eng);
+		announcement += "Initial infection location: " + convertIntToCard(loca) + "\n";
 		std::vector<int> locas;
 		locas.push_back(loca);
 		int meme = 0;
@@ -900,6 +901,12 @@ int GameStateManager::infect(int location, int meme, int count) {
 	// Decrements number of cubes available for that meme
 	// If it's less than 0 than game lost
 	cubesLeft[meme] = cubesLeft[meme] - count;
+	if (cubesLeft[meme] < 4) { 
+		std::string warning = "Warning: Meme ";
+		warning += meme + 49;
+		warning += " is spreading dangerously!\n";
+		announcement += warning;
+	}
 	if (cubesLeft[meme] < 0) {
 		endGame();
 	}
@@ -921,6 +928,15 @@ int GameStateManager::getViralQuotient() {
 Board& GameStateManager::getBoard() {
 	return board;
 }
+
+Player& GameStateManager::getCurrentPlayer() {
+	return getPlayer(currentPlayer);
+}
+
+int GameStateManager::getCurrentPlayerNumber() {
+	return currentPlayer;
+}
+
 Player& GameStateManager::getPlayer(int index) {
 	return *(players[index]);
 }

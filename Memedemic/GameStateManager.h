@@ -12,7 +12,7 @@ class GameStateManager {
 	
 public:
 	//GameStateManager();
-	std::string announcement = "";
+	std::string announcement = ""; // Used to announce other game info to the player
 
 	// Sets up initial game starting conditions
 	GameStateManager(Board& b, Location& l);
@@ -48,6 +48,8 @@ public:
 	int getViralQuotient();
 	int getMemeStatus(int memeNumber);
 	int getActionsRemaining();
+	Player& getCurrentPlayer();
+	int getCurrentPlayerNumber();
 	Board& getBoard();
 	Player& getPlayer(int index);
     std::vector<Player*> getPlayers();

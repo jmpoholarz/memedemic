@@ -34,13 +34,13 @@ std::string Parser::parse(std::string command) {
 	if (tokens[0] == "help") {
 		if (tokens.size() == 1) {
 			return "Help on the following topics is available:\n"
-				"   <insert list of help topics here>\n"
+				"   goal, winning, losing, CMC, roles, epidemic, \n"
+				"  outbreak track, viral quotient, meme filter\n"
 				"Help for the following commands is available:\n"
-				"   usage, access, move, build, ban, give, take, filter, event, "
-				"outbreak, viral, \n   meme, players, roles, cmc, servers, draw, "
-				"discard, cards, end, new";
+				"   usage, access, move, build, ban, give, take, filter,\n "
+				"draw, discard, cards, end, save";
 		}
-		else if (tokens.size() == 2) {
+		else if (tokens.size() >= 2) {
 			if (tokens[1] == "usage") {
 				return "Provides instructions on how to use a command.\n";
 			}
@@ -114,7 +114,7 @@ std::string Parser::parse(std::string command) {
 					"\t\t of the board";
 			}
 			else if (tokens[1] == "roles") {
-				return "Now select a role from the following (1-6):\n"
+				return "The following roles exist in Memedemic:\n"
 					"\t1. The Professor\n"
 					"\t\t> May build a research station at any time.\n"
 					"\t\t> May discard a card to move to any city.\n"
@@ -132,13 +132,28 @@ std::string Parser::parse(std::string command) {
 					"\t\t> When in the same location as another player, may trade held cards\n";
 			}
 			else if (tokens[1] == "outbreak") {
-				return "Use this to view more information on the Outbreak Track\n";
+				return "The Outbreak Track keeps a counter for how many\n"
+					"\toutbreaks have occurred.  If 8 occur in one game,\n"
+					"\tthe players will lose.  The following cause an outbreak:\n"
+					"\t1. An epidemic card is drawn\n"
+					"\t2. An infection occurs on a location of meme level 3\n"
+					"\t\t- infection will spread to all adjacencies";
 			}
 			else if (tokens[1] == "viral") {
-				return "Use this to view more information on the Viral Quotient\n";
+				return "The Viral Quotient is a counter of the following format:\n"
+					"\t\t[2,2,2,3,3,4,4]\n"
+					"\tEach position of the quotient determines how many\n"
+					"\tinfections will occur at the end of each player turn.\n"
+					"\tOutbreaks will increase the Viral Quotient.";
 			}
 			else if (tokens[1] == "meme") {
-				return "Use this to view more information on the Meme Status\n";
+				return "A meme filter is used prevent the spread of memes.\n"
+					"\tIt requires 5 cards of the same internet region to be\n"
+					"\ttaken to a CMC.  Once a filter for a meme has been\n"
+					"\tdeveloped, the meme will not randomly infect locations\n"
+					"\tanymore.  It will only spread from existing locations.\n"
+					"\tA player may eradicate a meme by removing it from the\n"
+					"\tentire board.  However, this is not necessary to win.";
 			}
 			else if (tokens[1] == "players") {
 				return "Use this to view the locations of all players\n";
@@ -146,9 +161,9 @@ std::string Parser::parse(std::string command) {
 			else if (tokens[1] == "roles") {
 				return "Use this to view the roles of all players\n";
 			}
-			else if (tokens[1] == "cmc") {
+			/*else if (tokens[1] == "cmc") {
 				return "Use this to view a list of all CMC locations\n";
-			}
+			}*/
 			else if (tokens[1] == "servers") {
 				return "Use this to view a list of all CMC Server locations\n";
 			}
@@ -167,6 +182,42 @@ std::string Parser::parse(std::string command) {
 			}
 			else if (tokens[1] == "new") {
 				return "Use this to quit the current game and begin another\n";
+			}
+			else if (tokens[1] == "goal") {
+				return "In Memedemic, you play the role of a galliant\n"
+					"\tdefender of the internet, safeguarding it from the\n"
+					"\tstale memes that seek to destroy it.\n"
+					"To do this, your goal is to develop 4 meme filters\n"
+					"\tand stop the memes from taking over.  You do this\n"
+					"\tby obtaining 5 cards of the same internet region and\n"
+					"\ttaking them to a Center for Meme Control (CMC) Server.";
+			}
+			else if (tokens[1] == "winning") {
+				return "To win a game of Memedemic, you must develop 4 meme\n"
+					"\tfilters by bring 5 cards of each internet region to a\n"
+					"\tCMC server and using the 'filter' command with the cards.";
+			}
+			else if (tokens[1] == "losing") {
+				return "Careful!  You can lose Memedemic in any of the\n"
+					"following 3 ways:\n"
+					"\t1. Allow the Outbreak Track to reach level 8\n"
+					"\t2. Run out of cards in the deck\n"
+					"\t3. Allow the quantity of any meme to exceed 18\n";
+			}
+			else if (tokens[1] == "CMC" || tokens[1] == "cmc") {
+				return "A Center for Meme Control Server (CMC) is a building\n"
+					"\ta player can construct in any location on the internet.\n"
+					"\tYou need the card of the location to construct it with\n"
+					"\tthe 'build' command.  Players can fast travel between\n"
+					"\tCMCs.  There can be a maximum of 6.";
+			}
+			else if (tokens[1] == "epidemic") {
+				return "The deck is populated with epidemic cards.  When any\n"
+					"\tof these cards is drawn, the following will happen.\n"
+					"\t1. A random location's meme level will be set to 3\n"
+					"\t2. The Outbreak Track will increase by 1\n"
+					"\t3. The Viral Quotient will move to the next stage\n"
+					"\t4. An oubreak occurs at the epidemic location";
 			}
 			else return "No help available on " + tokens[1] + "\n";
 		}
@@ -215,7 +266,7 @@ std::string Parser::parse(std::string command) {
                 !std::isdigit(tokens[1][0])) {
             return "Incorrect usage of move: " + getUsage("move");
         }
-        // Check that specified player number to move is valie
+        // Check that specified player number to move is valid
         int playerToMove = atoi(tokens[1].c_str()) - 1;
         if (playerToMove < 0 || playerToMove > gsm.getPlayers().size() - 1) {
             return "Invalid player number: " + getUsage("move");
@@ -713,7 +764,7 @@ std::string Parser::getUsage(std::string command) {
 		return "access <location>";
 	}
 	else if (command == "move") {
-		return "access <player #> <location>";
+		return "move <player #> <location>";
 	}
 	else if (command == "build") {
 		return "build";

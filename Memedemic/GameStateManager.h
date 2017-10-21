@@ -12,6 +12,7 @@ class GameStateManager {
 	
 public:
 	//GameStateManager();
+	std::string announcement = "";
 
 	// Sets up initial game starting conditions
 	GameStateManager(Board& b, Location& l);

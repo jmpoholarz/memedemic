@@ -305,24 +305,26 @@ std::string Parser::parse(std::string command) {
 		else return "Unable to ban meme " + tokens[1] + " from current location.";
 	}
 	else if (tokens[0] == "give") {
-		// Check for wrong number of arguments
-		if (tokens.size() != 3) {
+		// Check for wrong number of arguments or non player number input
+		if (tokens.size() != 3 || tokens[2].size() != 1 || !std::isdigit(tokens[2][0])) {
 			return "Incorrect usage of give: " + getUsage("give");
 		}
+
 		// Attempt to give card
-		int cardIndex = atoi(tokens[1].c_str());
-		int successful = gsm.shareCard(1, cardIndex, tokens[2]);
+		int cardIndex = atoi(tokens[1].c_str()) - 1;
+		int otherPlayer = atoi(tokens[2].c_str()) - 1;
+		int successful = gsm.shareCard(1, cardIndex, otherPlayer);
 		if (successful == 1)
-			return "Traded card " + tokens[1] + " to " + tokens[2];
+			return "Traded card " + tokens[1] + " to player " + tokens[2];
 		else if (successful == 0)
 			return "You have no actions remaining.  Please end your turn.";
 		else if (successful == -1) {
 			// invalid player chosen
-			return tokens[2] + " is not a valid player for giving a card.";
+			return "Player " + tokens[2] + " is not a valid player for giving a card.";
 		}
 		else if (successful == -2) {
 			// invalid card chosen
-			return tokens[1] + " is not a valid card for giving.";
+			return "Card " + tokens[1] + " is not a valid card for giving.";
 		}
 		else if (successful == -2) {
 			// not holding card of current location
@@ -332,28 +334,34 @@ std::string Parser::parse(std::string command) {
 			// players not in same location
 			return "You must be in the same location as the player you wish to trade with.";
 		}
-
-		else return "Unable to trade card" + tokens[1] + " to player " + tokens[2];
+		else if (successful == -4) {
+			return "Player " + tokens[2] + "'s hand is full.";
+		}
+		else if (successful == -5) {
+			return "You can only trade the card for your current location.";
+		}
+		else return "Unable to trade card " + tokens[1] + " to player " + tokens[2];
 	}
 	else if (tokens[0] == "take") {
-		// Check for wrong number of arguments
-		if (tokens.size() != 3) {
+		// Check for wrong number of arguments or non player number input
+		if (tokens.size() != 3 || tokens[2].size() != 1 || !std::isdigit(tokens[2][0])) {
 			return "Incorrect usage of give: " + getUsage("take");
 		}
 		// Attempt to take card
-		int cardIndex = atoi(tokens[1].c_str());
-		int successful = gsm.shareCard(-1, cardIndex, tokens[2]);
+		int cardIndex = atoi(tokens[1].c_str()) - 1;
+		int otherPlayer = atoi(tokens[2].c_str()) - 1;
+		int successful = gsm.shareCard(-1, cardIndex, otherPlayer);
 		if (successful == 1)
-			return "Traded card " + tokens[1] + " from " + tokens[2];
+			return "Traded card " + tokens[1] + " from player " + tokens[2];
 		else if (successful == 0)
 			return "You have no actions remaining.  Please end your turn.";
 		else if (successful == -1) {
 			// invalid player chosen
-			return tokens[2] + " is not a valid player for taking a card.";
+			return "Player " + tokens[2] + " is not a valid player for taking a card.";
 		}
 		else if (successful == -2) {
 			// invalid card chosen
-			return tokens[1] + " is not a valid card for taking.";
+			return "Card " + tokens[1] + " is not a valid card for taking.";
 		}
 		else if (successful == -2) {
 			// not holding card of current location
@@ -363,8 +371,13 @@ std::string Parser::parse(std::string command) {
 			// players not in same location
 			return "You must be in the same location as the player you wish to trade with.";
 		}
-
-		else return "Unable to trade card" + tokens[1] + " from player " + tokens[2];
+		else if (successful == -4) {
+			return "Your hand is full.";
+		}
+		else if (successful == -5) {
+			return "You can only trade the card for your current location.";
+		}
+		else return "Unable to trade card " + tokens[1] + " from player " + tokens[2];
 
 	}
 	else if (tokens[0] == "filter") {
@@ -722,10 +735,10 @@ std::string Parser::getUsage(std::string command) {
 		return "ban <number of meme>";
 	}
 	else if (command == "give") {
-		return "give <card name> <player name>";
+		return "give <card name> <player #>";
 	}
 	else if (command == "take") {
-		return "take <card name> <player name>";
+		return "take <card name> <player #>";
 	}
 	else if (command == "filter") {
 		return "filter <card1> <card2> <card3> <card4> <card5>";

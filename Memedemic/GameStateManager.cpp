@@ -631,7 +631,7 @@ int GameStateManager::epidemicCard() {
 	std::uniform_int_distribution<> distr(0, 23);
 	int infectionLoc = distr(eng);
 	std::string color = returnLocSection(infectionLoc);
-
+	announcement += "Initial infection location: " + convertIntToCard(infectionLoc) + "\n";
 	int meme;
 	if (color == "&") {
 		meme = 0;
@@ -808,6 +808,7 @@ int GameStateManager::nextTurn() {
 	{
 		//choose the location
 		int loca = distr(eng);
+		announcement += "Initial infection location: " + convertIntToCard(loca) + "\n";
 		std::vector<int> locas;
 		locas.push_back(loca);
 		int meme = 0;

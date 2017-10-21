@@ -617,9 +617,7 @@ int GameStateManager::drawCards() {
 	return 0;
 }
 int GameStateManager::epidemicCard() {
-	std::cout << "You drew an epidemic card!" << std::endl;
-	std::cout << "Type any command to continue..." << std::endl;
-	std::cin.ignore();
+	std::cout << "\nYou drew an epidemic card!" << std::endl;
 
 	setViralQuotient(++viralQuotient);
 
@@ -632,6 +630,13 @@ int GameStateManager::epidemicCard() {
 	int infectionLoc = distr(eng);
 	std::string color = returnLocSection(infectionLoc);
 	int meme;
+
+	std::cout << "The epidemic will infect " + convertIntToCard(infectionLoc) + "!\n";
+	std::cout << "Type any command to continue..." << std::endl;
+
+	std::cin.ignore();
+	std::cin.ignore();
+
 	if (color == "&") {
 		meme = 0;
 	} else if (color == "$") {
@@ -642,7 +647,6 @@ int GameStateManager::epidemicCard() {
 		meme = 3;
     }
 	if (board.getCure(meme) != 2) {
-		announcement += "Epidemic Initial infection location: " + convertIntToCard(infectionLoc) + "\n";
 		infect(infectionLoc, meme, 3);
 		std::vector<int> vec = {infectionLoc};
 		incrementInfect(infectionLoc, vec, meme, 0);

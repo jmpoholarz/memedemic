@@ -72,7 +72,7 @@ Location::Location() {
 	site TWITTER = {0};
 	TWITTER.id = 13;
 	TWITTER.siteName = "TWITTER";
-	TWITCH.adjacencies = {14,9,12};
+	TWITTER.adjacencies = {14,9,12};
 	
 	site FACEBOOK = {0};
 	FACEBOOK.id = 14;

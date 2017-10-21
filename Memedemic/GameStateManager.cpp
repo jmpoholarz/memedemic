@@ -1219,7 +1219,6 @@ int GameStateManager::endGame() {
 		//checks cubesLeft array to see if there are any cubes left for a meme
 		//if not then the game is lost
 		for (int i = 0; i < 4; i++) {
-			std::cout << i << ": " << cubesLeft[i] << std::endl;
 			if (cubesLeft[i] < 0) {
 				system("cls||clear");
 				board.printBoard();

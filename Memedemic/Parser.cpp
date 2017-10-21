@@ -633,7 +633,8 @@ return "Incorrect usage of cmc: " + getUsage("cmc");
 			return "Incorrect usage of new: " + getUsage("new");
 		}
 		// Attempt to start new game
-		return "Starting a new game!";
+		
+		return "__main_menu";
 	}
 	else if (tokens[0] == "save") {
 		// Check for wrong number of arguments

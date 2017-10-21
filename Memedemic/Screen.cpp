@@ -31,6 +31,8 @@ void Screen::run() {
 		std::getline(std::cin, command);
 		response = sendCommand(command);
 
+		if ("response = __main_menu")
+			return;
 	}
 }
 

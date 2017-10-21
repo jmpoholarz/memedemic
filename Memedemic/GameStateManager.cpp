@@ -631,7 +631,6 @@ int GameStateManager::epidemicCard() {
 	std::uniform_int_distribution<> distr(0, 23);
 	int infectionLoc = distr(eng);
 	std::string color = returnLocSection(infectionLoc);
-	announcement += "Initial infection location: " + convertIntToCard(infectionLoc) + "\n";
 	int meme;
 	if (color == "&") {
 		meme = 0;
@@ -643,6 +642,7 @@ int GameStateManager::epidemicCard() {
 		meme = 3;
     }
 	if (board.getCure(meme) != 2) {
+		announcement += "Epidemic Initial infection location: " + convertIntToCard(infectionLoc) + "\n";
 		infect(infectionLoc, meme, 3);
 		std::vector<int> vec = {infectionLoc};
 		incrementInfect(infectionLoc, vec, meme, 0);
@@ -718,6 +718,21 @@ int GameStateManager::incrementInfect(int loca, std::vector<int> &track, int mem
 	{
 		if(loca == track[i] && track.size() != 1)
 			return 1;
+	}
+	std::vector<int> firewallLocations;
+	for (Player * player : players) {
+		if (player->getPlayerRole() == FIREWALL) {
+			std::vector<int> newLocations = locations.getAdjacentLocations(player->getPlayerLocation());
+			for (int loc : newLocations) {
+				firewallLocations.push_back(loc);
+			}
+			firewallLocations.push_back(player->getPlayerLocation());
+		}
+	}
+	for (int loc : firewallLocations) {
+		if (loca == loc) {
+			return 0;
+		}
 	}
 	//determine which meme to use based on the origin of this infection cycle
 	switch(track[0]){
@@ -812,7 +827,27 @@ int GameStateManager::nextTurn() {
 	{
 		//choose the location
 		int loca = distr(eng);
-		announcement += "Initial infection location: " + convertIntToCard(loca) + "\n";
+
+		bool message = true;
+		std::vector<int> firewallLocations;
+		for (Player * player : players) {
+			if (player->getPlayerRole() == FIREWALL) {
+				std::vector<int> newLocations = locations.getAdjacentLocations(player->getPlayerLocation());
+				for (int loc : newLocations) {
+					firewallLocations.push_back(loc);
+				}
+				firewallLocations.push_back(player->getPlayerLocation());
+			}
+		}
+		for (int loc : firewallLocations) {
+			if (loca == loc) {
+				message = false;
+			}
+		}
+		if (message == true) {
+			announcement += "Initial infection location: " + convertIntToCard(loca) + "\n";
+		}
+
 		std::vector<int> locas;
 		locas.push_back(loca);
 		int meme = 0;
@@ -897,7 +932,21 @@ int GameStateManager::initialInfection() {
 	return 0;
 }
 int GameStateManager::infect(int location, int meme, int count) {
-
+	std::vector<int> firewallLocations;
+	for (Player * player : players) {
+		if (player->getPlayerRole() == FIREWALL) {
+			std::vector<int> newLocations = locations.getAdjacentLocations(player->getPlayerLocation());
+			for (int loc : newLocations) {
+				firewallLocations.push_back(loc);
+			}
+			firewallLocations.push_back(player->getPlayerLocation());
+		}
+	}
+	for (int loc : firewallLocations) {
+		if (location == loc) {
+			return 0;
+		}
+	}
 	// Decrements number of cubes available for that meme
 	// If it's less than 0 than game lost
 	cubesLeft[meme] = cubesLeft[meme] - count;

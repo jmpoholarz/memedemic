@@ -9,6 +9,7 @@ public:
 	Screen(GameStateManager& gsm, Parser& parser);
 	~Screen();
 	void showBoard();
+	std::string convertRole(int role);
 	std::string sendCommand(std::string command);
 	void run();
 private:

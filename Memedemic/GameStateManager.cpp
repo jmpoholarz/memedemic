@@ -800,7 +800,7 @@ int GameStateManager::endTurn() {
 	if (playerHasDrawn == 0) {
         int result = drawCards();
         if (result == 1) {
-            announcement = "Drew 2 cards.";
+            announcement = "Drew 2 cards.\n";
         }
 		return result;
 	}
@@ -950,6 +950,12 @@ int GameStateManager::infect(int location, int meme, int count) {
 	// Decrements number of cubes available for that meme
 	// If it's less than 0 than game lost
 	cubesLeft[meme] = cubesLeft[meme] - count;
+	if (cubesLeft[meme] < 4) { 
+		std::string warning = "Warning: Meme ";
+		warning += meme + 49;
+		warning += " is spreading dangerously!\n";
+		announcement += warning;
+	}
 	if (cubesLeft[meme] < 0) {
 		endGame();
 	}
@@ -971,6 +977,15 @@ int GameStateManager::getViralQuotient() {
 Board& GameStateManager::getBoard() {
 	return board;
 }
+
+Player& GameStateManager::getCurrentPlayer() {
+	return getPlayer(currentPlayer);
+}
+
+int GameStateManager::getCurrentPlayerNumber() {
+	return currentPlayer;
+}
+
 Player& GameStateManager::getPlayer(int index) {
 	return *(players[index]);
 }
@@ -1289,9 +1304,9 @@ std::string GameStateManager::convertIntToCard(int intCard) {
 std::string GameStateManager::returnLocSection(int loc) {
     if (loc == 16 || loc == 1 || loc == 0 || loc == 2 || loc == 3) {
         return "&";
-    } else if (loc == 17 || loc == 14 || loc == 9 || loc == 13 || loc == 12 || loc == 10 || loc == 11) {
-        return "$";
     } else if (loc == 15 || loc == 8 || loc == 7 || loc == 4 || loc == 6 || loc == 5) {
+        return "$";
+    } else if (loc == 17 || loc == 14 || loc == 9 || loc == 13 || loc == 12 || loc == 10 || loc == 11) {
         return "#";
     } else if (loc == 18 || loc == 20 || loc == 19 || loc == 21 || loc == 22 || loc == 23) {
         return "@";

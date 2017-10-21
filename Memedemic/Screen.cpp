@@ -21,6 +21,7 @@ void Screen::run() {
 		// If there is an announcement, print it!!
 		if (gsm.announcement != "")
 			std::cout << gsm.announcement << std::endl;
+		gsm.announcement = "";
 		// Print response of output to user
 		std::cout << response << std::endl;
 		gsm.saveGame("autosave.txt");

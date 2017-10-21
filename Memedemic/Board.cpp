@@ -8,7 +8,7 @@
 Board::Board() {
 	actionsCounter = 4;
 	outbreakCounter = 0;
-	viralQuotientCounter = 2;
+	viralQuotientCounter = 0;
 	cures[0] = 0;
 	cures[1] = 0;
 	cures[2] = 0;

@@ -56,7 +56,7 @@ int mainMenu() {
 			std::this_thread::sleep_for(std::chrono::milliseconds(750));
 			std::cout << "?" << std::endl;
 			std::this_thread::sleep_for(std::chrono::milliseconds(1500));
-			return 0;
+			exit(0);
 		}
 	}
 

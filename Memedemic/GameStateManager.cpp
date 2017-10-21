@@ -623,9 +623,15 @@ int GameStateManager::epidemicCard() {
 
 	setViralQuotient(++viralQuotient);
 
-	int card = infectionCards.back();
-	infectionCards.pop_back();
-	std::string color = returnLocSection(card);
+	//int card = infectionCards.back();
+	//infectionCards.pop_back();
+	//std::string color = returnLocSection(card);
+	std::random_device rd;
+	std::mt19937 eng(rd());
+	std::uniform_int_distribution<> distr(0, 23);
+	int infectionLoc = distr(eng);
+	std::string color = returnLocSection(infectionLoc);
+
 	int meme;
 	if (color == "&") {
 		meme = 0;
@@ -636,10 +642,10 @@ int GameStateManager::epidemicCard() {
     } else if (color == "@") {
 		meme = 3;
     }
-	if (board.getCure(card) != 2) {
-		infect(card, meme, 3);
-		std::vector<int> vec = {card};
-		incrementInfect(card, vec, meme, 0);
+	if (board.getCure(meme) != 2) {
+		infect(infectionLoc, meme, 3);
+		std::vector<int> vec = {infectionLoc};
+		incrementInfect(infectionLoc, vec, meme, 0);
 		auto rng = std::default_random_engine {};
         std::shuffle(std::begin(infectionCards), std::end(infectionCards), rng);
 	}
@@ -705,7 +711,7 @@ int GameStateManager::autoSave(std::string filename = "autosave.txt") {
 	else return -1;
 }
 
-int GameStateManager::incrementInfect(int loca, std::vector<int> track, int meme, int outbreakTrackIncremented) {
+int GameStateManager::incrementInfect(int loca, std::vector<int> &track, int meme, int outbreakTrackIncremented) {
 	//returns 1 if the track counter has been incremented this turn, 0 if not
 	//check if the location has already been infected this cycle
 	for(int i = 0; i < track.size()-1; i++)
@@ -766,7 +772,6 @@ int GameStateManager::incrementInfect(int loca, std::vector<int> track, int meme
 		{
 			track.push_back(adja[i]);
 			incrementInfect(adja[i], track, meme, 1);
-			track.pop_back();
 		}
 		return 1;
 	}

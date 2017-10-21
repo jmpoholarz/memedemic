@@ -75,7 +75,7 @@ int setupNewGame(GameStateManager& gsm) {
 	} while (!(playerCount > 0 && playerCount < 5));
 	// Set players at start positions, etc.
 	gsm.setupDeck();
-	gsm.setupPlayers(playerCount);
+	gsm.setupPlayers(playerCount, false);
 	// Prompt player names
 	for (int i = 0; i < playerCount; i++) {
 		bool isValidName = false;

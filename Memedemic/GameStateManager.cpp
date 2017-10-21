@@ -67,7 +67,7 @@ void GameStateManager::setupPlayers(int numPlayers, bool loadingGame) {
 		// Insert Epidemic cards
 		std::random_device rd;
 		std::mt19937 eng(rd());
-		std::uniform_int_distribution<> distr(0, cards.size());
+		std::uniform_int_distribution<> distr(0, cards.size() - 1);
 		for (int i = 0; i < 6; i++) {
 			cards.insert(cards.begin() + distr(eng), 29);
 		}
@@ -77,7 +77,7 @@ void GameStateManager::setupPlayers(int numPlayers, bool loadingGame) {
 }
 
 void GameStateManager::setupDeck() {
-    std::vector<int> values(24, 0);
+    /*std::vector<int> values(24, 0);
     std::random_device rd;
     std::mt19937 eng(rd());
     std::uniform_int_distribution<> distr(0, 23);
@@ -98,7 +98,22 @@ void GameStateManager::setupDeck() {
         i++;
     }
     auto rng = std::default_random_engine {};
-    std::shuffle(std::begin(infectionCards), std::end(infectionCards), rng);
+    std::shuffle(std::begin(infectionCards), std::end(infectionCards), rng);*/
+    std::vector<int> values(24, 0);
+    std::random_device rd;
+    std::mt19937 eng(rd());
+    std::uniform_int_distribution<> distr(0, 23);
+    int i = 0;
+    while (i < 48) {
+        int randomValue = distr(eng);
+        if (values[randomValue] == 2) {
+            continue;
+        } else {
+            cards.push_back(randomValue);
+            values[randomValue] += 1;
+        }
+        i++;
+    }
 }
 
 GameStateManager::~GameStateManager() {

@@ -785,7 +785,7 @@ int GameStateManager::endTurn() {
 	if (playerHasDrawn == 0) {
         int result = drawCards();
         if (result == 1) {
-            announcement = "Drew 2 cards.";
+            announcement = "Drew 2 cards.\n";
         }
 		return result;
 	}
@@ -1239,9 +1239,9 @@ std::string GameStateManager::convertIntToCard(int intCard) {
 std::string GameStateManager::returnLocSection(int loc) {
     if (loc == 16 || loc == 1 || loc == 0 || loc == 2 || loc == 3) {
         return "&";
-    } else if (loc == 17 || loc == 14 || loc == 9 || loc == 13 || loc == 12 || loc == 10 || loc == 11) {
-        return "$";
     } else if (loc == 15 || loc == 8 || loc == 7 || loc == 4 || loc == 6 || loc == 5) {
+        return "$";
+    } else if (loc == 17 || loc == 14 || loc == 9 || loc == 13 || loc == 12 || loc == 10 || loc == 11) {
         return "#";
     } else if (loc == 18 || loc == 20 || loc == 19 || loc == 21 || loc == 22 || loc == 23) {
         return "@";

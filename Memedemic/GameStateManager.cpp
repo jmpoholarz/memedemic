@@ -617,9 +617,7 @@ int GameStateManager::drawCards() {
 	return 0;
 }
 int GameStateManager::epidemicCard() {
-	std::cout << "You drew an epidemic card!" << std::endl;
-	std::cout << "Type any command to continue..." << std::endl;
-	std::cin.ignore();
+	std::cout << "\nYou drew an epidemic card!" << std::endl;
 
 	setViralQuotient(++viralQuotient);
 
@@ -631,8 +629,14 @@ int GameStateManager::epidemicCard() {
 	std::uniform_int_distribution<> distr(0, 23);
 	int infectionLoc = distr(eng);
 	std::string color = returnLocSection(infectionLoc);
-	announcement += "Initial infection location: " + convertIntToCard(infectionLoc) + "\n";
 	int meme;
+
+	std::cout << "The epidemic will infect " + convertIntToCard(infectionLoc) + "!\n";
+	std::cout << "Type any command to continue..." << std::endl;
+
+	std::cin.ignore();
+	std::cin.ignore();
+
 	if (color == "&") {
 		meme = 0;
 	} else if (color == "$") {
@@ -719,6 +723,21 @@ int GameStateManager::incrementInfect(int loca, std::vector<int> &track, int mem
 		if(loca == track[i] && track.size() != 1)
 			return 1;
 	}
+	std::vector<int> firewallLocations;
+	for (Player * player : players) {
+		if (player->getPlayerRole() == FIREWALL) {
+			std::vector<int> newLocations = locations.getAdjacentLocations(player->getPlayerLocation());
+			for (int loc : newLocations) {
+				firewallLocations.push_back(loc);
+			}
+			firewallLocations.push_back(player->getPlayerLocation());
+		}
+	}
+	for (int loc : firewallLocations) {
+		if (loca == loc) {
+			return 0;
+		}
+	}
 	//determine which meme to use based on the origin of this infection cycle
 	switch(track[0]){
 		case TUMBLR:
@@ -785,7 +804,7 @@ int GameStateManager::endTurn() {
 	if (playerHasDrawn == 0) {
         int result = drawCards();
         if (result == 1) {
-            announcement = "Drew 2 cards.";
+            announcement = "Drew 2 cards.\n";
         }
 		return result;
 	}
@@ -812,7 +831,27 @@ int GameStateManager::nextTurn() {
 	{
 		//choose the location
 		int loca = distr(eng);
-		announcement += "Initial infection location: " + convertIntToCard(loca) + "\n";
+
+		bool message = true;
+		std::vector<int> firewallLocations;
+		for (Player * player : players) {
+			if (player->getPlayerRole() == FIREWALL) {
+				std::vector<int> newLocations = locations.getAdjacentLocations(player->getPlayerLocation());
+				for (int loc : newLocations) {
+					firewallLocations.push_back(loc);
+				}
+				firewallLocations.push_back(player->getPlayerLocation());
+			}
+		}
+		for (int loc : firewallLocations) {
+			if (loca == loc) {
+				message = false;
+			}
+		}
+		if (message == true) {
+			announcement += "Initial infection location: " + convertIntToCard(loca) + "\n";
+		}
+
 		std::vector<int> locas;
 		locas.push_back(loca);
 		int meme = 0;
@@ -897,7 +936,21 @@ int GameStateManager::initialInfection() {
 	return 0;
 }
 int GameStateManager::infect(int location, int meme, int count) {
-
+	std::vector<int> firewallLocations;
+	for (Player * player : players) {
+		if (player->getPlayerRole() == FIREWALL) {
+			std::vector<int> newLocations = locations.getAdjacentLocations(player->getPlayerLocation());
+			for (int loc : newLocations) {
+				firewallLocations.push_back(loc);
+			}
+			firewallLocations.push_back(player->getPlayerLocation());
+		}
+	}
+	for (int loc : firewallLocations) {
+		if (location == loc) {
+			return 0;
+		}
+	}
 	// Decrements number of cubes available for that meme
 	// If it's less than 0 than game lost
 	cubesLeft[meme] = cubesLeft[meme] - count;
@@ -1166,7 +1219,6 @@ int GameStateManager::endGame() {
 		//checks cubesLeft array to see if there are any cubes left for a meme
 		//if not then the game is lost
 		for (int i = 0; i < 4; i++) {
-			std::cout << i << ": " << cubesLeft[i] << std::endl;
 			if (cubesLeft[i] < 0) {
 				system("cls||clear");
 				board.printBoard();
@@ -1255,9 +1307,9 @@ std::string GameStateManager::convertIntToCard(int intCard) {
 std::string GameStateManager::returnLocSection(int loc) {
     if (loc == 16 || loc == 1 || loc == 0 || loc == 2 || loc == 3) {
         return "&";
-    } else if (loc == 17 || loc == 14 || loc == 9 || loc == 13 || loc == 12 || loc == 10 || loc == 11) {
-        return "$";
     } else if (loc == 15 || loc == 8 || loc == 7 || loc == 4 || loc == 6 || loc == 5) {
+        return "$";
+    } else if (loc == 17 || loc == 14 || loc == 9 || loc == 13 || loc == 12 || loc == 10 || loc == 11) {
         return "#";
     } else if (loc == 18 || loc == 20 || loc == 19 || loc == 21 || loc == 22 || loc == 23) {
         return "@";

@@ -17,6 +17,8 @@ void Screen::run() {
 		system("cls||clear");
 		// Display the current board
 		showBoard();
+		std::cout << "Player " << gsm.getCurrentPlayerNumber()+1 << "\t" << gsm.getCurrentPlayer().getPlayerName() << " - "
+			<< convertRole(gsm.getCurrentPlayer().getPlayerRole()) << "\n                                                          Actions left: " << gsm.getActionsRemaining() << "\n";
 
 		// If there is an announcement, print it!!
 		if (gsm.announcement != "")
@@ -38,4 +40,19 @@ void Screen::showBoard() {
 
 std::string Screen::sendCommand(std::string command) {
 	return parser.parse(command);
+}
+
+std::string Screen::convertRole(int role) {
+	if (role == 0)
+		return "Professor";
+	else if (role == 1)
+		return "Hacker";
+	else if (role == 2)
+		return "Moderator";
+	else if (role == 3)
+		return "Router";
+	else if (role == 4)
+		return "Firewall";
+	else if (role == 5)
+		return "Millenial";
 }

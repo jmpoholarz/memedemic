@@ -896,6 +896,12 @@ int GameStateManager::infect(int location, int meme, int count) {
 	// Decrements number of cubes available for that meme
 	// If it's less than 0 than game lost
 	cubesLeft[meme] = cubesLeft[meme] - count;
+	if (cubesLeft[meme] < 4) { 
+		std::string warning = "Warning: Meme ";
+		warning += meme + 49;
+		warning += " is spreading dangerously!\n";
+		announcement += warning;
+	}
 	if (cubesLeft[meme] < 0) {
 		endGame();
 	}
@@ -917,6 +923,15 @@ int GameStateManager::getViralQuotient() {
 Board& GameStateManager::getBoard() {
 	return board;
 }
+
+Player& GameStateManager::getCurrentPlayer() {
+	return getPlayer(currentPlayer);
+}
+
+int GameStateManager::getCurrentPlayerNumber() {
+	return currentPlayer;
+}
+
 Player& GameStateManager::getPlayer(int index) {
 	return *(players[index]);
 }

@@ -17,6 +17,10 @@ void Screen::run() {
 		system("cls||clear");
 		// Display the current board
 		showBoard();
+
+		// If there is an announcement, print it!!
+		if (gsm.announcement != "")
+			std::cout << gsm.announcement << std::endl;
 		// Print response of output to user
 		std::cout << response << std::endl;
 		gsm.saveGame("autosave.txt");

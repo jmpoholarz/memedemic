@@ -617,7 +617,10 @@ int GameStateManager::drawCards() {
 	return 0;
 }
 int GameStateManager::epidemicCard() {
-	std::cout << "You drew an epidemic card" << std::endl;
+	std::cout << "You drew an epidemic card!" << std::endl;
+	std::cout << "Type any command to continue..." << std::endl;
+	std::cin.ignore();
+
 	setViralQuotient(++viralQuotient);
 
 	int card = infectionCards.back();

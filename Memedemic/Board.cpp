@@ -511,7 +511,7 @@ void Board::printViralQuotient() {
 }
 
 void Board::printCures() {
-	std::cout << "Cures: ";
+	std::cout << "Filter:";
 	for (int i = 0; i < 4; i++) {
 		if (cures[i] == 1) {
 			std::cout << "C";
@@ -520,7 +520,16 @@ void Board::printCures() {
 			std::cout << "E";
 		}
 		else {
-			std::cout << "_";
+			switch (i) {
+			case 0: std::cout << "&";
+				break;
+			case 1: std::cout << "$";
+				break;
+			case 2: std::cout << "#";
+				break;
+			default: std::cout << "@";
+				break;
+			}
 		}
 		if (i != 3) {
 			std::cout << " ";

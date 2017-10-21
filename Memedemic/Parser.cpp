@@ -786,10 +786,10 @@ std::string Parser::getUsage(std::string command) {
 		return "ban <number of meme>";
 	}
 	else if (command == "give") {
-		return "give <card name> <player #>";
+		return "give <card #> <player #>";
 	}
 	else if (command == "take") {
-		return "take <card name> <player #>";
+		return "take <card #> <player #>";
 	}
 	else if (command == "filter") {
 		return "filter <card1> <card2> <card3> <card4> <card5>";

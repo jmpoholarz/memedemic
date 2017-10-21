@@ -405,10 +405,10 @@ int GameStateManager::developMemeFilter(int card1, int card2, int card3,
             card3Section == card4Section && card4Section == "&") {
             memeNumber = 0;
         } else if (card1Section == card2Section && card2Section == card3Section &&
-            card3Section == card4Section && card4Section == "#") {
+            card3Section == card4Section && card4Section == "$") {
             memeNumber = 1;
         } else if (card1Section == card2Section && card2Section == card3Section &&
-            card3Section == card4Section && card4Section == "$") {
+            card3Section == card4Section && card4Section == "#") {
             memeNumber = 2;
         } else if (card1Section == card2Section && card2Section == card3Section &&
             card3Section == card4Section && card4Section == "@") {
@@ -433,11 +433,11 @@ int GameStateManager::developMemeFilter(int card1, int card2, int card3,
             memeNumber = 0;
         } else if (card1Section == card2Section && card2Section == card3Section &&
             card3Section == card4Section && card4Section == card5Section &&
-            card5Section == "#") {
+            card5Section == "$") {
             memeNumber = 1;
         } else if (card1Section == card2Section && card2Section == card3Section &&
             card3Section == card4Section && card4Section == card5Section &&
-            card5Section == "$") {
+            card5Section == "#") {
             memeNumber = 2;
         } else if (card1Section == card2Section && card2Section == card3Section &&
             card3Section == card4Section && card4Section == card5Section &&
@@ -635,9 +635,9 @@ int GameStateManager::epidemicCard() {
 	int meme;
 	if (color == "&") {
 		meme = 0;
-	} else if (color == "#") {
-		meme = 1;
 	} else if (color == "$") {
+		meme = 1;
+	} else if (color == "#") {
      	meme = 2;
     } else if (color == "@") {
 		meme = 3;
@@ -1236,9 +1236,9 @@ std::string GameStateManager::returnLocSection(int loc) {
     if (loc == 16 || loc == 1 || loc == 0 || loc == 2 || loc == 3) {
         return "&";
     } else if (loc == 17 || loc == 14 || loc == 9 || loc == 13 || loc == 12 || loc == 10 || loc == 11) {
-        return "#";
-    } else if (loc == 15 || loc == 8 || loc == 7 || loc == 4 || loc == 6 || loc == 5) {
         return "$";
+    } else if (loc == 15 || loc == 8 || loc == 7 || loc == 4 || loc == 6 || loc == 5) {
+        return "#";
     } else if (loc == 18 || loc == 20 || loc == 19 || loc == 21 || loc == 22 || loc == 23) {
         return "@";
     } else {

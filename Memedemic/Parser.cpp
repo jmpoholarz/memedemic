@@ -113,6 +113,24 @@ std::string Parser::parse(std::string command) {
 					"\t- Government Grant - Build a free CMC Server on any location\n"
 					"\t\t of the board";
 			}
+			else if (tokens[1] == "roles") {
+				return "Now select a role from the following (1-6):\n"
+					"\t1. The Professor\n"
+					"\t\t> May build a research station at any time.\n"
+					"\t\t> May discard a card to move to any city.\n"
+					"\t2. The H4cker\n"
+					"\t\t> Needs only 4 cards to develop a meme filter.\n"
+					"\t3. The Moderator\n"
+					"\t\t> Removes memes entirely when banning them from a site\n"
+					"\t\t> Auto-bans filtered memes from visited sites.\n"
+					"\t4. The Router\n"
+					"\t\t> May use an action to move another player.\n"
+					"\t\t> May move a player to another player's location\n"
+					"\t5. The Firewall\n"
+					"\t\t> Prevents the spread of memes to the current and adjacent sites\n"
+					"\t6. The Millenial\n"
+					"\t\t> When in the same location as another player, may trade held cards\n";
+			}
 			else if (tokens[1] == "outbreak") {
 				return "Use this to view more information on the Outbreak Track\n";
 			}

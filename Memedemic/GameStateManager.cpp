@@ -278,6 +278,7 @@ int GameStateManager::banMeme(int memeNumber) {
 		else {
 			for (int i = 0; i < numberOfRemainingCubes; i++) {
 				board.removeMemeCube(players[currentPlayer]->getPlayerLocation(), memeNumber);
+				cubesLeft[memeNumber]++;
 			}
 			locations.setMemeStatus(players[currentPlayer]->getPlayerLocation(), memeNumber, 0);
 
@@ -304,10 +305,12 @@ int GameStateManager::banMeme(int memeNumber) {
 				int numMemes = board.getLocation(players[currentPlayer]->getPlayerLocation()).memes[memeNumber];
 				for (int count = 0; count < numMemes; count++) {
 					board.removeMemeCube(players[currentPlayer]->getPlayerLocation(), memeNumber);
+					cubesLeft[memeNumber]++;
 				}
 			}
 			else {
 				board.removeMemeCube(players[currentPlayer]->getPlayerLocation(), memeNumber);
+				cubesLeft[memeNumber]++;
 				//locations.setMemeStatus(memeNumber, numberOfRemainingCubes - 1,
 				//	players[currentPlayer]->getPlayerLocation());
 			}

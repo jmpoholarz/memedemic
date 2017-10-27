@@ -15,6 +15,8 @@ public:
 	Board();
 	~Board();
 
+	std::vector<BoardLocation> locations;
+
 	void setupPlayers(int players);
 	void printBoard();
 	void addMemeCubes(int loc, int meme, int count);
@@ -43,7 +45,6 @@ public:
 	void setActionsRemaining(int value);
 
 private:
-	std::vector<BoardLocation> locations;
 
 	std::vector<std::string> playerRoles;
 

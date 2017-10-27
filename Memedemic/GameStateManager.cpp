@@ -264,6 +264,10 @@ int GameStateManager::moveOtherPlayer(int playerToMove, int location) {
 }
 
 int GameStateManager::banMeme(int memeNumber) {
+    // Make sure player has actions remaining
+    /*if (actionsRemaining <= 0) {
+        return 0;
+    }*/
 	// Meme already eradicated
 	if (board.getCure(memeNumber == 2)) {
 		return -1;
@@ -280,12 +284,13 @@ int GameStateManager::banMeme(int memeNumber) {
 				board.removeMemeCube(players[currentPlayer]->getPlayerLocation(), memeNumber);
 				cubesLeft[memeNumber]++;
 			}
-			locations.setMemeStatus(players[currentPlayer]->getPlayerLocation(), memeNumber, 0);
+			//locations.setMemeStatus(memeNumber, 0, players[currentPlayer]->getPlayerLocation());
+            board.locations[players[currentPlayer]->getPlayerLocation()].memes[memeNumber] = 0;
 
 			for (int i = 0; i < 24; i++) {
-				if (locations.getMemeStatus(players[currentPlayer]->getPlayerLocation())[memeNumber] != 0) {
-					break;
-				}
+                if (board.locations[players[currentPlayer]->getPlayerLocation()].memes[memeNumber] != 0) {
+                    break;
+                }
 				if (i == 23) {
 					board.eradicateMeme(memeNumber);
 				}
@@ -301,13 +306,16 @@ int GameStateManager::banMeme(int memeNumber) {
 			return -2;
 		}
 		else {
-			if (players[currentPlayer]->getPlayerRole() == MODERATOR) {
+			/*if (players[currentPlayer]->getPlayerRole() == MODERATOR) {
 				int numMemes = board.getLocation(players[currentPlayer]->getPlayerLocation()).memes[memeNumber];
 				for (int count = 0; count < numMemes; count++) {
 					board.removeMemeCube(players[currentPlayer]->getPlayerLocation(), memeNumber);
 					cubesLeft[memeNumber]++;
 				}
-			}
+			}*/
+            if (0 == 1) {
+
+            }
 			else {
 				board.removeMemeCube(players[currentPlayer]->getPlayerLocation(), memeNumber);
 				cubesLeft[memeNumber]++;
@@ -568,7 +576,7 @@ int GameStateManager::shareCard(int direction, int card, int otherPlayer) {
 	// Taking
 	else if (direction == -1) {
 		// Check for valid card
-		if (card < 0 || card >= players[currentPlayer]->getPlayerCards().size()) {
+		if (card < 0 || card >= players[otherPlayer]->getPlayerCards().size()) {
 			return -2;
 		}
 

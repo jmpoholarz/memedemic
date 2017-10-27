@@ -265,9 +265,9 @@ int GameStateManager::moveOtherPlayer(int playerToMove, int location) {
 
 int GameStateManager::banMeme(int memeNumber) {
     // Make sure player has actions remaining
-    /*if (actionsRemaining <= 0) {
+    if (actionsRemaining <= 0) {
         return 0;
-    }*/
+    }
 	// Meme already eradicated
 	if (board.getCure(memeNumber == 2)) {
 		return -1;
@@ -306,16 +306,13 @@ int GameStateManager::banMeme(int memeNumber) {
 			return -2;
 		}
 		else {
-			/*if (players[currentPlayer]->getPlayerRole() == MODERATOR) {
+			if (players[currentPlayer]->getPlayerRole() == MODERATOR) {
 				int numMemes = board.getLocation(players[currentPlayer]->getPlayerLocation()).memes[memeNumber];
 				for (int count = 0; count < numMemes; count++) {
 					board.removeMemeCube(players[currentPlayer]->getPlayerLocation(), memeNumber);
 					cubesLeft[memeNumber]++;
 				}
-			}*/
-            if (0 == 1) {
-
-            }
+			}
 			else {
 				board.removeMemeCube(players[currentPlayer]->getPlayerLocation(), memeNumber);
 				cubesLeft[memeNumber]++;
@@ -487,6 +484,7 @@ int GameStateManager::developMemeFilter(int card1, int card2, int card3,
         discardPile.push_back(card5Card);
     }
 	board.addCure(memeNumber);
+    setActionsRemaining(--actionsRemaining);
 	return 1;
 }
 int GameStateManager::buildCMCServer() {

@@ -20,9 +20,9 @@ std::string Parser::parse(std::string command) {
 		
 		if (1){ //str != " ") {
 			// Make all characters lowercase
-			/*for (int i = 0; i < str.length(); i++) {
+			for (int i = 0; i < str.length(); i++) {
 				str[i] = std::tolower(str[i]);
-			}*/
+			}
 			tokens.push_back(str);
 		}
 	}
@@ -362,7 +362,7 @@ std::string Parser::parse(std::string command) {
 		}
 
 		// Attempt to give card
-		int cardIndex = atoi(tokens[1].c_str()); //- 1;
+		int cardIndex = atoi(tokens[1].c_str()) - 1;
 		int otherPlayer = atoi(tokens[2].c_str()) - 1;
 		int successful = gsm.shareCard(1, cardIndex, otherPlayer);
 		if (successful == 1)
@@ -399,7 +399,7 @@ std::string Parser::parse(std::string command) {
 			return "Incorrect usage of give: " + getUsage("take");
 		}
 		// Attempt to take card
-		int cardIndex = atoi(tokens[1].c_str()); //- 1;
+		int cardIndex = atoi(tokens[1].c_str()) - 1;
 		int otherPlayer = atoi(tokens[2].c_str()) - 1;
 		int successful = gsm.shareCard(-1, cardIndex, otherPlayer);
 		if (successful == 1)

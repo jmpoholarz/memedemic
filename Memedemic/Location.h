@@ -22,7 +22,7 @@ private:
 		std::string siteName;
 		std::vector<int> adjacencies;
 		std::vector<site> a;
-		std::vector<int> memeStatus;
+		std::vector<int> memeStatus;  // do not use xd
 		bool CMCServer;	
 	};
 	std::list<site> sites;

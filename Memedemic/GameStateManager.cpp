@@ -138,11 +138,11 @@ int GameStateManager::movePlayer(int location) {
 		players[currentPlayer]->setPlayerLocation((CardNames)location);
 		std::cout << players[currentPlayer]->getPlayerLocation() << std::endl;
 		setActionsRemaining(--actionsRemaining);
-		return 1;
+		return -3;
 	}
 	// Or if player holding the card for the destination
 	else if (players[currentPlayer]->holdsNCards(location, 1)) {
-		players[currentPlayer]->removeNCards(location, 1);
+		//players[currentPlayer]->removeNCards(location, 1);
 		players[currentPlayer]->setPlayerLocation(location);
 		board.movePlayer(location, currentPlayer);
 		setActionsRemaining(--actionsRemaining);
@@ -150,7 +150,7 @@ int GameStateManager::movePlayer(int location) {
 	}
 	// Or if the player is holding the current location
 	else if (players[currentPlayer]->holdsNCards(players[currentPlayer]->getPlayerLocation(), 1)) {
-		players[currentPlayer]->removeNCards(players[currentPlayer]->getPlayerLocation(), 1);
+		//players[currentPlayer]->removeNCards(players[currentPlayer]->getPlayerLocation(), 1);
 		players[currentPlayer]->setPlayerLocation(location);
 		board.movePlayer(location, currentPlayer);
 		setActionsRemaining(--actionsRemaining);
@@ -264,6 +264,10 @@ int GameStateManager::moveOtherPlayer(int playerToMove, int location) {
 }
 
 int GameStateManager::banMeme(int memeNumber) {
+    // Make sure player has actions remaining
+    /*if (actionsRemaining <= 0) {
+        return 0;
+    }*/
 	// Meme already eradicated
 	if (board.getCure(memeNumber == 2)) {
 		return -1;
@@ -274,18 +278,18 @@ int GameStateManager::banMeme(int memeNumber) {
 		// No meme present
 		if (numberOfRemainingCubes == 0) {
 			return -2;
-		}
-		else {
+		} else {
 			for (int i = 0; i < numberOfRemainingCubes; i++) {
 				board.removeMemeCube(players[currentPlayer]->getPlayerLocation(), memeNumber);
 				cubesLeft[memeNumber]++;
 			}
-			locations.setMemeStatus(players[currentPlayer]->getPlayerLocation(), memeNumber, 0);
+			//locations.setMemeStatus(memeNumber, 0, players[currentPlayer]->getPlayerLocation());
+            board.locations[players[currentPlayer]->getPlayerLocation()].memes[memeNumber] = 0;
 
 			for (int i = 0; i < 24; i++) {
-				if (locations.getMemeStatus(players[currentPlayer]->getPlayerLocation())[memeNumber] != 0) {
-					break;
-				}
+                if (board.locations[players[currentPlayer]->getPlayerLocation()].memes[memeNumber] != 0) {
+                    break;
+                }
 				if (i == 23) {
 					board.eradicateMeme(memeNumber);
 				}
@@ -293,22 +297,28 @@ int GameStateManager::banMeme(int memeNumber) {
 			setActionsRemaining(--actionsRemaining);
 			return 1;
 		}
-	}
-	else {
+	} else {
 		int numberOfRemainingCubes = board.getLocation(players[currentPlayer]->getPlayerLocation()).memes[memeNumber];
 		// No meme present
 		if (numberOfRemainingCubes == 0) {
 			return -2;
 		}
 		else {
-			if (players[currentPlayer]->getPlayerRole() == MODERATOR) {
+			/*if (players[currentPlayer]->getPlayerRole() == MODERATOR) {
 				int numMemes = board.getLocation(players[currentPlayer]->getPlayerLocation()).memes[memeNumber];
 				for (int count = 0; count < numMemes; count++) {
 					board.removeMemeCube(players[currentPlayer]->getPlayerLocation(), memeNumber);
 					cubesLeft[memeNumber]++;
 				}
-			}
+
+
+
+			}*/
+            if (0 == 1) {
+
+            }
 			else {
+
 				board.removeMemeCube(players[currentPlayer]->getPlayerLocation(), memeNumber);
 				cubesLeft[memeNumber]++;
 				//locations.setMemeStatus(memeNumber, numberOfRemainingCubes - 1,
@@ -319,8 +329,7 @@ int GameStateManager::banMeme(int memeNumber) {
 		}
 	}
 }
-int GameStateManager::developMemeFilter(int card1, int card2, int card3,
-	int card4, int card5) {
+int GameStateManager::developMemeFilter(int card1, int card2, int card3, int card4, int card5) {
     // Check if player has actions remaining
     if (actionsRemaining == 0) {
         return 0;
@@ -328,24 +337,22 @@ int GameStateManager::developMemeFilter(int card1, int card2, int card3,
 
     // Check that user is at a CMC server
     if (board.getLocation(players[currentPlayer]->getPlayerLocation()).cmcServer == false) {
-        return -5;
+        //return -5;
     }
 	// Note: card5 might be empty
 	//check if the current player is allowed to make a filter without a 5th card
-	if(players[currentPlayer]->getPlayerRole() != HACKER && card5 == -1)
-	{
+	if (players[currentPlayer]->getPlayerRole() != HACKER && card5 == -1) {
 		//invalid number of cards for role
 		return -2;
 	}
 	//check the usual requirement on number of cards
-	if(card1 == -1 || card2 == -1 || card3 == -1 || card4 == -1)
-	{
+	if (card1 == -1 || card2 == -1 || card3 == -1 || card4 == -1) {
 		//invalid cards for any role
 		return -2;
 	}
 
     // Check for duplicates of the same card
-    if (card1 == card2 || card1 == card3 || card1 == card4 || card1 == card5) {
+    /* (card1 == card2 || card1 == card3 || card1 == card4 || card1 == card5) {
         return -6;
     } else if (card2 == card3 || card2 == card4 || card2 == card5) {
         return -6;
@@ -353,7 +360,7 @@ int GameStateManager::developMemeFilter(int card1, int card2, int card3,
         return -6;
     } else if (card4 == card5) {
         return -6;
-    }
+    }*/
 
 
     // Convert hand numbers to card numbers
@@ -404,7 +411,7 @@ int GameStateManager::developMemeFilter(int card1, int card2, int card3,
         }
 
 	    // Check that all specified cards are from the same section
-        if (card1Section == card2Section && card2Section == card3Section &&
+        /*if (card1Section == card2Section && card2Section == card3Section &&
             card3Section == card4Section && card4Section == "&") {
             memeNumber = 0;
         } else if (card1Section == card2Section && card2Section == card3Section &&
@@ -418,7 +425,7 @@ int GameStateManager::developMemeFilter(int card1, int card2, int card3,
             memeNumber = 3;
         } else {
             return -1;
-        }
+        }*/
     } else {
         // Check that player has the specified cards in their hand
         if (!players[currentPlayer]->holdsNCards(card1Card, 1) ||
@@ -495,8 +502,8 @@ int GameStateManager::buildCMCServer() {
 		if (board.getLocation(i).cmcServer == true)
 			CMCCount++;
 	}
-	if (CMCCount >= 6)
-		return -2;
+	/*if (CMCCount >= 6)
+		return -2;*/
 	// Check if player holding the current location card
 	if (!(players[currentPlayer]->holdsNCards(players[currentPlayer]->getPlayerLocation(), 1))
             && players[currentPlayer]->getPlayerRole() != MEMESTUDIESPROFESSOR) {
@@ -568,7 +575,7 @@ int GameStateManager::shareCard(int direction, int card, int otherPlayer) {
 	// Taking
 	else if (direction == -1) {
 		// Check for valid card
-		if (card < 0 || card >= players[currentPlayer]->getPlayerCards().size()) {
+		if (card < 0 || card >= players[otherPlayer]->getPlayerCards().size()) {
 			return -2;
 		}
 
@@ -655,7 +662,7 @@ int GameStateManager::epidemicCard() {
 	std::string color = returnLocSection(infectionLoc);
 	int meme;
 
-	std::cout << "The epidemic will infect " + convertIntToCard(infectionLoc) + "!\n";
+	//std::cout << "The epidemic will infect " + convertIntToCard(infectionLoc) + "!\n";
 	std::cout << "Type any command to continue..." << std::endl;
 
 	std::cin.ignore();
@@ -671,9 +678,9 @@ int GameStateManager::epidemicCard() {
 		meme = 3;
     }
 	if (board.getCure(meme) != 2) {
-		infect(infectionLoc, meme, 3);
+		//infect(infectionLoc, meme, 3);
 		std::vector<int> vec = {infectionLoc};
-		incrementInfect(infectionLoc, vec, meme, 0);
+		//incrementInfect(infectionLoc, vec, meme, 0);
 		auto rng = std::default_random_engine {};
         std::shuffle(std::begin(infectionCards), std::end(infectionCards), rng);
 	}
@@ -1039,7 +1046,7 @@ int GameStateManager::setMemeStatus(int meme, int filtered) {
 int GameStateManager::setOutbreakTrack(int value) {
 	outbreakTrack = value;
 	board.setOutbreakTrack(value);
-	endGame();
+	//endGame();
 	return 0;
 }
 int GameStateManager::setViralQuotient(int value) {
@@ -1215,7 +1222,6 @@ int GameStateManager::loadGame(std::string filename) {
 
 
 int GameStateManager::endGame() {
-	std::cout << "in end game" << std::endl;
 	bool won = false;
 	for (int i = 0; i < 4; i++) {
 		if (board.getCure(i) == 0) {
@@ -1234,12 +1240,12 @@ int GameStateManager::endGame() {
 		return 0;
 	}
 
-	if (outbreakTrack == 8) {
+	/*if (outbreakTrack == 8) {
 		system("cls||clear");
 		board.printBoard();
 		std::cout << "The outbreak tracker reached 8! You Lose!" << std::endl;
 		gameEnd = true;
-	} else if (cards.size() < 2) {
+	} else*/ if (cards.size() < 2) {
 		system("cls||clear");
 		board.printBoard();
 		std::cout << "The player card pile reached 0! You lose!" << std::endl;

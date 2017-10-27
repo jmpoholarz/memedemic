@@ -34,6 +34,7 @@ enum CardNames {
 };
 
 enum PlayerRoles {
+	NOTFIREWALL = -2,
 	UNASSIGNED = -1,
 	MEMESTUDIESPROFESSOR = 0,
 	HACKER = 1,

@@ -94,7 +94,7 @@ int setupNewGame(GameStateManager& gsm) {
 			if (!isValidName)
 				std::cout << "Name contained invalid characters." << std::endl;
 		}
-		gsm.getPlayer(i).setPlayerName(playerName);
+		//gsm.getPlayer(i).setPlayerName(playerName);
 
 	}
 	// Prompt player roles
@@ -123,7 +123,11 @@ int setupNewGame(GameStateManager& gsm) {
 			std::getline(std::cin, strRole);
 			if (strRole.length() == 1 && std::isdigit(strRole[0]))
 				roleChoice = atoi(strRole.c_str());
-		} while (!(roleChoice > 0 && roleChoice < 7));
+				if (roleChoice == 7)
+					roleChoice = 0;
+				if (roleChoice == 5)
+					roleChoice = -1;
+		} while (!(roleChoice >= -1 && roleChoice < 8));
 		gsm.getPlayer(i).setPlayerRole(PlayerRoles(roleChoice - 1));
 	}
 

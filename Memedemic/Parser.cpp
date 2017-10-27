@@ -20,9 +20,9 @@ std::string Parser::parse(std::string command) {
 		
 		if (1){ //str != " ") {
 			// Make all characters lowercase
-			for (int i = 0; i < str.length(); i++) {
+			/*for (int i = 0; i < str.length(); i++) {
 				str[i] = std::tolower(str[i]);
-			}
+			}*/
 			tokens.push_back(str);
 		}
 	}
@@ -347,7 +347,7 @@ std::string Parser::parse(std::string command) {
 		}
 		else if (successful == -1) {
 			// Meme already filtered - doesn't exist on map anymore
-			return "Meme " + tokens[1] + " has already been filtered.";
+			return "Meme " + tokens[1] + " has already been eradicated.";
 		}
 		else if (successful == -2) {
 			// Meme not at current location
@@ -362,7 +362,7 @@ std::string Parser::parse(std::string command) {
 		}
 
 		// Attempt to give card
-		int cardIndex = atoi(tokens[1].c_str()) - 1;
+		int cardIndex = atoi(tokens[1].c_str()); //- 1;
 		int otherPlayer = atoi(tokens[2].c_str()) - 1;
 		int successful = gsm.shareCard(1, cardIndex, otherPlayer);
 		if (successful == 1)
@@ -399,7 +399,7 @@ std::string Parser::parse(std::string command) {
 			return "Incorrect usage of give: " + getUsage("take");
 		}
 		// Attempt to take card
-		int cardIndex = atoi(tokens[1].c_str()) - 1;
+		int cardIndex = atoi(tokens[1].c_str()); //- 1;
 		int otherPlayer = atoi(tokens[2].c_str()) - 1;
 		int successful = gsm.shareCard(-1, cardIndex, otherPlayer);
 		if (successful == 1)
@@ -647,7 +647,8 @@ return "Incorrect usage of cmc: " + getUsage("cmc");
 		}
 		// Attempt to start new game
 		
-		return "__main_menu";
+		//return "__main_menu";
+		
 	}
 	else if (tokens[0] == "save") {
 		// Check for wrong number of arguments
@@ -826,7 +827,7 @@ std::string Parser::getUsage(std::string command) {
 		return "discard <card position in hand>";
 	}
 	else if (command == "cards") {
-		return "cards <player name>";
+		return "cards <player #>";
 	}
 	else if (command == "end") {
 		return "end turn";

@@ -598,14 +598,11 @@ int GameStateManager::drawCards() {
 
 	if (playerHasDrawn) {
 		return -3;
-	//} else if (playerHandSize == 7) {
-	//    return -1;
-	//} else if (playerHandSize >= 8) {
-	//	  return -2;
-	} else if (playerHandSize == 6) {
-		return -1;
-	} else if (playerHandSize >= 7) {
-		return -2;
+	// SEEDED BUG: No cap limit
+	//} else if (playerHandSize == 6) {
+	//	return -1;
+	//} else if (playerHandSize >= 7) {
+	//	return -2;
     } else if (cards.size() < 2) {
         endGame();
     } else if (cards.size() <= 0) {
@@ -844,6 +841,11 @@ int GameStateManager::nextTurn() {
 	setActionsRemaining(4);
 	currentPlayer++;
 	currentPlayer %= players.size();
+
+	// SEEDED BUG: Player 4 is skipped
+	if (currentPlayer == 3) {
+		currentPlayer = 0;
+	}
 
 	// Perhaps print board with each new turn? board->printBoard();
 

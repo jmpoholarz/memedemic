@@ -23,7 +23,7 @@ int mainMenu() {
 			std::cout << "2. Load" << std::endl;
 			std::cout << "3. Quit" << std::endl;
 			std::getline(std::cin, startMenuResponse);
-		} while (!(startMenuResponse == "1" || startMenuResponse == "2" ||
+		} while (!(startMenuResponse == "1" || /*startMenuResponse == "2" ||*/ // SEEDED BUG: Disable load option
 			startMenuResponse == "3"));
 
 		// Perform uniform start-up process

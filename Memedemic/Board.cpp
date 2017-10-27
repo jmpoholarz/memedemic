@@ -415,6 +415,7 @@ void Board::printBoard() {
 	printCMC(11);
 	std::cout << "| ";
 	printPlayerCards();
+	printPlayerCards(); // SEEDED BUG: Print player cards multiple time
 	std::cout << "\n";
 
 	std::cout << "|           |  |           |  |           |  |           | ";

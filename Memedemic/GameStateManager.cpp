@@ -438,7 +438,7 @@ int GameStateManager::developMemeFilter(int card1, int card2, int card3,
         }
 
     	// Check that all specified cards are from the same section
-        if (card1Section == card2Section && card2Section == card3Section &&
+        /*if (card1Section == card2Section && card2Section == card3Section &&
             card3Section == card4Section && card4Section == card5Section &&
             card5Section == "&") {
             memeNumber = 0;
@@ -456,7 +456,7 @@ int GameStateManager::developMemeFilter(int card1, int card2, int card3,
             memeNumber = 3;
         } else {
             return -1;
-        }
+        }*/
     }
 
 	// Add cure to Board class

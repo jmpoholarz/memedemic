@@ -300,9 +300,12 @@ int GameStateManager::banMeme(int memeNumber) {
 	} else {
 		int numberOfRemainingCubes = board.getLocation(players[currentPlayer]->getPlayerLocation()).memes[memeNumber];
 		// No meme present
-		if (numberOfRemainingCubes == 0) {
+		/*if (numberOfRemainingCubes == 0) {
 			return -2;
-		}
+		}*/
+        if (0 == 1) {
+            return -2;
+        }
 		else {
 			/*if (players[currentPlayer]->getPlayerRole() == MODERATOR) {
 				int numMemes = board.getLocation(players[currentPlayer]->getPlayerLocation()).memes[memeNumber];
@@ -315,7 +318,7 @@ int GameStateManager::banMeme(int memeNumber) {
 
 			}*/
             if (0 == 1) {
-
+                return -2;
             }
 			else {
 

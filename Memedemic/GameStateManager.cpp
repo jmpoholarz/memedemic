@@ -138,11 +138,11 @@ int GameStateManager::movePlayer(int location) {
 		players[currentPlayer]->setPlayerLocation((CardNames)location);
 		std::cout << players[currentPlayer]->getPlayerLocation() << std::endl;
 		setActionsRemaining(--actionsRemaining);
-		return 1;
+		return -3;
 	}
 	// Or if player holding the card for the destination
 	else if (players[currentPlayer]->holdsNCards(location, 1)) {
-		players[currentPlayer]->removeNCards(location, 1);
+		//players[currentPlayer]->removeNCards(location, 1);
 		players[currentPlayer]->setPlayerLocation(location);
 		board.movePlayer(location, currentPlayer);
 		setActionsRemaining(--actionsRemaining);
@@ -150,7 +150,7 @@ int GameStateManager::movePlayer(int location) {
 	}
 	// Or if the player is holding the current location
 	else if (players[currentPlayer]->holdsNCards(players[currentPlayer]->getPlayerLocation(), 1)) {
-		players[currentPlayer]->removeNCards(players[currentPlayer]->getPlayerLocation(), 1);
+		//players[currentPlayer]->removeNCards(players[currentPlayer]->getPlayerLocation(), 1);
 		players[currentPlayer]->setPlayerLocation(location);
 		board.movePlayer(location, currentPlayer);
 		setActionsRemaining(--actionsRemaining);
@@ -345,7 +345,7 @@ int GameStateManager::developMemeFilter(int card1, int card2, int card3,
 	}
 
     // Check for duplicates of the same card
-    if (card1 == card2 || card1 == card3 || card1 == card4 || card1 == card5) {
+    /* (card1 == card2 || card1 == card3 || card1 == card4 || card1 == card5) {
         return -6;
     } else if (card2 == card3 || card2 == card4 || card2 == card5) {
         return -6;
@@ -353,7 +353,7 @@ int GameStateManager::developMemeFilter(int card1, int card2, int card3,
         return -6;
     } else if (card4 == card5) {
         return -6;
-    }
+    }*/
 
 
     // Convert hand numbers to card numbers
@@ -404,7 +404,7 @@ int GameStateManager::developMemeFilter(int card1, int card2, int card3,
         }
 
 	    // Check that all specified cards are from the same section
-        if (card1Section == card2Section && card2Section == card3Section &&
+        /*if (card1Section == card2Section && card2Section == card3Section &&
             card3Section == card4Section && card4Section == "&") {
             memeNumber = 0;
         } else if (card1Section == card2Section && card2Section == card3Section &&
@@ -418,7 +418,7 @@ int GameStateManager::developMemeFilter(int card1, int card2, int card3,
             memeNumber = 3;
         } else {
             return -1;
-        }
+        }*/
     } else {
         // Check that player has the specified cards in their hand
         if (!players[currentPlayer]->holdsNCards(card1Card, 1) ||
@@ -495,8 +495,8 @@ int GameStateManager::buildCMCServer() {
 		if (board.getLocation(i).cmcServer == true)
 			CMCCount++;
 	}
-	if (CMCCount >= 6)
-		return -2;
+	/*if (CMCCount >= 6)
+		return -2;*/
 	// Check if player holding the current location card
 	if (!(players[currentPlayer]->holdsNCards(players[currentPlayer]->getPlayerLocation(), 1))
             && players[currentPlayer]->getPlayerRole() != MEMESTUDIESPROFESSOR) {

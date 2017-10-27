@@ -647,7 +647,8 @@ return "Incorrect usage of cmc: " + getUsage("cmc");
 		}
 		// Attempt to start new game
 		
-		return "__main_menu";
+		//return "__main_menu";
+		
 	}
 	else if (tokens[0] == "save") {
 		// Check for wrong number of arguments

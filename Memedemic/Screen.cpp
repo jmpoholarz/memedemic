@@ -45,7 +45,11 @@ std::string Screen::sendCommand(std::string command) {
 }
 
 std::string Screen::convertRole(int role) {
-	if (role == 0)
+	if (role == -2)
+		return "Firewall";
+	else if (role == -1)
+		return "";
+	else if (role == 0)
 		return "Professor";
 	else if (role == 1)
 		return "Hacker";

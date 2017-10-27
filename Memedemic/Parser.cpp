@@ -495,7 +495,7 @@ std::string Parser::parse(std::string command) {
 			return "Incorrect usage of outbreak: " + getUsage("outbreak");
 		}
 		// Try to print outbreak track
-		return 0;
+		return "";
 	}
 	else if (tokens[0] == "viral") {
 		// Check for wrong number of arguments
@@ -503,7 +503,7 @@ std::string Parser::parse(std::string command) {
 			return "Incorrect usage of viral: " + getUsage("viral");
 		}
 		// Try to print viral quotient
-		return 0;
+		return "";
 	}
 	else if (tokens[0] == "meme") {
 		// Check for wrong number of arguments
@@ -511,7 +511,7 @@ std::string Parser::parse(std::string command) {
 			return "Incorrect usage of meme: " + getUsage("meme");
 		}
 		// Attempt to print meme status
-		return 0;
+		return "";
 	}
 	else if (tokens[0] == "players") {
 		// Check for wrong number of arguments
@@ -647,7 +647,8 @@ return "Incorrect usage of cmc: " + getUsage("cmc");
 		}
 		// Attempt to start new game
 		
-		return "__main_menu";
+		//return "__main_menu";
+		
 	}
 	else if (tokens[0] == "save") {
 		// Check for wrong number of arguments

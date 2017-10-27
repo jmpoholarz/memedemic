@@ -278,8 +278,7 @@ int GameStateManager::banMeme(int memeNumber) {
 		// No meme present
 		if (numberOfRemainingCubes == 0) {
 			return -2;
-		}
-		else {
+		} else {
 			for (int i = 0; i < numberOfRemainingCubes; i++) {
 				board.removeMemeCube(players[currentPlayer]->getPlayerLocation(), memeNumber);
 				cubesLeft[memeNumber]++;
@@ -298,13 +297,15 @@ int GameStateManager::banMeme(int memeNumber) {
 			setActionsRemaining(--actionsRemaining);
 			return 1;
 		}
-	}
-	else {
+	} else {
 		int numberOfRemainingCubes = board.getLocation(players[currentPlayer]->getPlayerLocation()).memes[memeNumber];
 		// No meme present
-		if (numberOfRemainingCubes == 0) {
+		/*if (numberOfRemainingCubes == 0) {
 			return -2;
-		}
+		}*/
+        if (0 == 1) {
+            return -2;
+        }
 		else {
 			/*if (players[currentPlayer]->getPlayerRole() == MODERATOR) {
 				int numMemes = board.getLocation(players[currentPlayer]->getPlayerLocation()).memes[memeNumber];
@@ -312,11 +313,15 @@ int GameStateManager::banMeme(int memeNumber) {
 					board.removeMemeCube(players[currentPlayer]->getPlayerLocation(), memeNumber);
 					cubesLeft[memeNumber]++;
 				}
+
+
+
 			}*/
             if (0 == 1) {
-
+                return -2;
             }
 			else {
+
 				board.removeMemeCube(players[currentPlayer]->getPlayerLocation(), memeNumber);
 				cubesLeft[memeNumber]++;
 				//locations.setMemeStatus(memeNumber, numberOfRemainingCubes - 1,
@@ -327,8 +332,7 @@ int GameStateManager::banMeme(int memeNumber) {
 		}
 	}
 }
-int GameStateManager::developMemeFilter(int card1, int card2, int card3,
-	int card4, int card5) {
+int GameStateManager::developMemeFilter(int card1, int card2, int card3, int card4, int card5) {
     // Check if player has actions remaining
     if (actionsRemaining == 0) {
         return 0;
@@ -336,18 +340,16 @@ int GameStateManager::developMemeFilter(int card1, int card2, int card3,
 
     // Check that user is at a CMC server
     if (board.getLocation(players[currentPlayer]->getPlayerLocation()).cmcServer == false) {
-        return -5;
+        //return -5;
     }
 	// Note: card5 might be empty
 	//check if the current player is allowed to make a filter without a 5th card
-	if(players[currentPlayer]->getPlayerRole() != HACKER && card5 == -1)
-	{
+	if (players[currentPlayer]->getPlayerRole() != HACKER && card5 == -1) {
 		//invalid number of cards for role
 		return -2;
 	}
 	//check the usual requirement on number of cards
-	if(card1 == -1 || card2 == -1 || card3 == -1 || card4 == -1)
-	{
+	if (card1 == -1 || card2 == -1 || card3 == -1 || card4 == -1) {
 		//invalid cards for any role
 		return -2;
 	}
@@ -606,14 +608,11 @@ int GameStateManager::drawCards() {
 
 	if (playerHasDrawn) {
 		return -3;
-	//} else if (playerHandSize == 7) {
-	//    return -1;
-	//} else if (playerHandSize >= 8) {
-	//	  return -2;
-	} else if (playerHandSize == 6) {
-		return -1;
-	} else if (playerHandSize >= 7) {
-		return -2;
+	// SEEDED BUG: No cap limit
+	//} else if (playerHandSize == 6) {
+	//	return -1;
+	//} else if (playerHandSize >= 7) {
+	//	return -2;
     } else if (cards.size() < 2) {
         endGame();
     } else if (cards.size() <= 0) {
@@ -666,7 +665,7 @@ int GameStateManager::epidemicCard() {
 	std::string color = returnLocSection(infectionLoc);
 	int meme;
 
-	std::cout << "The epidemic will infect " + convertIntToCard(infectionLoc) + "!\n";
+	//std::cout << "The epidemic will infect " + convertIntToCard(infectionLoc) + "!\n";
 	std::cout << "Type any command to continue..." << std::endl;
 
 	std::cin.ignore();
@@ -682,9 +681,9 @@ int GameStateManager::epidemicCard() {
 		meme = 3;
     }
 	if (board.getCure(meme) != 2) {
-		infect(infectionLoc, meme, 3);
+		//infect(infectionLoc, meme, 3);
 		std::vector<int> vec = {infectionLoc};
-		incrementInfect(infectionLoc, vec, meme, 0);
+		//incrementInfect(infectionLoc, vec, meme, 0);
 		auto rng = std::default_random_engine {};
         std::shuffle(std::begin(infectionCards), std::end(infectionCards), rng);
 	}
@@ -852,6 +851,11 @@ int GameStateManager::nextTurn() {
 	setActionsRemaining(4);
 	currentPlayer++;
 	currentPlayer %= players.size();
+
+	// SEEDED BUG: Player 4 is skipped
+	if (currentPlayer == 3) {
+		currentPlayer = 0;
+	}
 
 	// Perhaps print board with each new turn? board->printBoard();
 
@@ -1045,7 +1049,7 @@ int GameStateManager::setMemeStatus(int meme, int filtered) {
 int GameStateManager::setOutbreakTrack(int value) {
 	outbreakTrack = value;
 	board.setOutbreakTrack(value);
-	endGame();
+	//endGame();
 	return 0;
 }
 int GameStateManager::setViralQuotient(int value) {
@@ -1221,7 +1225,6 @@ int GameStateManager::loadGame(std::string filename) {
 
 
 int GameStateManager::endGame() {
-	std::cout << "in end game" << std::endl;
 	bool won = false;
 	for (int i = 0; i < 4; i++) {
 		if (board.getCure(i) == 0) {
@@ -1240,12 +1243,12 @@ int GameStateManager::endGame() {
 		return 0;
 	}
 
-	if (outbreakTrack == 8) {
+	/*if (outbreakTrack == 8) {
 		system("cls||clear");
 		board.printBoard();
 		std::cout << "The outbreak tracker reached 8! You Lose!" << std::endl;
 		gameEnd = true;
-	} else if (cards.size() < 2) {
+	} else*/ if (cards.size() < 2) {
 		system("cls||clear");
 		board.printBoard();
 		std::cout << "The player card pile reached 0! You lose!" << std::endl;

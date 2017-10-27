@@ -17,8 +17,12 @@ void Screen::run() {
 		system("cls||clear");
 		// Display the current board
 		showBoard();
+
+		// SEEDED BUG: Wrong role is displayed
 		std::cout << "Player " << gsm.getCurrentPlayerNumber()+1 << "\t" << gsm.getCurrentPlayer().getPlayerName() << " - "
-			<< convertRole(gsm.getCurrentPlayer().getPlayerRole()) << "\n                                                          Actions left: " << gsm.getActionsRemaining() << "\n";
+			<< convertRole(0) << "\n                                                          Actions left: " << gsm.getActionsRemaining() << "\n";
+		//std::cout << "Player " << gsm.getCurrentPlayerNumber()+1 << "\t" << gsm.getCurrentPlayer().getPlayerName() << " - "
+		//	<< convertRole(gsm.getCurrentPlayer().getPlayerRole()) << "\n                                                          Actions left: " << gsm.getActionsRemaining() << "\n";
 
 		// If there is an announcement, print it!!
 		if (gsm.announcement != "")
@@ -45,7 +49,11 @@ std::string Screen::sendCommand(std::string command) {
 }
 
 std::string Screen::convertRole(int role) {
-	if (role == 0)
+	if (role == -2)
+		return "Firewall";
+	else if (role == -1)
+		return "";
+	else if (role == 0)
 		return "Professor";
 	else if (role == 1)
 		return "Hacker";

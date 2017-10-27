@@ -94,7 +94,7 @@ int setupNewGame(GameStateManager& gsm) {
 			if (!isValidName)
 				std::cout << "Name contained invalid characters." << std::endl;
 		}
-		gsm.getPlayer(i).setPlayerName(playerName);
+		//gsm.getPlayer(i).setPlayerName(playerName);
 
 	}
 	// Prompt player roles

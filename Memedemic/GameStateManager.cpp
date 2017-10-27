@@ -414,21 +414,17 @@ int GameStateManager::developMemeFilter(int card1, int card2, int card3, int car
         }
 
 	    // Check that all specified cards are from the same section
-        /*if (card1Section == card2Section && card2Section == card3Section &&
-            card3Section == card4Section && card4Section == "&") {
+        if (card1Section == "&") {
             memeNumber = 0;
-        } else if (card1Section == card2Section && card2Section == card3Section &&
-            card3Section == card4Section && card4Section == "$") {
+        } else if (card1Section == "$") {
             memeNumber = 1;
-        } else if (card1Section == card2Section && card2Section == card3Section &&
-            card3Section == card4Section && card4Section == "#") {
+        } else if (card1Section == "#") {
             memeNumber = 2;
-        } else if (card1Section == card2Section && card2Section == card3Section &&
-            card3Section == card4Section && card4Section == "@") {
+        } else if (card1Section == "@") {
             memeNumber = 3;
         } else {
             return -1;
-        }*/
+        }
     } else {
         // Check that player has the specified cards in their hand
         if (!players[currentPlayer]->holdsNCards(card1Card, 1) ||
@@ -440,21 +436,13 @@ int GameStateManager::developMemeFilter(int card1, int card2, int card3, int car
         }
 
     	// Check that all specified cards are from the same section
-        if (card1Section == card2Section && card2Section == card3Section &&
-            card3Section == card4Section && card4Section == card5Section &&
-            card5Section == "&") {
+        if (card1Section == "&") {
             memeNumber = 0;
-        } else if (card1Section == card2Section && card2Section == card3Section &&
-            card3Section == card4Section && card4Section == card5Section &&
-            card5Section == "$") {
+        } else if (card1Section == "$") {
             memeNumber = 1;
-        } else if (card1Section == card2Section && card2Section == card3Section &&
-            card3Section == card4Section && card4Section == card5Section &&
-            card5Section == "#") {
+        } else if (card1Section == "#") {
             memeNumber = 2;
-        } else if (card1Section == card2Section && card2Section == card3Section &&
-            card3Section == card4Section && card4Section == card5Section &&
-            card5Section == "@") {
+        } else if (card1Section == "@") {
             memeNumber = 3;
         } else {
             return -1;
